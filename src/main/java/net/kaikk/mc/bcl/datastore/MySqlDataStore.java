@@ -186,6 +186,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 	}
 	
 	private Statement statement() throws SQLException {
+		this.refreshConnection();
 		return this.dbConnection.createStatement();
 	}
 	
