@@ -13,7 +13,7 @@ import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import org.bukkit.Effect;
 
 /** An implementation of IDataStore that stores data into HashMaps
- * It's abstract because it doesn't write any data anywhere, all data will be lost at server shutdown
+ * It's abstract because it doesn't write any data on disk: all data will be lost at server shutdown
  * Classes that extend this class should store the data somewhere. */
 public abstract class AHashMapDataStore implements IDataStore {
 	protected Map<String, List<CChunkLoader>> chunkLoaders;
