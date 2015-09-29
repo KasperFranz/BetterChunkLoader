@@ -101,7 +101,7 @@ public class BetterChunkLoader extends JavaPlugin {
 	}
 	
 	public static long getPlayerDataLastModified(UUID playerId) {
-		File playerData =new File(Bukkit.getWorlds().get(0).getWorldFolder(), "playerdata"+playerId.toString()+".dat");
+		File playerData =new File(Bukkit.getWorlds().get(0).getWorldFolder(), "playerdata"+File.separator+playerId.toString()+".dat");
 		if (playerData.exists()) {
 			return playerData.lastModified();
 		}
