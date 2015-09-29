@@ -1,0 +1,37 @@
+name: BetterChunkLoader
+main: net.kaikk.mc.bcl.BetterChunkLoader
+version: ${version}
+
+commands:
+   betterchunkloader:
+      description: OP commands
+      aliases: [bcl]
+
+permissions:
+   betterchunkloader.onlineonly:
+      description: Permission to create new onlineonly chunk loaders
+      default: true
+   betterchunkloader.alwayson:
+      description: Permission to create new alwayson chunk loaders
+      default: true
+   betterchunkloader.list.own:
+      description: List own chunk loaders
+      default: true
+   betterchunkloader.list.others:
+      description: List others chunk loaders
+      default: op
+   betterchunkloader.edit:
+      description: Edit others chunk loaders
+      default: op
+   betterchunkloader.adminloader:
+      description: Create admin chunk loaders
+      default: op
+   betterchunkloader.info:
+      description: Show general statistics
+      default: op
+   betterchunkloader.delete:
+      description: Delete player chunk loaders
+      default: op
+   betterchunkloader.reload:
+      description: Reload the plugin
+      default: op
