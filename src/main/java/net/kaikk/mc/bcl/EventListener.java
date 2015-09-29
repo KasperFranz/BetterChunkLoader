@@ -163,7 +163,7 @@ public class EventListener implements Listener {
         			pos-=2;
         			
         			// if higher range, check if the player has enough free chunks
-        			if (!chunkLoader.isAdminChunkLoader()) {
+        			if (!chunkLoader.isAdminChunkLoader() || !player.hasPermission("betterchunkloader.unlimitedchunks")) {
 	        			if (pos>chunkLoader.getRange()) {
 	        				int needed = ((1+(pos*2))*(1+(pos*2)))-chunkLoader.size();
 	        				int available;
@@ -192,7 +192,7 @@ public class EventListener implements Listener {
     		} else if (pos>1 && pos<7) {
     			pos-=2;
     			
-    			if (!chunkLoader.isAdminChunkLoader()) {
+    			if (!chunkLoader.isAdminChunkLoader() || !player.hasPermission("betterchunkloader.unlimitedchunks")) {
 	    			int needed = (1+(pos*2))*(1+(pos*2));
 					int available;
 					if (chunkLoader.isAlwaysOn()) {

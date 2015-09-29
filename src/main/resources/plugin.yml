@@ -17,6 +17,9 @@ permissions:
    betterchunkloader.list.own:
       description: List own chunk loaders
       default: true
+   betterchunkloader.unlimitedchunks:
+      description: Override chunks amount limits
+      default: false
    betterchunkloader.list.others:
       description: List others chunk loaders
       default: op
