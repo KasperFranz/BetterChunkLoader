@@ -203,7 +203,6 @@ public class CommandExec implements CommandExecutor {
 		return true;
 	}
 	
-	// TODO command for adding/removing chunks amount
 	@SuppressWarnings("deprecation")
 	private boolean chunks(CommandSender sender, String label, String[] args) {
 		final String usage = "Usage: /"+label+" chunks get (PlayerName)\n"

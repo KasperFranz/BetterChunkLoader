@@ -184,9 +184,6 @@ public class EventListener implements Listener {
     				BetterChunkLoader.instance().getLogger().info(player.getName()+" edited "+chunkLoader.getOwnerName()+"'s chunk loader at "+chunkLoader.getLocationString()+" range from "+chunkLoader.getRange()+" to "+pos);
     				DataStoreManager.getDataStore().changeChunkLoaderRange(chunkLoader, pos);
     				player.sendMessage(ChatColor.GOLD + "Chunk Loader updated.");
-    				if (!chunkLoader.isAdminChunkLoader()) {
-    					player.sendMessage(CommandExec.chunksInfo(player));
-    				}
     				closeInventory(player);
         		}
     		} else if (pos>1 && pos<7) {
