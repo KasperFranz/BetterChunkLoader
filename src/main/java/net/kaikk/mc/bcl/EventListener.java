@@ -50,7 +50,7 @@ public class EventListener implements Listener {
 							UUID uid=player.getUniqueId();
 							if (clickedBlock.getType()==Material.DIAMOND_BLOCK) {
 								if (!player.hasPermission("betterchunkloader.alwayson")) {
-									player.sendMessage(ChatColor.RED + "You don't have the permission to create always-on chunk loaders.");
+									player.sendMessage(ChatColor.RED + "You don't have the permission to create always-on chunk loaders."+(player.isOp()?" (betterchunkloader.alwayson is needed)":""));
 									return;
 								}
 								if (player.isSneaking() && player.hasPermission("betterchunkloader.adminloader")) {
@@ -58,7 +58,7 @@ public class EventListener implements Listener {
 								}
 							} else if (clickedBlock.getType()==Material.IRON_BLOCK) {
 								if (!player.hasPermission("betterchunkloader.onlineonly")) {
-									player.sendMessage(ChatColor.RED + "You don't have the permission to create online-only chunk loaders.");
+									player.sendMessage(ChatColor.RED + "You don't have the permission to create online-only chunk loaders."+(player.isOp()?" (betterchunkloader.onlineonly is needed)":""));
 									return;
 								}
 							} else {

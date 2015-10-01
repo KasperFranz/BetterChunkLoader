@@ -10,10 +10,10 @@ commands:
 permissions:
    betterchunkloader.onlineonly:
       description: Permission to create new onlineonly chunk loaders
-      default: true
+      default: false
    betterchunkloader.alwayson:
       description: Permission to create new alwayson chunk loaders
-      default: true
+      default: false
    betterchunkloader.list.own:
       description: List own chunk loaders
       default: true
