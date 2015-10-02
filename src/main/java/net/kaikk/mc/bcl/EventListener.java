@@ -211,9 +211,6 @@ public class EventListener implements Listener {
     			DataStoreManager.getDataStore().addChunkLoader(chunkLoader);
     			closeInventory(player);
     			player.sendMessage(ChatColor.GOLD + "Chunk Loader created.");
-				if (!chunkLoader.isAdminChunkLoader()) {
-					player.sendMessage(CommandExec.chunksInfo(player));
-				}
         	}
     	}
     }
