@@ -40,7 +40,7 @@ public class EventListener implements Listener {
 				CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(new BlockLocation(clickedBlock.getLocation()));
 				if (player.getItemInHand().getType()==Material.BLAZE_ROD) {
 					if (chunkLoader!=null) {
-						if (player.getUniqueId().equals(chunkLoader.getOwner()) || player.hasPermission("betterchunkloader.edit")) {
+						if (player.getUniqueId().equals(chunkLoader.getOwner()) || player.hasPermission("betterchunkloader.edit") || (chunkLoader.isAdminChunkLoader() && player.hasPermission("betterchunkloader.adminloader"))) {
 							chunkLoader.showUI(player);
 						} else {
 							player.sendMessage(ChatColor.RED + "You can't edit others' chunk loaders.");
