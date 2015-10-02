@@ -218,7 +218,7 @@ public class EventListener implements Listener {
     	}
     }
     
-    @EventHandler
+    @EventHandler(priority=EventPriority.MONITOR)
     void onWorldLoad(WorldLoadEvent event) {
 		for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders(event.getWorld().getName())) {
 			if (cl.isLoadable()) {
