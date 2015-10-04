@@ -156,13 +156,13 @@ public abstract class AHashMapDataStore implements IDataStore {
 	@Override
 	public void addAlwaysOnChunksLimit(UUID playerId, int amount) {
 		PlayerData playerData = this.getPlayerData(playerId);
-		playerData.setAlwaysOnChunksAmount(this.getAlwaysOnFreeChunksAmount(playerId)+amount);
+		playerData.setAlwaysOnChunksAmount(playerData.getAlwaysOnChunksAmount()+amount);
 	}
 
 	@Override
 	public void addOnlineOnlyChunksLimit(UUID playerId, int amount) {
 		PlayerData playerData = this.getPlayerData(playerId);
-		playerData.setOnlineOnlyChunksAmount(this.getOnlineOnlyFreeChunksAmount(playerId)+amount);
+		playerData.setOnlineOnlyChunksAmount(playerData.getOnlineOnlyChunksAmount()+amount);
 	}
 	
 	@Override
