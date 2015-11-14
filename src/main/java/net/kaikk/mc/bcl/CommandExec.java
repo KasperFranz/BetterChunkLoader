@@ -134,26 +134,21 @@ public class CommandExec implements CommandExecutor {
 			
 			List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders();
 			
-			int clSize=clList.size();
-			if (clSize==0) {
-				sender.sendMessage(ChatColor.RED + "There isn't any chunk loader yet!");
+			printChunkLoadersList(clList, sender, page);
+		} else if (args[1].equalsIgnoreCase("alwayson")) {
+			if (!sender.hasPermission("betterchunkloader.list.others")) {
+				sender.sendMessage(ChatColor.RED + "You don't have permission to run this command.");
 				return false;
 			}
 			
-			int pages=(int) Math.ceil(clSize/5.00);
-
-			if (page>pages) {
-				sender.sendMessage(ChatColor.RED + "Invalid page");
-				return false;
+			List<CChunkLoader> clList = new ArrayList<CChunkLoader>();
+			for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
+				if (cl.isAlwaysOn()) {
+					clList.add(cl);
+				}
 			}
 			
-			sender.sendMessage(ChatColor.GOLD + "== Chunk loaders list ("+page+"/"+pages+") ==");
-			sender.sendMessage(ChatColor.GRAY + "(Owner - AlwaysOn - Size - Position)");
-			
-			for(int i=(page-1)*5; i<page*5 && i<clSize; i++) {
-				CChunkLoader chunkLoader=clList.get(i);
-				sender.sendMessage(chunkLoader.getOwnerName()+" - "+chunkLoader.toString());
-			}
+			printChunkLoadersList(clList, sender, page);
 		} else {
 			String playerName = args[1];
 			if (playerName.equalsIgnoreCase("own")) {
@@ -200,6 +195,31 @@ public class CommandExec implements CommandExecutor {
 			}
 			
 		}	
+		return true;
+	}
+	
+	static private boolean printChunkLoadersList(List<CChunkLoader> clList, CommandSender sender, int page) {
+
+		int clSize=clList.size();
+		if (clSize==0) {
+			sender.sendMessage(ChatColor.RED + "There isn't any chunk loader yet!");
+			return false;
+		}
+		
+		int pages=(int) Math.ceil(clSize/5.00);
+
+		if (page>pages) {
+			sender.sendMessage(ChatColor.RED + "Invalid page");
+			return false;
+		}
+		
+		sender.sendMessage(ChatColor.GOLD + "== Chunk loaders list ("+page+"/"+pages+") ==");
+		sender.sendMessage(ChatColor.GRAY + "(Owner - AlwaysOn - Size - Position)");
+		
+		for(int i=(page-1)*5; i<page*5 && i<clSize; i++) {
+			CChunkLoader chunkLoader=clList.get(i);
+			sender.sendMessage(chunkLoader.getOwnerName()+" - "+chunkLoader.toString());
+		}
 		return true;
 	}
 	
