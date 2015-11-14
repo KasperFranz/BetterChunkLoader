@@ -5,8 +5,8 @@ public class Config {
 	public String dataStore, mySqlHostname, mySqlUsername, mySqlPassword, mySqlDatabase;
 	
 	Config(BetterChunkLoader instance) {
-		instance.saveDefaultConfig();
 		instance.getConfig().options().copyDefaults(true);
+		instance.saveDefaultConfig();
 		
 		this.maxHoursOffline=instance.getConfig().getInt("MaxHoursOffline", 168);
 		
