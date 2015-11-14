@@ -82,6 +82,9 @@ public class BetterChunkLoader extends JavaPlugin {
 	}
 	
 	public void onDisable() {
+		for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
+			BCLForgeLib.instance().removeChunkLoader(cl);
+		}
 		instance=null;
 	}
 
