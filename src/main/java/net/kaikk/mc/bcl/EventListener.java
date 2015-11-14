@@ -19,6 +19,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -107,8 +108,12 @@ public class EventListener implements Listener {
 		BetterChunkLoader.instance().getLogger().info(player.getName()+" broke "+chunkLoader.getOwnerName()+"'s chunk loader at "+chunkLoader.getLocationString());
 	}
 	
-	@EventHandler(ignoreCancelled=true, priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.MONITOR)
 	void onPlayerLogin(PlayerLoginEvent event) {
+		if (event.getResult()!=Result.ALLOWED) {
+			return;
+		}
+	
 		List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(event.getPlayer().getUniqueId());
 
 		for (CChunkLoader chunkLoader : clList) {
