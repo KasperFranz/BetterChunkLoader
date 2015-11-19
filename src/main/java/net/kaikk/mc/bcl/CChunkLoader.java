@@ -169,7 +169,11 @@ public class CChunkLoader extends ChunkLoader implements InventoryHolder {
 	
 	/** Shows the chunk loader's user interface to the specified player */
 	void showUI(Player player) {
-		Inventory inventory = Bukkit.createInventory(this, 9, (this.range!=-1 ? "BCL:"+this.getOwnerName()+"@"+this.getLoc() : "New "+(this.isAdminChunkLoader()?"Admin ":"")+"BetterChunkLoader"));
+		String title = (this.range!=-1 ? "BCL:"+this.getOwnerName()+"@"+this.getLoc() : "New "+(this.isAdminChunkLoader()?"Admin ":"")+"BetterChunkLoader");
+		if (title.length()>32) {
+			title=title.substring(0, 32);
+		}
+		Inventory inventory = Bukkit.createInventory(this, 9, title);
 
 		addInventoryOption(inventory, 0, Material.REDSTONE_TORCH_ON, "Remove");
 		
