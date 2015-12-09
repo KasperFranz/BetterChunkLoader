@@ -1,6 +1,6 @@
-name: BetterChunkLoader
-main: net.kaikk.mc.bcl.BetterChunkLoader
-version: ${version}
+name: ${project.artifactId}
+main: ${package}.BetterChunkLoader
+version: ${project.version}
 
 commands:
    betterchunkloader:
