@@ -6,16 +6,17 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import net.kaikk.mc.bcl.datastore.DataStoreManager;
-import net.kaikk.mc.bcl.datastore.IDataStore;
-import net.kaikk.mc.bcl.datastore.PlayerData;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import net.kaikk.mc.bcl.datastore.DataStoreManager;
+import net.kaikk.mc.bcl.datastore.IDataStore;
+import net.kaikk.mc.bcl.datastore.PlayerData;
 
 public class CommandExec implements CommandExecutor {
 	BetterChunkLoader instance;
@@ -225,8 +226,14 @@ public class CommandExec implements CommandExecutor {
 	
 	@SuppressWarnings("deprecation")
 	private boolean chunks(CommandSender sender, String label, String[] args) {
-		final String usage = "Usage: /"+label+" chunks get (PlayerName)\n"
+		final String usage = "Usage: /"+label+" chunks [get (PlayerName)]\n"
 							+ "       /"+label+" chunks (add|set) (PlayerName) (alwayson|onlineonly) (amount)";
+		
+		if (sender instanceof Player && args.length==1) {
+			sender.sendMessage(chunksInfo((Player) sender));
+			return true;
+		}
+		
 		if (args.length<3) {
 			sender.sendMessage(usage);
 			return false;
@@ -260,11 +267,21 @@ public class CommandExec implements CommandExecutor {
 			}
 			
 			if (args[1].equalsIgnoreCase("add")) {
-
+				PlayerData playerData = DataStoreManager.getDataStore().getPlayerData(player.getUniqueId());
 				if (args[3].equalsIgnoreCase("alwayson")) {
+					if (playerData.getAlwaysOnChunksAmount()+amount>this.instance.config().maxChunksAmountAlwaysOn) {
+						sender.sendMessage("Couldn't add "+amount+" always-on chunks to "+player.getName()+" because it would exceed the always-on chunks limit of "+this.instance.config().maxChunksAmountAlwaysOn);
+						return false;
+					}
+
 					DataStoreManager.getDataStore().addAlwaysOnChunksLimit(player.getUniqueId(), amount);
 					sender.sendMessage("Added "+amount+" always-on chunks to "+player.getName());
 				} else if (args[3].equalsIgnoreCase("onlineonly")) {
+					if (playerData.getOnlineOnlyChunksAmount()+amount>this.instance.config().maxChunksAmountOnlineOnly) {
+						sender.sendMessage("Couldn't add "+amount+" online-only chunks to "+player.getName()+" because it would exceed the online-only chunks limit of "+this.instance.config().maxChunksAmountOnlineOnly);
+						return false;
+					}
+					
 					DataStoreManager.getDataStore().addOnlineOnlyChunksLimit(player.getUniqueId(), amount);
 					sender.sendMessage("Added "+amount+" online-only chunks to "+player.getName());
 				} else {
@@ -365,7 +382,7 @@ public class CommandExec implements CommandExecutor {
 		int amountOnlineOnly = pd.getOnlineOnlyChunksAmount();
 		
 		return ChatColor.GOLD + "=== "+player.getName()+" chunks amount ===\n" + ChatColor.GREEN
-				+ "Always-on - Free: "+freeAlwaysOn+" Used: "+(amountAlwaysOn-freeAlwaysOn)+" Total: "+amountAlwaysOn+"\n"
-				+ "Online-only - Free: "+freeOnlineOnly+" Used: "+(amountOnlineOnly-freeOnlineOnly)+" Total: "+amountOnlineOnly;
+				+ "Always-on - " + ((player.isOnline() && player.getPlayer().hasPermission("betterchunkloader.alwayson")) ? "Free: "+freeAlwaysOn+" Used: "+(amountAlwaysOn-freeAlwaysOn)+" Total: "+amountAlwaysOn : "Missing permission")+"\n"
+				+ "Online-only - " + ((player.isOnline() && player.getPlayer().hasPermission("betterchunkloader.onlineonly")) ? "Free: "+freeOnlineOnly+" Used: "+(amountOnlineOnly-freeOnlineOnly)+" Total: "+amountOnlineOnly+"" : "Missing permission");
 	}
 }

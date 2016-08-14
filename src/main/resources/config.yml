@@ -6,6 +6,11 @@ DefaultChunksAmount:
   AlwaysOn: 5
   OnlineOnly: 50
   
+# Max amount of chunks for each player
+MaxChunksAmount:
+  AlwaysOn: 57
+  OnlineOnly: 75
+  
 # Data Store to use, XML or MySQL, but extensions can add custom data stores
 DataStore: XML
 

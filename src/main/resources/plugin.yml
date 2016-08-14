@@ -35,6 +35,12 @@ permissions:
    betterchunkloader.delete:
       description: Delete player chunk loaders
       default: op
+   betterchunkloader.chunks:
+      description: Manage players chunks amount
+      default: op
+   betterchunkloader.purge:
+      description: Allows the use of the purge command
+      default: op
    betterchunkloader.reload:
       description: Reload the plugin
       default: op
