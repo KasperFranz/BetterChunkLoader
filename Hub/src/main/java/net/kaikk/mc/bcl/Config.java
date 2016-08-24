@@ -2,21 +2,19 @@ package net.kaikk.mc.bcl;
 
 public class Config {
 	public int maxHoursOffline, defaultChunksAmountAlwaysOn, defaultChunksAmountOnlineOnly, maxChunksAmountAlwaysOn, maxChunksAmountOnlineOnly;
-	public String dataStore, mySqlHostname, mySqlUsername, mySqlPassword, mySqlDatabase, serverName;
+	public String dataStore, mySqlHostname, mySqlUsername, mySqlPassword, mySqlDatabase;
 	
 	Config(BetterChunkLoader instance) {
 		instance.getConfig().options().copyDefaults(true);
 		instance.saveDefaultConfig();
-		
+
 		this.maxHoursOffline=instance.getConfig().getInt("MaxHoursOffline", 72);
-		
+
 		this.defaultChunksAmountAlwaysOn=instance.getConfig().getInt("DefaultChunksAmount.AlwaysOn", 0);
 		this.defaultChunksAmountOnlineOnly=instance.getConfig().getInt("DefaultChunksAmount.OnlineOnly", 0);
 
 		this.maxChunksAmountAlwaysOn=instance.getConfig().getInt("MaxChunksAmount.AlwaysOn", 250);
 		this.maxChunksAmountOnlineOnly=instance.getConfig().getInt("MaxChunksAmount.OnlineOnly", 250);
-
-        this.serverName=instance.getConfig().getString("ServerName");
 
 		this.dataStore=instance.getConfig().getString("DataStore");
 		

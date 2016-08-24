@@ -5,13 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.BlockLocation;
 import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
-
-import org.bukkit.Effect;
 
 /** An implementation of IDataStore that stores data into HashMaps
  * It's abstract because it doesn't write any data on disk: all data will be lost at server shutdown
@@ -60,67 +54,6 @@ public abstract class AHashMapDataStore implements IDataStore {
 		return chunkLoaders;
 	}
 
-	@Override
-	public CChunkLoader getChunkLoaderAt(BlockLocation blockLocation) {
-		for (CChunkLoader cl : this.getChunkLoaders(blockLocation.getWorldName())) {
-			if (cl.getLoc().getX()==blockLocation.getX() && cl.getLoc().getZ()==blockLocation.getZ() && cl.getLoc().getY()==blockLocation.getY()) {
-				return cl;
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public void addChunkLoader(CChunkLoader chunkLoader) {
-			List<CChunkLoader> clList = this.chunkLoaders.get(chunkLoader.getWorldName());
-			if (clList == null) {
-				clList = new ArrayList<CChunkLoader>();
-				this.chunkLoaders.put(chunkLoader.getWorldName(), clList);
-			}
-
-			clList.add(chunkLoader);
-		if (chunkLoader.getServerName().equalsIgnoreCase(BetterChunkLoader.instance().config().serverName)) {
-			chunkLoader.getLoc().getLocation().getWorld().playEffect(chunkLoader.getLoc().getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
-			if (chunkLoader.isLoadable()) {
-				BCLForgeLib.instance().addChunkLoader(chunkLoader);
-			}
-		}
-	}
-
-	@Override
-	public void removeChunkLoader(CChunkLoader chunkLoader) {
-		List<CChunkLoader> clList = this.chunkLoaders.get(chunkLoader.getWorldName());
-		if (clList!=null) {
-			if (chunkLoader.blockCheck()) {
-				chunkLoader.getLoc().getLocation().getWorld().playEffect(chunkLoader.getLoc().getLocation(), Effect.POTION_BREAK, 0);
-			}
-			clList.remove(chunkLoader);
-			if (chunkLoader.getServerName().equalsIgnoreCase(BetterChunkLoader.instance().config().serverName)) {
-				BCLForgeLib.instance().removeChunkLoader(chunkLoader);
-			}
-		}
-	}
-	
-	@Override
-	public void removeChunkLoaders(UUID ownerId) {
-		List<CChunkLoader> clList = this.getChunkLoaders(ownerId);
-		for (CChunkLoader cl : clList) {
-			this.getChunkLoaders(cl.getWorldName()).remove(cl);
-		}
-	}
-	
-	@Override
-	public void changeChunkLoaderRange(CChunkLoader chunkLoader, byte range) {
-		if (chunkLoader.isLoadable()) {
-			BCLForgeLib.instance().removeChunkLoader(chunkLoader);
-		}
-		
-		chunkLoader.setRange(range);
-		
-		if (chunkLoader.isLoadable()) {
-			BCLForgeLib.instance().addChunkLoader(chunkLoader);
-		}
-	}
 
 	@Override
 	public int getAlwaysOnFreeChunksAmount(UUID playerId) {

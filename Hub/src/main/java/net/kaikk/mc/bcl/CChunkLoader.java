@@ -2,14 +2,10 @@ package net.kaikk.mc.bcl;
 
 import java.util.Date;
 import java.util.UUID;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import net.kaikk.mc.bcl.forgelib.ChunkLoader;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import net.kaikk.mc.bcl.datastore.ChunkLoader;
 
 @XmlRootElement
 @XmlAccessorType(value=XmlAccessType.NONE)
