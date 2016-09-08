@@ -36,6 +36,9 @@ public interface IDataStore {
 	
 	/** Add a new chunk loader */
 	public abstract void addChunkLoader(CChunkLoader chunkLoader);
+
+	/** refresh balance on login */
+	public abstract void refreshPlayer(UUID uuid);
 	
 	/** Remove chunk loader */
 	public abstract void removeChunkLoader(CChunkLoader chunkLoader);

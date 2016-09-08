@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
-
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
 
@@ -91,6 +90,45 @@ public class MySqlDataStore extends AHashMapDataStore {
 		}
 	}
 
+	@Override
+	public void setAlwaysOnChunksLimit(UUID playerId, int amount) {
+		super.setAlwaysOnChunksLimit(playerId, amount);
+		try {
+			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+amount+", "+BetterChunkLoader.instance().config().defaultChunksAmountOnlineOnly+") ON DUPLICATE KEY UPDATE alwayson="+amount);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void setOnlineOnlyChunksLimit(UUID playerId, int amount) {
+		super.setOnlineOnlyChunksLimit(playerId, amount);
+		try {
+			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+BetterChunkLoader.instance().config().defaultChunksAmountAlwaysOn+", "+amount+") ON DUPLICATE KEY UPDATE onlineonly="+amount);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void addAlwaysOnChunksLimit(UUID playerId, int amount) {
+		super.addAlwaysOnChunksLimit(playerId, amount);
+		try {
+			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+amount+", "+BetterChunkLoader.instance().config().defaultChunksAmountOnlineOnly+") ON DUPLICATE KEY UPDATE alwayson=alwayson+"+amount);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void addOnlineOnlyChunksLimit(UUID playerId, int amount) {
+		super.addOnlineOnlyChunksLimit(playerId, amount);
+		try {
+			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+BetterChunkLoader.instance().config().defaultChunksAmountAlwaysOn+", "+amount+") ON DUPLICATE KEY UPDATE onlineonly=onlineonly+"+amount);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void refreshConnection() throws SQLException {
 		if (this.dbConnection == null || this.dbConnection.isClosed()) {
@@ -102,7 +140,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 			connectionProps.put("maxReconnects", "4");
 
 			// establish connection
-			this.dbConnection = DriverManager.getConnection("jdbc:mysql://"+BetterChunkLoader.instance().config().mySqlHostname+"/"+BetterChunkLoader.instance().config().mySqlDatabase, connectionProps);
+			this.dbConnection = DriverManager.getConnection("jdbc:mysql://"+BetterChunkLoader.instance().config().mySqlHostname+"/"+BetterChunkLoader.instance().config().mySqlDatabase+"?autoReconnect=true", connectionProps);
 		}
 	}
 	

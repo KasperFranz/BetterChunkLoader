@@ -92,6 +92,23 @@ public class MySqlDataStore extends AHashMapDataStore {
 	}
 
 	@Override
+	public void refreshPlayer(UUID uuid) {
+		try {
+			String statement = "SELECT * FROM bcl_playersdata WHERE pid="+UUIDtoHexString(uuid)+" LIMIT 1";
+			ResultSet rs = this.statement().executeQuery(statement);
+			while(rs.next()) {
+                PlayerData playerData = this.getPlayerData(uuid);
+                playerData.setAlwaysOnChunksAmount(rs.getInt(2));
+                playerData.setOnlineOnlyChunksAmount(rs.getInt(3));
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        return;
+	}
+
+	@Override
 	public void addChunkLoader(CChunkLoader chunkLoader) {
 		super.addChunkLoader(chunkLoader);
 		try {
@@ -179,11 +196,9 @@ public class MySqlDataStore extends AHashMapDataStore {
 			final Properties connectionProps = new Properties();
 			connectionProps.put("user", BetterChunkLoader.instance().config().mySqlUsername);
 			connectionProps.put("password", BetterChunkLoader.instance().config().mySqlPassword);
-			connectionProps.put("autoReconnect", "true");
-			connectionProps.put("maxReconnects", "4");
 
 			// establish connection
-			this.dbConnection = DriverManager.getConnection("jdbc:mysql://"+BetterChunkLoader.instance().config().mySqlHostname+"/"+BetterChunkLoader.instance().config().mySqlDatabase, connectionProps);
+			this.dbConnection = DriverManager.getConnection("jdbc:mysql://"+BetterChunkLoader.instance().config().mySqlHostname+"/"+BetterChunkLoader.instance().config().mySqlDatabase+"?autoReconnect=true", connectionProps);
 		}
 	}
 	

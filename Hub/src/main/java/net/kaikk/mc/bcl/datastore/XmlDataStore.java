@@ -111,25 +111,6 @@ public class XmlDataStore extends AHashMapDataStore {
 		}
 	}
 
-	
-	@Override
-	public void addChunkLoader(CChunkLoader chunkLoader) {
-		super.addChunkLoader(chunkLoader);
-		this.saveChunkLoaders();
-	}
-
-	@Override
-	public void removeChunkLoader(CChunkLoader chunkLoader) {
-		super.removeChunkLoader(chunkLoader);
-		this.saveChunkLoaders();
-	}
-	
-	@Override
-	public void removeChunkLoaders(UUID ownerId) {
-		super.removeChunkLoaders(ownerId);
-		this.saveChunkLoaders();
-	}
-
 	@Override
 	public void setAlwaysOnChunksLimit(UUID playerId, int amount) {
 		super.setAlwaysOnChunksLimit(playerId, amount);

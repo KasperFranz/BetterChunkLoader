@@ -115,7 +115,9 @@ public class EventListener implements Listener {
 		if (event.getResult()!=Result.ALLOWED) {
 			return;
 		}
-	
+
+		DataStoreManager.getDataStore().refreshPlayer(event.getPlayer().getUniqueId());
+
 		List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(event.getPlayer().getUniqueId());
 
 		for (CChunkLoader chunkLoader : clList) {

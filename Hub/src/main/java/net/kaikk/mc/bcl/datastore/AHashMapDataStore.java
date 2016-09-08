@@ -33,17 +33,6 @@ public abstract class AHashMapDataStore implements IDataStore {
 	}
 
 	@Override
-	public List<CChunkLoader> getChunkLoadersAt(String worldName, int chunkX, int chunkZ) {
-		List<CChunkLoader> chunkLoaders = new ArrayList<CChunkLoader>();
-		for (CChunkLoader cl : this.getChunkLoaders(worldName)) {
-			if (cl.getChunkX()==chunkX && cl.getChunkZ()==chunkZ) {
-				chunkLoaders.add(cl);
-			}
-		}
-		return chunkLoaders;
-	}
-
-	@Override
 	public List<CChunkLoader> getChunkLoaders(UUID ownerId) {
 		List<CChunkLoader> chunkLoaders = new ArrayList<CChunkLoader>();
 		for (CChunkLoader cl : this.getChunkLoaders()) {

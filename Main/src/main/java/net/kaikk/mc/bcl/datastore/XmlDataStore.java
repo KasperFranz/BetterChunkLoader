@@ -30,6 +30,11 @@ public class XmlDataStore extends AHashMapDataStore {
 		this.loadChunkLoaders();
 		this.loadPlayersData();
 	}
+
+	@Override
+	public void refreshPlayer(UUID uuid) {
+		return;
+	}
 	
 	public void loadChunkLoaders() {
 		this.chunkLoaders=new HashMap<>();
