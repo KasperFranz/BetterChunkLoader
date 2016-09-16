@@ -136,7 +136,6 @@ public class MySqlDataStore extends AHashMapDataStore {
 			final Properties connectionProps = new Properties();
 			connectionProps.put("user", BetterChunkLoader.instance().config().mySqlUsername);
 			connectionProps.put("password", BetterChunkLoader.instance().config().mySqlPassword);
-			connectionProps.put("autoReconnect", "true");
 			connectionProps.put("maxReconnects", "4");
 
 			// establish connection
