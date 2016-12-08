@@ -1,29 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.kaikk.mc</groupId>
-	<artifactId>BCL</artifactId>
 	<packaging>pom</packaging>
 	<version>2.4</version>
-	<licenses>
-		<license>
-			<name>GPL v3 License</name>
-			<url>http://www.gnu.org/licenses/</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	<modules>
-		<module>Main</module>
-		<module>Hub</module>
-	</modules>
-	<issueManagement>
-		<url>https://github.com/${developer}/${project.artifactId}/issues</url>
-		<system>GitHub Issues</system>
-	</issueManagement>
-	<scm>
-		<url>https://github.com/${developer}/${project.artifactId}</url>
-		<connection>scm:git:git://github.com/${developer}/${project.artifactId}.git</connection>
-		<developerConnection>scm:git:git@github.com:${developer}/${project.artifactId}.git</developerConnection>
-	</scm>
+	<artifactId>BetterChunkLoader</artifactId>
+
+
 	<build>
 		<plugins>
 			<plugin>
@@ -44,27 +26,28 @@
 		</plugins>
 		<resources>
 			<resource>
-				<directory>src/main/resources</directory>
+				<directory>../src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
 	</build>
+
 	<repositories>
-		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public/</url>
-		</repository>
 		<repository>
 			<id>net.kaikk.mc</id>
 			<url>http://kaikk.net/mc/repo/</url>
 		</repository>
+		<repository>
+			<id>sponge</id>
+			<url>http://repo.spongepowered.org/maven</url>
+		</repository>
 	</repositories>
+
 	<dependencies>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.7.9-R0.2</version>
-			<type>jar</type>
+			<groupId>org.spongepowered</groupId>
+			<artifactId>spongeapi</artifactId>
+			<version>5.1.0-20161126.155936-7</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
