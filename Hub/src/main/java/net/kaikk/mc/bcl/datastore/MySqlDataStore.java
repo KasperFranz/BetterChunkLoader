@@ -131,7 +131,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 	}
 
 	private void refreshConnection() throws SQLException {
-		if (this.dbConnection == null || this.dbConnection.isClosed()) {
+		if (this.dbConnection == null || this.dbConnection.isClosed() || !this.dbConnection.isValid(5)) {
 			// set username/pass properties
 			final Properties connectionProps = new Properties();
 			connectionProps.put("user", BetterChunkLoader.instance().config().mySqlUsername);
