@@ -1,40 +1,45 @@
 package net.kaikk.mc.bcl;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.time.temporal.ChronoField;
 import java.util.Optional;
 import java.util.UUID;
-
 import com.google.inject.Inject;
+import net.kaikk.mc.bcl.commands.CommandManager;
+import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.MySqlDataStore;
-import net.kaikk.mc.bcl.datastore.XmlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.args.GenericArguments;
-import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 @Plugin(id = "betterchunkloader", name = "BetterChunkLoader", version = "1.0")
 public class BetterChunkLoader {
 	private static BetterChunkLoader instance;
-	private Config config;
 	@Inject
 	private Logger logger;
 
+	@Inject
+    @ConfigDir(sharedRoot = false)
+    private Path configDir;
+
+	private static final Text prefix = Text.builder("[BetterChunkLoader] ").color(TextColors.GOLD).build();
+
 	public void onLoad() {
-		// Register XML DataStore
-		DataStoreManager.registerDataStore("XML", XmlDataStore.class);
-		
 		// Register MySQL DataStore
 		DataStoreManager.registerDataStore("MySQL", MySqlDataStore.class);
 	}
@@ -56,15 +61,28 @@ public class BetterChunkLoader {
 		}
 		
 		instance=this;
-		
+
+        // Config File
+        if (!Files.exists(configDir))
+        {
+            try
+            {
+                Files.createDirectories(configDir);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        Config.getConfig().setup();
+
 		try {
 			// load config
 			logger.info("Loading config...");
-			this.config = new Config(this);
-			
+            onLoad();
 			// instantiate data store, if needed
 			if (DataStoreManager.getDataStore()==null) {
-				DataStoreManager.setDataStoreInstance(config.dataStore);
+				DataStoreManager.setDataStoreInstance(Config.getConfig().get().getNode("DataStore").getString());
 			}
 			
 			// load datastore
@@ -77,7 +95,7 @@ public class BetterChunkLoader {
 			// load always on chunk loaders
 			int count=0;
 			for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
-				if (cl.getServerName().equalsIgnoreCase(BetterChunkLoader.instance().config().serverName)) {
+				if (cl.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
 					if (cl.isLoadable()) {
 						BCLForgeLib.instance().addChunkLoader(cl);
 						count++;
@@ -98,10 +116,11 @@ public class BetterChunkLoader {
 			//TODO: DISABLE PLUGIN HERE
 		}
 	}
-	
-	public void onDisable() {
+
+	@Listener
+	public void onDisable(GameStoppedServerEvent event) {
 		for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
-			if (cl.getServerName().equalsIgnoreCase(BetterChunkLoader.instance().config().serverName)) {
+			if (cl.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
 				BCLForgeLib.instance().removeChunkLoader(cl);
 			}
 		}
@@ -109,17 +128,12 @@ public class BetterChunkLoader {
 	}
 
 	private void initializeListeners() {
-		Sponge.getEventManager().registerListeners(this, new EventListener());
+		Sponge.getEventManager().registerListeners(this, new Events());
 	}
 
 	private void initializeCommands() {
-		CommandSpec bclSpec = CommandSpec.builder()
-				.description(Text.of("BetterChunkloader Main Command"))
-				.arguments(GenericArguments.onlyOne(GenericArguments.integer(Text.of("tagInt"))))
-				.executor(new CommandExec(this))
-				.build();
 
-		Sponge.getCommandManager().register(this, bclSpec, "betterchunkloader", "bcl");
+		Sponge.getCommandManager().register(this, new CommandManager().bclCmdSpec, "betterchunkloader", "bcl");
 	}
 
 	public static BetterChunkLoader instance() {
@@ -154,8 +168,17 @@ public class BetterChunkLoader {
 		}
 		return 0;
 	}
-	
-	public Config config() {
-		return this.config;
+
+	public Logger getLogger() {
+	    return this.logger;
+    }
+
+	public static Text getPrefix() {
+		return prefix;
 	}
+
+    public Path getConfigDir()
+    {
+        return configDir;
+    }
 }

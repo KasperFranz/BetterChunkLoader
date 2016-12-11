@@ -1,6 +1,7 @@
 package net.kaikk.mc.bcl;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -8,31 +9,41 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.forgelib.ChunkLoader;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.*;
+import org.spongepowered.api.item.inventory.property.InventoryCapacity;
+import org.spongepowered.api.item.inventory.property.InventoryTitle;
+import org.spongepowered.api.service.user.UserStorageService;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+import sun.awt.CausedFocusEvent;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 @XmlRootElement
 @XmlAccessorType(value=XmlAccessType.NONE)
-public class CChunkLoader extends ChunkLoader implements InventoryHolder {
+public class CChunkLoader extends ChunkLoader {
 	final public static UUID adminUUID = new UUID(0,1);
 	private UUID owner;
-	private BlockLocation loc;
+	private Location<World> loc;
 	private Date creationDate;
 	private boolean isAlwaysOn;
 	private String serverName;
 	
 	public CChunkLoader() { }
 	
-	public CChunkLoader(int chunkX, int chunkZ, String worldName, byte range, UUID owner, BlockLocation loc, Date creationDate, boolean isAlwaysOn, String serverName) {
+	public CChunkLoader(int chunkX, int chunkZ, String worldName, byte range, UUID owner, Location<World> loc, Date creationDate, boolean isAlwaysOn, String serverName) {
 		super(chunkX, chunkZ, worldName, range);
 		this.owner = owner;
 		this.loc = loc;
@@ -51,15 +62,25 @@ public class CChunkLoader extends ChunkLoader implements InventoryHolder {
 	}
 
 	public boolean isExpired() {
-		return System.currentTimeMillis()-this.getOwnerLastPlayed()>BetterChunkLoader.instance().config().maxHoursOffline*3600000L;
+		return System.currentTimeMillis()-this.getOwnerLastPlayed()>Config.getConfig().get().getNode("MaxHoursOffline").getInt()*3600000L;
 	}
 
-	public OfflinePlayer getOfflinePlayer() {
-		return BetterChunkLoader.instance().getServer().getOfflinePlayer(this.owner);
+	public User getOfflinePlayer() {
+		Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
+		Optional<User> optUser = userStorage.get().get(this.owner);
+		if (optUser.isPresent()) {
+			User user = optUser.get();
+			return user;
+		}
+		return null;
 	}
 	
 	public Player getPlayer() {
-		return BetterChunkLoader.instance().getServer().getPlayer(this.owner);
+		Optional<Player> onlinePlayer = Sponge.getServer().getPlayer(this.owner);
+		if(onlinePlayer.isPresent()) {
+			return onlinePlayer.get();
+		}
+		return null;
 	}
 	
 	public long getOwnerLastPlayed() {
@@ -88,12 +109,12 @@ public class CChunkLoader extends ChunkLoader implements InventoryHolder {
 		return this.side()+"x"+this.side();
 	}
 	
-	public String info() {
-		return ChatColor.GOLD + "== Chunk loader info ==\n"
-				+ ChatColor.WHITE + "Owner: "+this.getOwnerName()+"\n"
-						+ "Position: "+this.loc.toString()+"\n"
-						+ "Chunk: "+this.worldName+":"+this.chunkX+","+this.chunkZ+"\n"
-						+ "Size: "+this.sizeX();
+	public Text info() {
+		return Text.builder("== Chunk Loader Info ==").color(TextColors.GOLD).build().concat(Text.NEW_LINE)
+				.concat(Text.builder("Owner: "+this.getOwnerName()).build()).concat(Text.NEW_LINE)
+				.concat(Text.builder("Position: "+this.loc.toString()).build()).concat(Text.NEW_LINE)
+				.concat(Text.builder("Chunk: "+this.worldName+":"+this.chunkX+","+this.chunkZ).build()).concat(Text.NEW_LINE)
+				.concat(Text.builder("Size: "+this.sizeX()).build());
 	}
 	
 	public boolean isLoadable() {
@@ -105,9 +126,10 @@ public class CChunkLoader extends ChunkLoader implements InventoryHolder {
 			return false;
 		}
 		if (isAlwaysOn) {
-			return this.loc.getBlock().getType()==Material.DIAMOND_BLOCK;
+
+			return this.loc.getBlock().getType().equals(BlockTypes.DIAMOND_BLOCK);
 		} else {
-			return this.loc.getBlock().getType()==Material.IRON_BLOCK;
+			return this.loc.getBlock().getType().equals(BlockTypes.IRON_BLOCK);
 		}
 	}
 	
@@ -124,7 +146,7 @@ public class CChunkLoader extends ChunkLoader implements InventoryHolder {
 		return owner;
 	}
 	
-	public BlockLocation getLoc() {
+	public Location<World> getLoc() {
 		return loc;
 	}
 	
@@ -145,12 +167,10 @@ public class CChunkLoader extends ChunkLoader implements InventoryHolder {
 			Integer x=Integer.valueOf(coords[0]);
 			Integer y=Integer.valueOf(coords[1]);
 			Integer z=Integer.valueOf(coords[2]);
-			
-			this.loc=new BlockLocation(s[0], x, y, z);
-			
 			super.worldName=s[0];
-			super.chunkX=this.loc.getChunkX();
-			super.chunkZ=this.loc.getChunkZ();
+			this.loc= new Location<World>(Sponge.getServer().getWorld(s[0]).get(),x,y,z);
+			super.chunkX=this.loc.getChunkPosition().getX();
+			super.chunkZ=this.loc.getChunkPosition().getZ();
 		} catch(Exception e) {
 			throw new RuntimeException("Wrong chunk loader location: "+location);
 		}
@@ -168,9 +188,7 @@ public class CChunkLoader extends ChunkLoader implements InventoryHolder {
 	public void setCreationDate(Date date) {
 		this.creationDate=date;
 	}
-	
-	/** Ignore this, it'll always return null */
-	@Override
+
 	public Inventory getInventory() {
 		return null;
 	}
@@ -181,15 +199,16 @@ public class CChunkLoader extends ChunkLoader implements InventoryHolder {
 		if (title.length()>32) {
 			title=title.substring(0, 32);
 		}
-		Inventory inventory = Bukkit.createInventory(this, 9, title);
+		InventoryArchetype inventoryArchetype = InventoryArchetype.builder().from(InventoryArchetypes.MENU_ROW).property(CChunkLoaderInvProp.of(this)).build("archid","archname");
+		Inventory inventory = Inventory.builder().of(inventoryArchetype).property(InventoryTitle.PROPERTY_NAME , InventoryTitle.of(Text.of(title))).build(BetterChunkLoader.instance());
 
-		addInventoryOption(inventory, 0, Material.REDSTONE_TORCH_ON, "Remove");
+		addInventoryOption(inventory, 0, ItemTypes.REDSTONE_TORCH, "Remove");
 		
 		for (byte i=0; i<5; i++) {
-			addInventoryOption(inventory, i+2, Material.MAP, "Size "+this.sizeX(i)+(this.getRange()==i?" [selected]":""));
+			addInventoryOption(inventory, i+2, ItemTypes.MAP, "Size "+this.sizeX(i)+(this.getRange()==i?" [selected]":""));
 		}
 		
-		player.openInventory(inventory);
+		player.openInventory(inventory, Cause.of(NamedCause.simulated(player)));
 	}
 	
 	private String sizeX(byte i) {
@@ -200,12 +219,18 @@ public class CChunkLoader extends ChunkLoader implements InventoryHolder {
 		return 1+(i*2);
 	}
 
-	private static void addInventoryOption(Inventory inventory, int position, Material icon, String name) {
-		ItemStack is = new ItemStack(icon);
-		ItemMeta im = is.getItemMeta();
-		im.setDisplayName(name);
-		is.setItemMeta(im);
-		inventory.setItem(position, is);
+	private static void addInventoryOption(Inventory inventory, int position, ItemType icon, String name) {
+		Iterable<Slot> slotIterable = inventory.slots();
+		ItemStack itemStack = ItemStack.builder().itemType(icon).quantity(1).build();
+		itemStack.offer(Keys.DISPLAY_NAME, Text.of(name));
+		Integer iter = 0;
+		for(Slot slot : slotIterable) {
+			if(iter == position) {
+				slot.set(itemStack);
+			}
+			iter++;
+		}
+
 	}
 	
 	@XmlAttribute(name="own")
@@ -231,4 +256,5 @@ public class CChunkLoader extends ChunkLoader implements InventoryHolder {
 	public boolean isAdminChunkLoader() {
 		return adminUUID.equals(this.owner);
 	}
+
 }

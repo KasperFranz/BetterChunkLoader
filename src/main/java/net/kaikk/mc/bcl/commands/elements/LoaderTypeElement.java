@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ROB on 08/12/2016.
+ * Created by mcrob on 10/12/2016.
  */
-public class ChunksChangeElement extends CommandElement {
+public class LoaderTypeElement extends CommandElement {
 
-    public ChunksChangeElement(Text key) {
+    public LoaderTypeElement(Text key) {
         super(key);
     }
 
@@ -25,24 +25,21 @@ public class ChunksChangeElement extends CommandElement {
     @Override
     protected Object parseValue(CommandSource commandSource, CommandArgs commandArgs) throws ArgumentParseException {
         String arg = commandArgs.next();
-        if(arg.equalsIgnoreCase("set")){
+        if (arg.equalsIgnoreCase("world")) {
             return arg;
         }
-        if(arg.equalsIgnoreCase("add")){
+        if (arg.equalsIgnoreCase("personal")) {
             return arg;
         }
-        if(arg.equalsIgnoreCase("remove")){
-            return arg;
-        }
-        throw commandArgs.createError(Text.of(new Object[] { TextColors.RED, arg, " is not a valid argument!" }));
+        throw commandArgs.createError(Text.of(new Object[]{TextColors.RED, arg, " is not a valid argument!"}));
     }
 
     @Override
     public List<String> complete(CommandSource commandSource, CommandArgs commandArgs, CommandContext commandContext) {
         List<String> list = new ArrayList();
-        list.add("set");
-        list.add("add");
-        list.add("remove");
+        list.add("world");
+        list.add("personal");
         return list;
     }
+
 }

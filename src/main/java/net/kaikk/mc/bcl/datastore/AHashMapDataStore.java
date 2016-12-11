@@ -5,13 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.BlockLocation;
 import net.kaikk.mc.bcl.CChunkLoader;
+import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
-
-import org.bukkit.Effect;
+import org.spongepowered.api.effect.particle.ParticleEffect;
+import org.spongepowered.api.effect.particle.ParticleTypes;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /** An implementation of IDataStore that stores data into HashMaps
  * It's abstract because it doesn't write any data on disk: all data will be lost at server shutdown
@@ -61,8 +61,8 @@ public abstract class AHashMapDataStore implements IDataStore {
 	}
 
 	@Override
-	public CChunkLoader getChunkLoaderAt(BlockLocation blockLocation) {
-		for (CChunkLoader cl : this.getChunkLoaders(blockLocation.getWorldName())) {
+	public CChunkLoader getChunkLoaderAt(Location<World> blockLocation) {
+		for (CChunkLoader cl : this.getChunkLoaders(blockLocation.getExtent().getName())) {
 			if (cl.getLoc().getX()==blockLocation.getX() && cl.getLoc().getZ()==blockLocation.getZ() && cl.getLoc().getY()==blockLocation.getY()) {
 				return cl;
 			}
@@ -79,8 +79,8 @@ public abstract class AHashMapDataStore implements IDataStore {
 			}
 
 			clList.add(chunkLoader);
-		if (chunkLoader.getServerName().equalsIgnoreCase(BetterChunkLoader.instance().config().serverName)) {
-			chunkLoader.getLoc().getLocation().getWorld().playEffect(chunkLoader.getLoc().getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
+		if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+			chunkLoader.getPlayer().spawnParticles(ParticleEffect.builder().type(ParticleTypes.MOBSPAWNER_FLAMES).quantity(10).build(), chunkLoader.getLoc().getPosition());
 			if (chunkLoader.isLoadable()) {
 				BCLForgeLib.instance().addChunkLoader(chunkLoader);
 			}
@@ -92,10 +92,10 @@ public abstract class AHashMapDataStore implements IDataStore {
 		List<CChunkLoader> clList = this.chunkLoaders.get(chunkLoader.getWorldName());
 		if (clList!=null) {
 			if (chunkLoader.blockCheck()) {
-				chunkLoader.getLoc().getLocation().getWorld().playEffect(chunkLoader.getLoc().getLocation(), Effect.POTION_BREAK, 0);
+				chunkLoader.getPlayer().spawnParticles(ParticleEffect.builder().type(ParticleTypes.SPLASH_POTION).quantity(10).build(), chunkLoader.getLoc().getPosition());
 			}
 			clList.remove(chunkLoader);
-			if (chunkLoader.getServerName().equalsIgnoreCase(BetterChunkLoader.instance().config().serverName)) {
+			if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
 				BCLForgeLib.instance().removeChunkLoader(chunkLoader);
 			}
 		}

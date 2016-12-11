@@ -1,6 +1,7 @@
 package net.kaikk.mc.bcl.commands;
 
-import net.kaikk.mc.bcl.commands.elements.ChunksChangeElement;
+import net.kaikk.mc.bcl.commands.elements.ChunksChangeOperatorElement;
+import net.kaikk.mc.bcl.commands.elements.LoaderTypeElement;
 import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -11,31 +12,44 @@ import org.spongepowered.api.text.Text;
  */
 public class CommandManager {
 
-    private CommandSpec cmdChunks;
-    private CommandSpec cmdDelete;
-    private CommandSpec cmdInfo;
-    private CommandSpec cmdPurge;
-    private CommandSpec cmdReload;
+    private CommandSpec cmdBalance = CommandSpec.builder()
+            .arguments(GenericArguments.optional(GenericArguments.onlyOne(GenericArguments.string(Text.of("player")))))
+            .executor(new CmdBalance())
+            .build();
 
-    public CommandManager()
-    {
-        this.cmdInfo = CommandSpec.builder().arguments(GenericArguments.none()).executor(new CmdInfo()).build();
+    private CommandSpec cmdInfo = CommandSpec.builder()
+            .arguments(GenericArguments.none())
+            .executor(new CmdInfo())
+            .build();
 
-        this.cmdChunks = CommandSpec.builder().arguments(new CommandElement[] { new ChunksChangeElement(Text.of("world")), new ItemElement(Text.of("itemType[:id]")) }).executor(new CmdChunks()).build();
+    private CommandSpec cmdChunks = CommandSpec.builder()
+            .arguments(new CommandElement[]{new ChunksChangeOperatorElement(Text.of("change")), GenericArguments.string(Text.of("player")), new LoaderTypeElement(Text.of("type")), GenericArguments.integer(Text.of("value"))})
+            .executor(new CmdChunks())
+            .permission("betterchunkloader.chunks")
+            .build();
 
-        this.cmdList = CommandSpec.builder().arguments(new WorldElement(Text.of("world"))).executor(new CMDList()).build();
+    //private CommandSpec .cmdList = CommandSpec.builder().arguments(new WorldElement(Text.of("world"))).executor(new CmdList()).build();
 
-        this.cmdLog = CommandSpec.builder().arguments(GenericArguments.bool(Text.of("true|false"))).executor(new CMDLog()).build();
+    private CommandSpec cmdDelete = CommandSpec.builder()
+            .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("player"))))
+            .executor(new CmdDelete())
+            .permission("betterchunkloader.delete")
+            .build();
 
-        this.cmdWhatsThis = CommandSpec.builder().executor(new CMDWhatsThis()).build();
-    }
+    private CommandSpec cmdPurge = CommandSpec.builder()
+            .executor(new CmdPurge())
+            .permission("betterchunkloader.purge")
+            .build();
 
     public CommandSpec bclCmdSpec = CommandSpec.builder()
-            .child(this.cmdInfo, new String[] { "info", "i" })
-            .child(this.cmdChunks, new String[] { "chunks", "c" })
-            .child(this.cmdList, new String[] { "list", "ls" })
-            .child(this.cmdLog, new String[] { "log", "l" })
-            .child(this.cmdWhatsThis, new String[] { "whatsthis", "wt" })
+            .child(this.cmdBalance, new String[]{"balance", "bal"})
+            .child(this.cmdInfo, new String[]{"info", "i"})
+            //.child(this.cmdList, new String[] { "list", "ls" })
+            .child(this.cmdChunks, new String[]{"chunks", "c"})
+            .child(this.cmdDelete, new String[]{"delete", "d"})
+            .child(this.cmdPurge, new String[]{"purge"})
             .executor(new CmdBCL())
             .build();
+
+
 }

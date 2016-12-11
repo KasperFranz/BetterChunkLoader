@@ -5,15 +5,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
-
+import java.util.*;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
+import net.kaikk.mc.bcl.config.Config;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+import org.apache.commons.lang3.StringUtils;
 
 public class MySqlDataStore extends AHashMapDataStore {
 	private Connection dbConnection;
@@ -26,18 +24,10 @@ public class MySqlDataStore extends AHashMapDataStore {
 	@Override
 	public void load() {
 		try {
-			// load the java driver for mySQL
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (final Exception e) {
-			BetterChunkLoader.instance().getLogger().warning("Unable to load MySQL database driver. Make sure you've installed it properly.");
-			throw new RuntimeException(e);
-		}
-		
-		try {
 			// init connection
 			this.refreshConnection();
 		} catch (final Exception e) {
-			BetterChunkLoader.instance().getLogger().warning("Unable to connect to database. Check your config file settings.");
+			BetterChunkLoader.instance().getLogger().error("Unable to connect to database. Check your config file settings.");
 			throw new RuntimeException(e);
 		}
 		// create table, if not exists
@@ -74,7 +64,7 @@ public class MySqlDataStore extends AHashMapDataStore {
                     clList.add(chunkLoader);
             }
 		} catch (SQLException e) {
-			BetterChunkLoader.instance().getLogger().warning("Couldn't read chunk loaders data from MySQL server.");
+			BetterChunkLoader.instance().getLogger().error("Couldn't read chunk loaders data from MySQL server.");
 			throw new RuntimeException(e);
 		}
 		
@@ -86,9 +76,22 @@ public class MySqlDataStore extends AHashMapDataStore {
 				this.playersData.put(pd.getPlayerId(), pd);
 			}
 		} catch (SQLException e) {
-			BetterChunkLoader.instance().getLogger().warning("Couldn't read players data from MySQL server.");
+			BetterChunkLoader.instance().getLogger().error("Couldn't read players data from MySQL server.");
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public CChunkLoader getChunkLoaderAt(Location<World> blockLocation) {
+		for (Map.Entry<String, List<CChunkLoader>> entry : this.chunkLoaders.entrySet())
+		{
+			for(CChunkLoader cChunkLoader : entry.getValue()) {
+				if(cChunkLoader.getLoc().equals(blockLocation)){
+					return cChunkLoader;
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -112,7 +115,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 	public void addChunkLoader(CChunkLoader chunkLoader) {
 		super.addChunkLoader(chunkLoader);
 		try {
-		    String statement = "REPLACE INTO bcl_chunkloaders VALUES (\""+chunkLoader.getLocationString()+"\", "+chunkLoader.getRange()+", "+UUIDtoHexString(chunkLoader.getOwner())+", "+chunkLoader.getCreationDate().getTime()+", "+(chunkLoader.isAlwaysOn()?1:0)+", \""+ BetterChunkLoader.instance().config().serverName +"\")";
+		    String statement = "REPLACE INTO bcl_chunkloaders VALUES (\""+chunkLoader.getLocationString()+"\", "+chunkLoader.getRange()+", "+UUIDtoHexString(chunkLoader.getOwner())+", "+chunkLoader.getCreationDate().getTime()+", "+(chunkLoader.isAlwaysOn()?1:0)+", \""+ Config.getConfig().get().getNode("ServerName") +"\")";
             BetterChunkLoader.instance().getLogger().info(statement);
 			this.statement().executeUpdate(statement);
 		} catch (SQLException e) {
@@ -154,7 +157,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 	public void setAlwaysOnChunksLimit(UUID playerId, int amount) {
 		super.setAlwaysOnChunksLimit(playerId, amount);
 		try {
-			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+amount+", "+BetterChunkLoader.instance().config().defaultChunksAmountOnlineOnly+") ON DUPLICATE KEY UPDATE alwayson="+amount);
+			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+amount+", "+Config.getConfig().get().getNode("DefaultChunksAmount").getNode("World").getInt()+") ON DUPLICATE KEY UPDATE alwayson="+amount);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -164,7 +167,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 	public void setOnlineOnlyChunksLimit(UUID playerId, int amount) {
 		super.setOnlineOnlyChunksLimit(playerId, amount);
 		try {
-			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+BetterChunkLoader.instance().config().defaultChunksAmountAlwaysOn+", "+amount+") ON DUPLICATE KEY UPDATE onlineonly="+amount);
+			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+Config.getConfig().get().getNode("DefaultChunksAmount").getNode("Personal").getInt()+", "+amount+") ON DUPLICATE KEY UPDATE onlineonly="+amount);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -174,7 +177,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 	public void addAlwaysOnChunksLimit(UUID playerId, int amount) {
 		super.addAlwaysOnChunksLimit(playerId, amount);
 		try {
-			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+amount+", "+BetterChunkLoader.instance().config().defaultChunksAmountOnlineOnly+") ON DUPLICATE KEY UPDATE alwayson=alwayson+"+amount);
+			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+amount+", "+Config.getConfig().get().getNode("DefaultChunksAmount").getNode("World").getInt()+") ON DUPLICATE KEY UPDATE alwayson=alwayson+"+amount);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -184,7 +187,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 	public void addOnlineOnlyChunksLimit(UUID playerId, int amount) {
 		super.addOnlineOnlyChunksLimit(playerId, amount);
 		try {
-			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+BetterChunkLoader.instance().config().defaultChunksAmountAlwaysOn+", "+amount+") ON DUPLICATE KEY UPDATE onlineonly=onlineonly+"+amount);
+			this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES ("+UUIDtoHexString(playerId)+", "+Config.getConfig().get().getNode("DefaultChunksAmount").getNode("Personal").getInt()+", "+amount+") ON DUPLICATE KEY UPDATE onlineonly=onlineonly+"+amount);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -194,11 +197,11 @@ public class MySqlDataStore extends AHashMapDataStore {
 		if (this.dbConnection == null || this.dbConnection.isClosed()) {
 			// set username/pass properties
 			final Properties connectionProps = new Properties();
-			connectionProps.put("user", BetterChunkLoader.instance().config().mySqlUsername);
-			connectionProps.put("password", BetterChunkLoader.instance().config().mySqlPassword);
+			connectionProps.put("user", Config.getConfig().get().getNode("MySQL").getNode("Username").getString());
+			connectionProps.put("password", Config.getConfig().get().getNode("MySQL").getNode("Password").getString());
 
 			// establish connection
-			this.dbConnection = DriverManager.getConnection("jdbc:mysql://"+BetterChunkLoader.instance().config().mySqlHostname+"/"+BetterChunkLoader.instance().config().mySqlDatabase+"?autoReconnect=true", connectionProps);
+			this.dbConnection = DriverManager.getConnection("jdbc:mysql://"+Config.getConfig().get().getNode("MySQL").getNode("Hostname").getString()+"/"+Config.getConfig().get().getNode("MySQL").getNode("Database").getString()+"?autoReconnect=true", connectionProps);
 		}
 	}
 	
@@ -229,6 +232,6 @@ public class MySqlDataStore extends AHashMapDataStore {
 		if (uuid == null) {
 			return "0";
 		}
-		return "0x" + org.apache.commons.lang.StringUtils.leftPad(Long.toHexString(uuid.getMostSignificantBits()), 16, "0") + org.apache.commons.lang.StringUtils.leftPad(Long.toHexString(uuid.getLeastSignificantBits()), 16, "0");
+		return "0x" + StringUtils.leftPad(Long.toHexString(uuid.getMostSignificantBits()), 16, "0") + StringUtils.leftPad(Long.toHexString(uuid.getLeastSignificantBits()), 16, "0");
 	}
 }

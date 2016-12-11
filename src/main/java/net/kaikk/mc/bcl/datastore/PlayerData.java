@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
+import net.kaikk.mc.bcl.config.Config;
 
 @XmlRootElement
 public class PlayerData {
@@ -16,8 +17,8 @@ public class PlayerData {
 	
 	public PlayerData(UUID playerId) {
 		this.playerId = playerId;
-		this.alwaysOnChunksAmount=BetterChunkLoader.instance().config().defaultChunksAmountAlwaysOn;
-		this.onlineOnlyChunksAmount=BetterChunkLoader.instance().config().defaultChunksAmountOnlineOnly;
+		this.alwaysOnChunksAmount= Config.getConfig().get().getNode("DefaultChunksAmount").getNode("World").getInt();
+		this.onlineOnlyChunksAmount=Config.getConfig().get().getNode("DefaultChunksAmount").getNode("Personal").getInt();
 	}
 
 	public PlayerData(UUID playerId, int alwaysOnChunksAmount, int onlineOnlyChunksAmount) {

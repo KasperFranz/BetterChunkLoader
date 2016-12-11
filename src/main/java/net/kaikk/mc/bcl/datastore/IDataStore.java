@@ -2,9 +2,9 @@ package net.kaikk.mc.bcl.datastore;
 
 import java.util.List;
 import java.util.UUID;
-
-import net.kaikk.mc.bcl.BlockLocation;
 import net.kaikk.mc.bcl.CChunkLoader;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /** Interface for BetterChunkLoader's data store<br>
  * How to create custom data store:<br>
@@ -32,7 +32,7 @@ public interface IDataStore {
 	public abstract List<CChunkLoader> getChunkLoaders(UUID ownerId);
 	
 	/** Get chunk loader at specified location */
-	public abstract CChunkLoader getChunkLoaderAt(BlockLocation blockLocation);
+	public abstract CChunkLoader getChunkLoaderAt(Location<World> blockLocation);
 	
 	/** Add a new chunk loader */
 	public abstract void addChunkLoader(CChunkLoader chunkLoader);
