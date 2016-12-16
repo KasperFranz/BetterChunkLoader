@@ -150,8 +150,11 @@ public class BetterChunkLoader {
 			if (optUser.isPresent()) {
 				//TODO: Add more optional handling here.
 				User user = optUser.get();
-				Instant lastPlayed = user.getPlayer().get().lastPlayed().get();
-				return lastPlayed.getLong(ChronoField.NANO_OF_SECOND);
+				if(user.getPlayer().isPresent()){
+					Instant lastPlayed = user.getPlayer().get().lastPlayed().get();
+					return lastPlayed.getLong(ChronoField.NANO_OF_SECOND);
+				}
+				return 0L;
 			} else {
 				return getPlayerDataLastModified(playerId);
 			}

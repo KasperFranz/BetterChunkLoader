@@ -20,7 +20,6 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.InventoryProperty;
-import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -28,7 +27,6 @@ public class Events {
 
 	@Listener
 	public void onPlayerInteract(InteractBlockEvent.Secondary event) {
-		BetterChunkLoader.instance().getLogger().info("Interact event!");
 		if(!event.getCause().containsType(Player.class)){
 			return;
 		}
@@ -42,7 +40,7 @@ public class Events {
 		if (clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) || clickedBlock.getState().getType().equals(BlockTypes.IRON_BLOCK)) {
 				CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(clickedBlock.getLocation().get());
 				if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType().equals(ItemTypes.BLAZE_ROD)) {
-					if (chunkLoader!=null && chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").toString())) {
+					if (chunkLoader!=null && chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
 						if (player.getUniqueId().equals(chunkLoader.getOwner()) || player.hasPermission("betterchunkloader.edit") || (chunkLoader.isAdminChunkLoader() && player.hasPermission("betterchunkloader.adminloader"))) {
 							chunkLoader.showUI(player);
 						} else {
@@ -66,7 +64,6 @@ public class Events {
 
 	@Listener
 	public void onBlockBreak(ChangeBlockEvent.Break event) {
-		BetterChunkLoader.instance().getLogger().info("Break event!");
 		BlockSnapshot block = event.getTransactions().get(0).getOriginal();
 		if (block==null || (!block.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) && !block.getState().getType().equals(BlockTypes.IRON_BLOCK))) {
 			return;
@@ -75,7 +72,7 @@ public class Events {
 		CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(block.getLocation().get());
 		if (chunkLoader==null) {
 			return;
-		} else if (!chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").toString())) {
+		} else if (!chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
 		    return;
         }
 		
@@ -94,7 +91,6 @@ public class Events {
 	
 	@Listener
 	public void onPlayerLogin(ClientConnectionEvent.Join event) {
-		BetterChunkLoader.instance().getLogger().info("Login event!");
 //		if (event.getResult()!=Result.ALLOWED) {
 //			return;
 //		}
@@ -104,7 +100,7 @@ public class Events {
 		List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(event.getTargetEntity().getUniqueId());
 
 		for (CChunkLoader chunkLoader : clList) {
-			if(chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").toString())) {
+			if(chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
 				if (!chunkLoader.isAlwaysOn() && chunkLoader.blockCheck()) {
 					BCLForgeLib.instance().addChunkLoader(chunkLoader);
 				}
@@ -118,7 +114,7 @@ public class Events {
 		List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(event.getTargetEntity().getUniqueId());
 
 		for (CChunkLoader chunkLoader : clList) {
-			if(chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").toString())) {
+			if(chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
 				if (!chunkLoader.isAlwaysOn()) {
 					BCLForgeLib.instance().removeChunkLoader(chunkLoader);
 				}
@@ -133,10 +129,10 @@ public class Events {
 		if(!optionalCChunkLoaderInvProp.isPresent()) {
 			return;
 		}
+
 		CChunkLoaderInvProp cChunkLoaderInvProp = (CChunkLoaderInvProp)optionalCChunkLoaderInvProp.get();
 		CChunkLoader chunkLoader = cChunkLoaderInvProp.getValue();
     	if (event.getCause().last(Player.class).isPresent()) {
-            BetterChunkLoader.instance().getLogger().info("is player inv click");
     		Player player = event.getCause().last(Player.class).get();
 
     		event.setCancelled(true);
@@ -162,25 +158,21 @@ public class Events {
             } else {
     		    return;
             }
-            BetterChunkLoader.instance().getLogger().info("test1");
+            BetterChunkLoader.instance().getLogger().info("FISTCHAR:" +firstChar);
     		Integer pos;
     		try {
                 pos = Integer.parseInt(firstChar);
             } catch(NumberFormatException e){
     		    pos = 0;
             }
+            BetterChunkLoader.instance().getLogger().info("POS IS:" +pos);
 
-            BetterChunkLoader.instance().getLogger().info("POS IS "+pos);
-            BetterChunkLoader.instance().getLogger().info("test2");
     		if(chunkLoader.getRange()!=-1) {
-                BetterChunkLoader.instance().getLogger().info("test3");
     			if (pos==0) {
         			// remove the chunk loader
         			DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
         			closeInventory(player);
-        		} else if (pos>1 && pos<7) {
-        			// change range
-        			pos-=2;
+        		} else {
         			
         			// if higher range, check if the player has enough free chunks
         			if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.unlimitedchunks")) {
@@ -206,9 +198,7 @@ public class Events {
     				player.sendMessage(Text.of(TextColors.GOLD,"Chunk Loader updated."));
     				closeInventory(player);
         		}
-    		} else if (pos>1 && pos<7) {
-                BetterChunkLoader.instance().getLogger().info("test4");
-    			pos-=2;
+    		} else {
     			
     			if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.unlimitedchunks")) {
 	    			int needed = (1+(pos*2))*(1+(pos*2));
@@ -238,7 +228,6 @@ public class Events {
     
     @Listener
     public void onWorldLoad(LoadWorldEvent event) {
-		BetterChunkLoader.instance().getLogger().info("World load event!");
 		for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders(event.getTargetWorld().getName())) {
 			if (cl.isLoadable()) {
 				BCLForgeLib.instance().addChunkLoader(cl);

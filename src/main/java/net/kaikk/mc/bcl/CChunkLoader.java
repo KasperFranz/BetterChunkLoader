@@ -96,17 +96,14 @@ public class CChunkLoader extends ChunkLoader {
 		}
 		return this.getOfflinePlayer().getName();
 	}
-	
-	public int side() {
-		return 1+(super.getRange()*2);
-	}
+
 	
 	public int size() {
-		return this.side()*this.side();
+		return super.getRange()*super.getRange();
 	}
 	
 	public String sizeX() {
-		return this.side()+"x"+this.side();
+		return  super.getRange()+"x"+ super.getRange();
 	}
 	
 	public Text info() {
@@ -151,7 +148,9 @@ public class CChunkLoader extends ChunkLoader {
 	}
 	
 	public String getLocationString() {
-		return loc.toString();
+		String locString = "";
+		locString+=loc.getExtent().getName()+":"+loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ();
+		return locString;
 	}
 
 	public String getServerName() {
@@ -201,23 +200,23 @@ public class CChunkLoader extends ChunkLoader {
 		}
 		InventoryArchetype inventoryArchetype = InventoryArchetype.builder().from(InventoryArchetypes.MENU_ROW).property(CChunkLoaderInvProp.of(this)).build("archid","archname");
 		Inventory inventory = Inventory.builder().of(inventoryArchetype).property(InventoryTitle.PROPERTY_NAME , InventoryTitle.of(Text.of(title))).build(BetterChunkLoader.instance());
-
-		addInventoryOption(inventory, 0, ItemTypes.REDSTONE_TORCH, "Remove");
-		
-		for (byte i=0; i<5; i++) {
-			addInventoryOption(inventory, i+2, ItemTypes.MAP, "Size "+this.sizeX(i)+(this.getRange()==i?" [selected]":""));
+		if(this.range!=-1) {
+            addInventoryOption(inventory, 0, ItemTypes.REDSTONE_TORCH, "Remove");
+        }
+        int pos = 2;
+		for (byte i=1; i<10;) {
+			addInventoryOption(inventory, pos, ItemTypes.MAP, "Size "+this.sizeX(i)+(this.getRange()==i?" [selected]":""));
+			pos++;
+            i+=2;
 		}
 		
 		player.openInventory(inventory, Cause.of(NamedCause.simulated(player)));
 	}
 	
 	private String sizeX(byte i) {
-		return this.side(i)+"x"+this.side(i);
+		return i+"x"+i;
 	}
-	
-	private int side(byte i) {
-		return 1+(i*2);
-	}
+
 
 	private static void addInventoryOption(Inventory inventory, int position, ItemType icon, String name) {
 		Iterable<Slot> slotIterable = inventory.slots();

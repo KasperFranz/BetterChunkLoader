@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>org.spongepowered</groupId>
 			<artifactId>spongeapi</artifactId>
-			<version>5.1.0-20161126.155936-7</version>
+			<version>5.1.0-20161209.203735-8</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
