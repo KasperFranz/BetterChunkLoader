@@ -241,7 +241,8 @@ public class CChunkLoader extends ChunkLoader {
 	void setAlwaysOn(boolean isAlwaysOn) {
 		this.isAlwaysOn = isAlwaysOn;
 	}
-	
+
+	/* Worth noting that the range is NOT the radius anymore. i.e. a 3x3 chunkloader's "range" is now 3, previously it would have been 1. */
 	@Override
 	public byte getRange() {
 		return super.range;

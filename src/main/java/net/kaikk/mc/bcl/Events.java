@@ -177,7 +177,7 @@ public class Events {
         			// if higher range, check if the player has enough free chunks
         			if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.unlimitedchunks")) {
 	        			if (pos>chunkLoader.getRange()) {
-	        				int needed = ((1+(pos*2))*(1+(pos*2)))-chunkLoader.size();
+	        				int needed = (pos*pos)-chunkLoader.size();
 	        				int available;
 	        				if (chunkLoader.isAlwaysOn()) {
 	        					available=DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
@@ -201,7 +201,7 @@ public class Events {
     		} else {
     			
     			if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.unlimitedchunks")) {
-	    			int needed = (1+(pos*2))*(1+(pos*2));
+	    			int needed = (pos*pos);
 					int available;
 					if (chunkLoader.isAlwaysOn()) {
 						available=DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
