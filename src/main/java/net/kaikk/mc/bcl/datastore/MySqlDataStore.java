@@ -49,7 +49,6 @@ public class MySqlDataStore extends AHashMapDataStore {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		
 		// load data
 		this.chunkLoaders = new HashMap<String, List<CChunkLoader>>();
 		try {
@@ -64,10 +63,9 @@ public class MySqlDataStore extends AHashMapDataStore {
                     clList.add(chunkLoader);
             }
 		} catch (SQLException e) {
-			BetterChunkLoader.instance().getLogger().error("Couldn't read chunk loaders data from MySQL server.");
+			BetterChunkLoader.instance().getLogger().info("Couldn't read chunk loaders data from MySQL server.");
 			throw new RuntimeException(e);
 		}
-		
 		this.playersData = new HashMap<UUID, PlayerData>();
 		try {
 			ResultSet rs = this.statement().executeQuery("SELECT * FROM bcl_playersdata");
@@ -76,7 +74,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 				this.playersData.put(pd.getPlayerId(), pd);
 			}
 		} catch (SQLException e) {
-			BetterChunkLoader.instance().getLogger().error("Couldn't read players data from MySQL server.");
+			BetterChunkLoader.instance().getLogger().info("Couldn't read players data from MySQL server.");
 			throw new RuntimeException(e);
 		}
 	}

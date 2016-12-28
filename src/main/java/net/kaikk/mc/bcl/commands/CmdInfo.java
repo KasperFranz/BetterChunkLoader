@@ -24,11 +24,6 @@ public class CmdInfo implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
 
-//        if (!sender.hasPermission("betterchunkloader.info")) {
-//            sender.sendMessage(ChatColor.RED + "You don't have permission to run this command.");
-//            return false;
-//        }
-
         List<CChunkLoader> chunkLoaders = DataStoreManager.getDataStore().getChunkLoaders();
         if (chunkLoaders.isEmpty()) {
             Messenger.sendNoInfoMessage(commandSource);

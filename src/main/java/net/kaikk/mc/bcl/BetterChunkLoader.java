@@ -173,7 +173,7 @@ public class BetterChunkLoader {
 	}
 
 	public Logger getLogger() {
-	    return this.logger;
+	    return logger;
     }
 
 	public static Text getPrefix() {

@@ -158,14 +158,12 @@ public class Events {
             } else {
     		    return;
             }
-            BetterChunkLoader.instance().getLogger().info("FISTCHAR:" +firstChar);
     		Integer pos;
     		try {
                 pos = Integer.parseInt(firstChar);
             } catch(NumberFormatException e){
     		    pos = 0;
             }
-            BetterChunkLoader.instance().getLogger().info("POS IS:" +pos);
 
     		if(chunkLoader.getRange()!=-1) {
     			if (pos==0) {
@@ -173,11 +171,12 @@ public class Events {
         			DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
         			closeInventory(player);
         		} else {
-        			
+					pos = chunkLoader.radiusFromSide(pos);
         			// if higher range, check if the player has enough free chunks
         			if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.unlimitedchunks")) {
+
 	        			if (pos>chunkLoader.getRange()) {
-	        				int needed = (pos*pos)-chunkLoader.size();
+							int needed = ((1+(pos*2))*(1+(pos*2)))-chunkLoader.size();
 	        				int available;
 	        				if (chunkLoader.isAlwaysOn()) {
 	        					available=DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
@@ -199,9 +198,10 @@ public class Events {
     				closeInventory(player);
         		}
     		} else {
-    			
+				pos = chunkLoader.radiusFromSide(pos);
     			if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.unlimitedchunks")) {
-	    			int needed = (pos*pos);
+
+					int needed = (1+(pos*2))*(1+(pos*2));
 					int available;
 					if (chunkLoader.isAlwaysOn()) {
 						available=DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());

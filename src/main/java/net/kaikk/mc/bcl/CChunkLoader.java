@@ -54,16 +54,20 @@ public class CChunkLoader extends ChunkLoader {
 	
 	public CChunkLoader(String location, byte range, UUID owner, Date creationDate, boolean isAlwaysOn, String serverName) {
 		super(0, 0, "", range);
+        this.serverName = serverName;
 		this.setLocationString(location);
 		this.owner = owner;
 		this.creationDate = creationDate;
 		this.isAlwaysOn = isAlwaysOn;
-		this.serverName = serverName;
 	}
 
 	public boolean isExpired() {
 		return System.currentTimeMillis()-this.getOwnerLastPlayed()>Config.getConfig().get().getNode("MaxHoursOffline").getInt()*3600000L;
 	}
+
+	public String getServer() {
+	    return this.serverName;
+    }
 
 	public User getOfflinePlayer() {
 		Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
@@ -97,13 +101,16 @@ public class CChunkLoader extends ChunkLoader {
 		return this.getOfflinePlayer().getName();
 	}
 
-	
+	public int side() {
+		return 1+(super.getRange()*2);
+	}
+
 	public int size() {
-		return super.getRange()*super.getRange();
+		return this.side()*this.side();
 	}
 	
 	public String sizeX() {
-		return  super.getRange()+"x"+ super.getRange();
+		return this.side()+"x"+this.side();
 	}
 	
 	public Text info() {
@@ -161,15 +168,19 @@ public class CChunkLoader extends ChunkLoader {
 	@XmlAttribute(name="loc")
 	public void setLocationString(String location) {
 		try {
-			String[] s = location.split(":");
-			String[] coords = s[1].split(",");
-			Integer x=Integer.valueOf(coords[0]);
-			Integer y=Integer.valueOf(coords[1]);
-			Integer z=Integer.valueOf(coords[2]);
-			super.worldName=s[0];
-			this.loc= new Location<World>(Sponge.getServer().getWorld(s[0]).get(),x,y,z);
-			super.chunkX=this.loc.getChunkPosition().getX();
-			super.chunkZ=this.loc.getChunkPosition().getZ();
+		    if(this.serverName.equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+                String[] s = location.split(":");
+                String[] coords = s[1].split(",");
+                Integer x = Integer.valueOf(coords[0]);
+                Integer y = Integer.valueOf(coords[1]);
+                Integer z = Integer.valueOf(coords[2]);
+                super.worldName = s[0];
+                this.loc = new Location<World>(Sponge.getServer().getWorld(s[0]).get(), x, y, z);
+                super.chunkX = this.loc.getChunkPosition().getX();
+                super.chunkZ = this.loc.getChunkPosition().getZ();
+            } else {
+		        super.worldName = "Another server...";
+            }
 		} catch(Exception e) {
 			throw new RuntimeException("Wrong chunk loader location: "+location);
 		}
@@ -204,17 +215,25 @@ public class CChunkLoader extends ChunkLoader {
             addInventoryOption(inventory, 0, ItemTypes.REDSTONE_TORCH, "Remove");
         }
         int pos = 2;
-		for (byte i=1; i<10;) {
+		for (byte i=0; i<5;) {
 			addInventoryOption(inventory, pos, ItemTypes.MAP, "Size "+this.sizeX(i)+(this.getRange()==i?" [selected]":""));
 			pos++;
-            i+=2;
+            i++;
 		}
 		
 		player.openInventory(inventory, Cause.of(NamedCause.simulated(player)));
 	}
+
+	public int radiusFromSide(int side){
+	    return (side-1)/2;
+    }
+
+	public int side(byte i) {
+		return 1+(i*2);
+	}
 	
 	private String sizeX(byte i) {
-		return i+"x"+i;
+		return this.side(i)+"x"+this.side(i);
 	}
 
 
@@ -242,7 +261,6 @@ public class CChunkLoader extends ChunkLoader {
 		this.isAlwaysOn = isAlwaysOn;
 	}
 
-	/* Worth noting that the range is NOT the radius anymore. i.e. a 3x3 chunkloader's "range" is now 3, previously it would have been 1. */
 	@Override
 	public byte getRange() {
 		return super.range;
