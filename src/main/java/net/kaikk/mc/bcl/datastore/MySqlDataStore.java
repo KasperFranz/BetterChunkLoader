@@ -84,8 +84,10 @@ public class MySqlDataStore extends AHashMapDataStore {
 		for (Map.Entry<String, List<CChunkLoader>> entry : this.chunkLoaders.entrySet())
 		{
 			for(CChunkLoader cChunkLoader : entry.getValue()) {
-				if(cChunkLoader.getLoc().equals(blockLocation)){
-					return cChunkLoader;
+				if(cChunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+					if (cChunkLoader.getLoc().equals(blockLocation)) {
+						return cChunkLoader;
+					}
 				}
 			}
 		}

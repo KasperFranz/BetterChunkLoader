@@ -28,7 +28,7 @@ public class CommandManager {
             .permission("betterchunkloader.chunks")
             .build();
 
-    private CommandSpec cmdList = CommandSpec.builder().arguments().build();
+    //private CommandSpec cmdList = CommandSpec.builder().arguments(GenericArguments.none()).build();
 
     private CommandSpec cmdDelete = CommandSpec.builder()
             .arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("player"))))
@@ -44,7 +44,7 @@ public class CommandManager {
     public CommandSpec bclCmdSpec = CommandSpec.builder()
             .child(this.cmdBalance, new String[]{"balance", "bal"})
             .child(this.cmdInfo, new String[]{"info", "i"})
-            .child(this.cmdList, new String[] { "list", "ls" })
+            //.child(this.cmdList, new String[] { "list", "ls" })
             .child(this.cmdChunks, new String[]{"chunks", "c"})
             .child(this.cmdDelete, new String[]{"delete", "d"})
             .child(this.cmdPurge, new String[]{"purge"})
