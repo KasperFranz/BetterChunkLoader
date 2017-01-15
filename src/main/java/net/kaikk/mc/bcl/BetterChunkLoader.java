@@ -17,6 +17,7 @@ import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
@@ -141,31 +142,36 @@ public class BetterChunkLoader {
 	}
 	
 	public static long getPlayerLastPlayed(UUID playerId) {
-		Optional<Player> onlinePlayer = Sponge.getServer().getPlayer(playerId);
-		if(onlinePlayer.isPresent()) {
-			return 0L; //player is online
-		} else {
-			Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
-			Optional<User> optUser = userStorage.get().get(playerId);
-			if (optUser.isPresent()) {
-				//TODO: Add more optional handling here.
-				User user = optUser.get();
-				if(user.getPlayer().isPresent()){
-					Instant lastPlayed = user.getPlayer().get().lastPlayed().get();
-					return lastPlayed.getLong(ChronoField.NANO_OF_SECOND);
-				}
-				return 0L;
-			} else {
-				return getPlayerDataLastModified(playerId);
-			}
-		}
-		//return 0;
+//		Optional<Player> onlinePlayer = Sponge.getServer().getPlayer(playerId);
+//		if(onlinePlayer.isPresent()) {
+//			return 0L; //player is online
+//		} else {
+//			Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
+//			Optional<User> optUser = userStorage.get().get(playerId);
+//			if (optUser.isPresent()) {
+//				User user = optUser.get();
+//				if(user.getPlayer().isPresent()){
+//					//player is online
+//					Instant lastPlayed = user.getPlayer().get().lastPlayed().get();
+//					return lastPlayed.getLong(ChronoField.NANO_OF_SECOND);
+//				} else {
+//					//player is offline
+//					Instant instant = user.get(Keys.LAST_DATE_PLAYED).get();
+//					return instant.getLong(ChronoField.NANO_OF_SECOND);
+//				}
+//			} else {
+//				return getPlayerDataLastModified(playerId);
+//			}
+//		}
+		//TODO: Reimplement the above. Ref: https://forums.spongepowered.org/t/get-last-played-instance-of-offline-player/16829/11
+		return getPlayerDataLastModified(playerId);
+
 	}
 	
 	public static long getPlayerDataLastModified(UUID playerId) {
 		String name = Sponge.getServer().getDefaultWorldName();
-		Path path = Sponge.getGame().getGameDirectory().resolve("world/"+name);
-		File playerData =new File(path.toString(), "playerdata"+File.separator+playerId.toString()+".dat");
+		Path path = Sponge.getGame().getGameDirectory().resolve(name);
+		File playerData = new File(path.toString(), "playerdata"+File.separator+playerId.toString()+".dat");
 		if (playerData.exists()) {
 			return playerData.lastModified();
 		}
