@@ -28,7 +28,7 @@ import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-@Plugin(id = "betterchunkloader", name = "BetterChunkLoader", version = "1.0")
+@Plugin(id = "betterchunkloader", name = "BetterChunkLoader", version = "1.0", authors = "KaiNoMood, Rob5Underscores")
 public class BetterChunkLoader {
 	private static BetterChunkLoader instance;
 	@Inject

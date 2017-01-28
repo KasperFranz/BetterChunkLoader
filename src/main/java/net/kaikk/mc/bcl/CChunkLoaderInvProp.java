@@ -4,7 +4,7 @@ import org.spongepowered.api.data.Property;
 import org.spongepowered.api.item.inventory.property.AbstractInventoryProperty;
 
 /**
- * Created by mcrob on 10/12/2016.
+ * Created by Rob5Underscores on 10/12/2016.
  */
 public class CChunkLoaderInvProp extends AbstractInventoryProperty<String, CChunkLoader>  {
 

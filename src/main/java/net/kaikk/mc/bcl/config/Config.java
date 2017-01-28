@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileAttribute;
 
 /**
- * Created by mcrob on 10/12/2016.
+ * Created by Rob5Underscores on 10/12/2016.
  */
 public class Config implements Configurable
 {

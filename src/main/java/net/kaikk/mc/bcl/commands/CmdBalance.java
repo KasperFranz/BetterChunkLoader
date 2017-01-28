@@ -15,7 +15,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import java.util.Optional;
 
 /**
- * Created by mcrob on 10/12/2016.
+ * Created by Rob5Underscores on 10/12/2016.
  */
 public class CmdBalance implements CommandExecutor {
     @Override

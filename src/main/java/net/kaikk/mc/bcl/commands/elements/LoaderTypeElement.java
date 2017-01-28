@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by mcrob on 10/12/2016.
+ * Created by Rob5Underscores on 10/12/2016.
  */
 public class LoaderTypeElement extends CommandElement {
 
