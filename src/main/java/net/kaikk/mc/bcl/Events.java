@@ -121,6 +121,16 @@ public class Events {
 			}
 		}
 	}
+	@Listener
+	public void onInventoryInteract(ClickInventoryEvent event) {
+		Optional<InventoryProperty<String, ?>> optionalCChunkLoaderInvProp = event.getTargetInventory().getArchetype().getProperty("cchunkloaderinvprop");
+		if(!optionalCChunkLoaderInvProp.isPresent()) {
+			return;
+		}
+		if(!(event instanceof ClickInventoryEvent.Primary)){
+			event.setCancelled(true);
+		}
+	}
 
     @Listener
     public void onInventoryClick(ClickInventoryEvent.Primary event) {

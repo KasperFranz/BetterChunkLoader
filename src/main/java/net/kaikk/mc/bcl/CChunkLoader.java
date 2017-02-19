@@ -21,14 +21,12 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.*;
-import org.spongepowered.api.item.inventory.property.InventoryCapacity;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
-import sun.awt.CausedFocusEvent;
 
 
 @XmlRootElement
@@ -153,7 +151,7 @@ public class CChunkLoader extends ChunkLoader {
 	public Location<World> getLoc() {
 		return loc;
 	}
-	
+
 	public String getLocationString() {
 		String locString = "";
 		locString+=loc.getExtent().getName()+":"+loc.getBlockX()+","+loc.getBlockY()+","+loc.getBlockZ();
@@ -205,7 +203,7 @@ public class CChunkLoader extends ChunkLoader {
 	
 	/** Shows the chunk loader's user interface to the specified player */
 	void showUI(Player player) {
-		String title = (this.range!=-1 ? "BCL:"+this.getOwnerName()+"@"+this.getLoc() : "New "+(this.isAdminChunkLoader()?"Admin ":"")+"BetterChunkLoader");
+		String title = (this.range!=-1 ? "BCL:"+this.getOwnerName()+"@"+getLocationString() : "New "+(this.isAdminChunkLoader()?"Admin ":"")+"BetterChunkLoader");
 		if (title.length()>32) {
 			title=title.substring(0, 32);
 		}

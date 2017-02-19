@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Instant;
-import java.time.temporal.ChronoField;
-import java.util.Optional;
 import java.util.UUID;
 import com.google.inject.Inject;
 import net.kaikk.mc.bcl.commands.CommandManager;
@@ -17,18 +14,14 @@ import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-@Plugin(id = "betterchunkloader", name = "BetterChunkLoader", version = "1.0", authors = "KaiNoMood, Rob5Underscores")
+@Plugin(id = "betterchunkloader", name = "BetterChunkLoader", version = "1.0", authors = "KaiNoMood, Rob5Underscores, KasperFranz")
 public class BetterChunkLoader {
 	private static BetterChunkLoader instance;
 	@Inject
