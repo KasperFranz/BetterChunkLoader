@@ -6,13 +6,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 import com.google.inject.Inject;
-import net.kaikk.mc.bcl.commands.CommandManager;
+import net.kaikk.mc.bcl.commands.*;
+import net.kaikk.mc.bcl.commands.elements.ChunksChangeOperatorElement;
+import net.kaikk.mc.bcl.commands.elements.LoaderTypeElement;
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.MySqlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.args.CommandElement;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -127,7 +132,61 @@ public class BetterChunkLoader {
 
 	private void initializeCommands() {
 
-		Sponge.getCommandManager().register(this, new CommandManager().bclCmdSpec, "betterchunkloader", "bcl");
+
+		CommandSpec cmdInfo = CommandSpec.builder()
+				.arguments(GenericArguments.none())
+				.permission("betterchunkloader.info")
+				.description(Text.of("Get general information about the usage on the server."))
+				.executor(new CmdInfo())
+				.build();
+
+
+		//private CommandSpec cmdList = CommandSpec.builder().arguments(GenericArguments.none()).build();
+
+
+		CommandSpec cmdBalance = CommandSpec.builder()
+				.arguments(GenericArguments.requiringPermission(
+						GenericArguments.optional(GenericArguments.string(Text.of("player"))),"betterchunkloader.balance.others"))
+				.permission("betterchunkloading.balance")
+				.executor(new CmdBalance())
+				.description(Text.of("Get the balance of your different types of chunkloaders."))
+				.build();
+
+
+		CommandSpec cmdChunks = CommandSpec.builder()
+				.arguments(new CommandElement[]{new ChunksChangeOperatorElement(Text.of("change")),
+						GenericArguments.player(Text.of("player")),
+						new LoaderTypeElement(Text.of("type")),
+						GenericArguments.integer(Text.of("value"))}
+				)
+				.executor(new CmdChunks())
+				.permission("betterchunkloader.chunks")
+				.description(Text.of("add, set remove a players type of chunkloaders."))
+				.build();
+
+		CommandSpec cmdDelete = CommandSpec.builder()
+				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("player"))))
+				.executor(new CmdDelete())
+				.permission("betterchunkloader.delete")
+				.description(Text.of("Delete the specified players chunkloaders"))
+				.build();
+
+		CommandSpec cmdPurge = CommandSpec.builder()
+				.executor(new CmdPurge())
+				.permission("betterchunkloader.purge")
+				.description(Text.of("remove all chunks there is in not existing dimensions."))
+				.build();
+
+		CommandSpec bclCmdSpec = CommandSpec.builder()
+				.child(cmdBalance, new String[]{"balance", "bal"})
+				.child(cmdInfo, new String[]{"info", "i"})
+				//.child(cmdList, new String[] { "list", "ls" })
+				.child(cmdChunks, new String[]{"chunks", "c"})
+				.child(cmdDelete, new String[]{"delete", "d"})
+				.child(cmdPurge, new String[]{"purge"})
+				.executor(new CmdBCL())
+				.build();
+
 	}
 
 	public static BetterChunkLoader instance() {

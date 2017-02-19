@@ -16,8 +16,12 @@ public class CmdBCL implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
         Text message = BetterChunkLoader.getPrefix().concat(Text.builder("Commands").color(TextColors.LIGHT_PURPLE).build());
-        message = message.concat(Text.NEW_LINE).concat(Text.builder("/bcl bal").color(TextColors.BLUE).build());
-        message = message.concat(Text.NEW_LINE).concat(Text.builder("/bcl info").color(TextColors.BLUE).build());
+        if(commandSource.hasPermission("betterchunkloader.balance")) {
+            message = message.concat(Text.NEW_LINE).concat(Text.builder("/bcl bal").color(TextColors.BLUE).build());
+        }
+        if(commandSource.hasPermission("betterchunkloader.info")) {
+            message = message.concat(Text.NEW_LINE).concat(Text.builder("/bcl info").color(TextColors.BLUE).build());
+        }
         if(commandSource.hasPermission("betterchunkloader.chunks")) {
             message = message.concat(Text.NEW_LINE).concat(Text.builder("/bcl chunks <add|set|remove> <player> <type> <amount>").color(TextColors.BLUE).build());
         }
@@ -30,4 +34,6 @@ public class CmdBCL implements CommandExecutor {
         commandSource.sendMessage(message);
         return CommandResult.success();
     }
+
+    public void register(){}
 }
