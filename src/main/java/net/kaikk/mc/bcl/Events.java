@@ -41,22 +41,31 @@ public class Events {
 		}
 		
 		if (clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) || clickedBlock.getState().getType().equals(BlockTypes.IRON_BLOCK)) {
+				//todo: This should really be with the world too
 				CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(clickedBlock.getLocation().get());
-				if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType().equals(ItemTypes.BLAZE_ROD)) {
-					if (chunkLoader!=null && chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
-						if (player.getUniqueId().equals(chunkLoader.getOwner()) || player.hasPermission("betterchunkloader.edit") || (chunkLoader.isAdminChunkLoader() && player.hasPermission("betterchunkloader.adminloader"))) {
-							chunkLoader.showUI(player);
-						} else {
-							player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
-						}
-					} else {
-							UUID uid=player.getUniqueId();
+				String serverName = Config.getConfig().get().getNode("ServerName").getString();
+				boolean ChunkLoaderOnThisServer = chunkLoader!=null && chunkLoader.getServerName().equalsIgnoreCase(serverName);
 
-							chunkLoader = new CChunkLoader((int) (Math.floor(clickedBlock.getLocation().get().getBlockX()/16.00)), (int) (Math.floor(clickedBlock.getLocation().get().getBlockZ()/16.00)), clickedBlock.getLocation().get().getExtent().getName(), (byte) -1, uid, clickedBlock.getLocation().get(), null, clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK), Config.getConfig().get().getNode("ServerName").getString());
-							chunkLoader.showUI(player);
+				if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType().equals(ItemTypes.BLAZE_ROD)) {
+					boolean adminLoader = chunkLoader.isAdminChunkLoader() && player.hasPermission("betterchunkloader.adminloader");
+					// if the chunkloader is not on this server or the player can edit chunkloader or if it is an admin chunkloader then we should show the UI
+					if (!ChunkLoaderOnThisServer || (player.getUniqueId().equals(chunkLoader.getOwner()) || player.hasPermission("betterchunkloader.edit.others") || adminLoader)) {
+						// if the chunkloader is not present lets make one!
+						if(chunkLoader == null) {
+							UUID uid = player.getUniqueId();
+							int x = (int) Math.floor(clickedBlock.getLocation().get().getBlockX() / 16.00);
+							int y = (int) Math.floor(clickedBlock.getLocation().get().getBlockZ() / 16.00);
+							String worldName = clickedBlock.getLocation().get().getExtent().getName();
+							boolean alwaysOn = clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK);
+							chunkLoader = new CChunkLoader(x, y, worldName, (byte) -1, uid, clickedBlock.getLocation().get(), null, alwaysOn, serverName);
+						}
+
+						chunkLoader.showUI(player);
+					} else {
+						player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
 					}
 				} else {
-					if (chunkLoader!=null && chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+					if (ChunkLoaderOnThisServer) {
 						player.sendMessage(chunkLoader.info());
 					} else {
 						player.sendMessage(Text.of(TextColors.GOLD, "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a blaze rod."));
@@ -72,6 +81,7 @@ public class Events {
 			return;
 		}
 
+		//todo: This should really be with the world too
 		CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(block.getLocation().get());
 		if (chunkLoader==null) {
 			return;
@@ -81,25 +91,21 @@ public class Events {
 		
 		DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
 		
-		Player player = event.getCause().last(Player.class).get();
-		player.sendMessage(Text.of(TextColors.RED, "Chunk loader removed."));
-		
+		Optional<Player> player = event.getCause().last(Player.class);
+		String breaker = player.isPresent() ?player.get().getName() : "unknown";
 		Player owner = chunkLoader.getPlayer();
-		if (owner!=null && player!=owner) {
-			owner.sendMessage(Text.of(TextColors.RED, "Your chunk loader at "+chunkLoader.getLoc().toString()+" has been removed by "+player.getName()+"."));
+		if (owner!=null && !owner.getName().equals(breaker)) {
+			owner.sendMessage(Text.of(TextColors.RED, "Your chunk loader at "+chunkLoader.getLoc().toString()+" has been removed by "+breaker+"."));
 		}
 		
-		BetterChunkLoader.instance().getLogger().info(player.getName()+" broke "+chunkLoader.getOwnerName()+"'s chunk loader at "+chunkLoader.getLocationString());
+		BetterChunkLoader.instance().getLogger().info(breaker+" broke "+chunkLoader.getOwnerName()+"'s chunk loader at "+chunkLoader.getLocationString());
 	}
 	
 	@Listener
 	public void onPlayerLogin(ClientConnectionEvent.Join event) {
-//		if (event.getResult()!=Result.ALLOWED) {
-//			return;
-//		}
-
 		DataStoreManager.getDataStore().refreshPlayer(event.getTargetEntity().getUniqueId());
 
+		//todo: This should really be with the world too
 		List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(event.getTargetEntity().getUniqueId());
 
 		for (CChunkLoader chunkLoader : clList) {
@@ -113,7 +119,7 @@ public class Events {
 	
 	@Listener
 	public void onPlayerQuit(ClientConnectionEvent.Disconnect event) {
-		BetterChunkLoader.instance().getLogger().info("Quit event!");
+		//todo: This should really be with the world too
 		List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(event.getTargetEntity().getUniqueId());
 
 		for (CChunkLoader chunkLoader : clList) {
@@ -124,6 +130,9 @@ public class Events {
 			}
 		}
 	}
+
+	//This is only here to make sure that you ca't do weird shit with the inventory.
+	//Todo: I saw on the forum somehow to merge the 2 events, But i forgot where i found it, if this is found again it might be usefull to merge these 2
 	@Listener
 	public void onInventoryInteract(ClickInventoryEvent event) {
 		Optional<InventoryProperty<String, ?>> optionalCChunkLoaderInvProp = event.getTargetInventory().getArchetype().getProperty("cchunkloaderinvprop");
@@ -135,7 +144,8 @@ public class Events {
 		}
 	}
 
-
+	//This is only here to make sure that you ca't do weird shit with the inventory.
+	//Todo: I saw on the forum somehow to merge the 2 events, But i forgot where i found it, if this is found again it might be usefull to merge these 2
 	@Listener
 	public void onInventoryInteractTest(ChangeInventoryEvent event) {
 		Optional<InventoryProperty<String, ?>> optionalCChunkLoaderInvProp = event.getTargetInventory().getArchetype().getProperty("cchunkloaderinvprop");
@@ -157,7 +167,6 @@ public class Events {
 
 		event.setCancelled(true);
 
-		BetterChunkLoader.instance().getLogger().info("event is cancelled");
 		CChunkLoaderInvProp cChunkLoaderInvProp = (CChunkLoaderInvProp)optionalCChunkLoaderInvProp.get();
 		CChunkLoader chunkLoader = cChunkLoaderInvProp.getValue();
     	if (event.getCause().last(Player.class).isPresent()) {
@@ -167,30 +176,59 @@ public class Events {
     			return;
     		}
     		
-    		if (chunkLoader.isAdminChunkLoader()) {
-    			if (!player.hasPermission("betterchunkloader.adminloader")) {
-					Messenger.sendNoPermission(player);
-					return;
-    			}
-    		} else {
-	    		if (!player.getUniqueId().equals(chunkLoader.getOwner()) && !player.hasPermission("betterchunkloader.edit")) {
-	    			player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
-	    			return;
-	    		}
+    		if (chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.adminloader")) {
+				Messenger.sendNoPermission(player);
+				return;
     		}
-    		String firstChar;
-    		if(event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).isPresent()) {
-    		    firstChar = String.valueOf(event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).get().toPlain().charAt(5));
-            } else {
-    		    return;
+
+			if (!player.getUniqueId().equals(chunkLoader.getOwner()) && !player.hasPermission("betterchunkloader.edit.others")) {
+				player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
+				return;
+			}
+
+    		if(!event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).isPresent()) {
+    			return;
             }
+			String firstChar = String.valueOf(event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).get().toPlain().charAt(5));
     		Integer pos;
+
     		try {
                 pos = Integer.parseInt(firstChar);
             } catch(NumberFormatException e){
     		    pos = 0;
             }
 
+
+			//todo these 2 might be more useful combined as most of the logic is the same!.
+            // -1 == create new chunkloader (as the old chunkLoaders range was 0)
+			if(chunkLoader.getRange() == -1){
+				pos = chunkLoader.radiusFromSide(pos);
+				if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.unlimitedchunks")) {
+
+					int needed = (1+(pos*2))*(1+(pos*2));
+					int available;
+					if (chunkLoader.isAlwaysOn()) {
+						available=DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
+					} else {
+						available=DataStoreManager.getDataStore().getOnlineOnlyFreeChunksAmount(chunkLoader.getOwner());
+					}
+
+					if (needed>available) {
+						player.sendMessage(Text.of(TextColors.RED, "You don't have enough free chunks! Needed: "+needed+". Available: "+available+"."));
+						closeInventory(player);
+						return;
+					}
+				}
+
+				chunkLoader.setRange(Byte.valueOf(""+pos));
+				chunkLoader.setCreationDate(new Date());
+				String type = chunkLoader.isAdminChunkLoader()?"adminloader ":"chunkloader";
+				BetterChunkLoader.instance().getLogger().info(player.getName()+" made a new "+type +" at "+chunkLoader.getLocationString()+" with range "+pos);
+				DataStoreManager.getDataStore().addChunkLoader(chunkLoader);
+				closeInventory(player);
+				player.sendMessage(Text.of(TextColors.GOLD, "Chunk Loader created."));
+				return;
+			}
     		if(chunkLoader.getRange()!=-1) {
     			if (pos==0) {
         			// remove the chunk loader
@@ -211,7 +249,7 @@ public class Events {
 	        				}
 	        				
 	        				if (needed>available) {
-	        					player.sendMessage(Text.of(TextColors.RED, "Not enough free chunks! Needed: "+needed+". Available: "+available+"."));
+								player.sendMessage(Text.of(TextColors.RED, "You don't have enough free chunks! Needed: "+needed+". Available: "+available+"."));
 	        					closeInventory(player);
 	        					return;
 	        				}
@@ -223,37 +261,13 @@ public class Events {
     				player.sendMessage(Text.of(TextColors.GOLD,"Chunk Loader updated."));
     				closeInventory(player);
         		}
-    		} else {
-				pos = chunkLoader.radiusFromSide(pos);
-    			if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.unlimitedchunks")) {
-
-					int needed = (1+(pos*2))*(1+(pos*2));
-					int available;
-					if (chunkLoader.isAlwaysOn()) {
-						available=DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
-					} else {
-						available=DataStoreManager.getDataStore().getOnlineOnlyFreeChunksAmount(chunkLoader.getOwner());
-					}
-					
-					if (needed>available) {
-						player.sendMessage(Text.of(TextColors.RED, "Not enough free chunks! Needed: "+needed+". Available: "+available+"."));
-						closeInventory(player);
-						return;
-					}
-    			}
-    			
-    			chunkLoader.setRange(Byte.valueOf(""+pos));
-    			chunkLoader.setCreationDate(new Date());
-    			BetterChunkLoader.instance().getLogger().info(player.getName()+" made a new "+(chunkLoader.isAdminChunkLoader()?"admin ":"")+"chunk loader at "+chunkLoader.getLocationString()+" with range "+pos);
-    			DataStoreManager.getDataStore().addChunkLoader(chunkLoader);
-    			closeInventory(player);
-    			player.sendMessage(Text.of(TextColors.GOLD, "Chunk Loader created."));
-        	}
+    		}
     	}
     }
     
     @Listener
     public void onWorldLoad(LoadWorldEvent event) {
+		//todo: shouldn't this also include the world?
 		for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders(event.getTargetWorld().getName())) {
 			if (cl.isLoadable()) {
 				BCLForgeLib.instance().addChunkLoader(cl);
