@@ -276,7 +276,7 @@ class InventoryCloseAfterADelayTast implements Consumer<Task> {
 
 	private Player player;
 
-	public CancellingTimerTask(Player player){
+	public InventoryCloseAfterADelayTast(Player player){
 		this.player = player;
 	}
 
