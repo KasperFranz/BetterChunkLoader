@@ -1,5 +1,6 @@
 package net.kaikk.mc.bcl;
 
+
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.forgelib.ChunkLoader;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
@@ -24,6 +26,7 @@ import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -112,11 +115,13 @@ public class CChunkLoader extends ChunkLoader {
 	}
 	
 	public Text info() {
+		TextColor baseColor = TextColors.YELLOW;
+		TextColor highlightColor = TextColors.GREEN;
 		return Text.builder("== Chunk Loader Info ==").color(TextColors.GOLD).build().concat(Text.NEW_LINE)
-				.concat(Text.builder("Owner: "+this.getOwnerName()).build()).concat(Text.NEW_LINE)
-				.concat(Text.builder("Position: "+this.loc.toString()).build()).concat(Text.NEW_LINE)
-				.concat(Text.builder("Chunk: "+this.worldName+":"+this.chunkX+","+this.chunkZ).build()).concat(Text.NEW_LINE)
-				.concat(Text.builder("Size: "+this.sizeX()).build());
+				.concat(Text.of(highlightColor,"Owner: ")).concat(Text.of(baseColor,this.getOwnerName())).concat(Text.NEW_LINE)
+				.concat(Text.of(highlightColor,"Position: ")).concat(Text.of(baseColor,this.getLocationString())).concat(Text.NEW_LINE)
+				// .concat(Text.builder("Chunk: "+this.worldName+":"+this.chunkX+","+this.chunkZ).build()).concat(Text.NEW_LINE)
+				.concat(Text.of(highlightColor,"Size: ")).concat(Text.of(baseColor,this.sizeX()));
 	}
 	
 	public boolean isLoadable() {
@@ -212,6 +217,7 @@ public class CChunkLoader extends ChunkLoader {
 		if(this.range!=-1) {
             addInventoryOption(inventory, 0, ItemTypes.REDSTONE_TORCH, "Remove");
         }
+
         int pos = 2;
 		for (byte i=0; i<5;) {
 			addInventoryOption(inventory, pos, ItemTypes.MAP, "Size "+this.sizeX(i)+(this.getRange()==i?" [selected]":""));
