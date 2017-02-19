@@ -265,14 +265,14 @@ public class Events {
     }
     
     private static void closeInventory(final Player p) {
-		Task.builder().execute(new CancellingTimerTask(p))
+		Task.builder().execute(new InventoryCloseAfterADelayTast(p))
 				.delay(100, TimeUnit.MILLISECONDS)
 				.name("Closing players inventory.").submit(BetterChunkLoader.instance());
     }
 
 }
 
-class CancellingTimerTask implements Consumer<Task> {
+class InventoryCloseAfterADelayTast implements Consumer<Task> {
 
 	private Player player;
 
