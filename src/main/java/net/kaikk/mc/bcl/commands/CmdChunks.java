@@ -1,13 +1,10 @@
 package net.kaikk.mc.bcl.commands;
 
-import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.commands.elements.ChunksChangeOperatorElement;
-import net.kaikk.mc.bcl.commands.elements.LoaderTypeElement;
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.PlayerData;
 import net.kaikk.mc.bcl.utils.Messenger;
-import net.kaikk.mc.bcl.utils.Utilities;
+
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -16,7 +13,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-import java.util.Optional;
 
 /**
  * Created by ROB on 08/12/2016.

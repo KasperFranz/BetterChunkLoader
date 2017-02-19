@@ -6,11 +6,11 @@ import org.spongepowered.api.item.inventory.property.AbstractInventoryProperty;
 /**
  * Created by Rob5Underscores on 10/12/2016.
  */
-public class CChunkLoaderInvProp extends AbstractInventoryProperty<String, CChunkLoader>  {
+public class CChunkLoaderInvProp extends AbstractInventoryProperty<String, CChunkLoader> {
 
     public static final String PROPERTY_NAME = "chunkloaderdata";
 
-    public CChunkLoaderInvProp (CChunkLoader cChunkLoader) {
+    public CChunkLoaderInvProp(CChunkLoader cChunkLoader) {
         super(cChunkLoader);
     }
 

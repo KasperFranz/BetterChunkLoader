@@ -5,15 +5,12 @@ import java.util.UUID;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.config.Config;
 
 @XmlRootElement
 public class PlayerData {
 	private UUID playerId;
 	private int alwaysOnChunksAmount, onlineOnlyChunksAmount;
-	
-	PlayerData(){}
 	
 	public PlayerData(UUID playerId) {
 		this.playerId = playerId;

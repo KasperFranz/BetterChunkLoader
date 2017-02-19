@@ -2,11 +2,11 @@ package net.kaikk.mc.bcl;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
+import net.kaikk.mc.bcl.utils.InventoryCloseAfterADelayTask;
 import net.kaikk.mc.bcl.utils.Messenger;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
@@ -16,11 +16,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.item.ItemTypes;
@@ -181,7 +178,7 @@ public class Events {
 	    			return;
 	    		}
     		}
-    		String firstChar = null;
+    		String firstChar;
     		if(event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).isPresent()) {
     		    firstChar = String.valueOf(event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).get().toPlain().charAt(5));
             } else {
@@ -265,24 +262,10 @@ public class Events {
     }
     
     private static void closeInventory(final Player p) {
-		Task.builder().execute(new InventoryCloseAfterADelayTast(p))
+		Task.builder().execute(new InventoryCloseAfterADelayTask(p))
 				.delay(100, TimeUnit.MILLISECONDS)
 				.name("Closing players inventory.").submit(BetterChunkLoader.instance());
     }
 
-}
-
-class InventoryCloseAfterADelayTast implements Consumer<Task> {
-
-	private Player player;
-
-	public InventoryCloseAfterADelayTast(Player player){
-		this.player = player;
-	}
-
-	@Override
-	public void accept(Task task) {
-		player.closeInventory(Cause.of(NamedCause.simulated(player)));
-	}
 }
 
