@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
+import net.kaikk.mc.bcl.utils.BCLPermission;
 import net.kaikk.mc.bcl.utils.InventoryCloseAfterADelayTask;
 import net.kaikk.mc.bcl.utils.Messenger;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -47,9 +48,9 @@ public class Events {
 				boolean ChunkLoaderOnThisServer = chunkLoader!=null && chunkLoader.getServerName().equalsIgnoreCase(serverName);
 
 				if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType().equals(ItemTypes.BLAZE_ROD)) {
-					boolean adminLoader = chunkLoader.isAdminChunkLoader() && player.hasPermission("betterchunkloader.adminloader");
+					boolean adminLoader = chunkLoader.isAdminChunkLoader() && player.hasPermission(BCLPermission.ABILITY_ADMINLOADER);
 					// if the chunkloader is not on this server or the player can edit chunkloader or if it is an admin chunkloader then we should show the UI
-					if (!ChunkLoaderOnThisServer || (player.getUniqueId().equals(chunkLoader.getOwner()) || player.hasPermission("betterchunkloader.edit.others") || adminLoader)) {
+					if (!ChunkLoaderOnThisServer || (player.getUniqueId().equals(chunkLoader.getOwner()) || player.hasPermission(BCLPermission.ABILITY_EDIT_OTHERS) || adminLoader)) {
 						// if the chunkloader is not present lets make one!
 						if(chunkLoader == null) {
 							UUID uid = player.getUniqueId();
@@ -176,12 +177,12 @@ public class Events {
     			return;
     		}
     		
-    		if (chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.adminloader")) {
+    		if (chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_ADMINLOADER)) {
 				Messenger.sendNoPermission(player);
 				return;
     		}
 
-			if (!player.getUniqueId().equals(chunkLoader.getOwner()) && !player.hasPermission("betterchunkloader.edit.others")) {
+			if (!player.getUniqueId().equals(chunkLoader.getOwner()) && !player.hasPermission(BCLPermission.ABILITY_EDIT_OTHERS)) {
 				player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
 				return;
 			}
@@ -203,7 +204,7 @@ public class Events {
             // -1 == create new chunkloader (as the old chunkLoaders range was 0)
 			if(chunkLoader.getRange() == -1){
 				pos = chunkLoader.radiusFromSide(pos);
-				if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.unlimitedchunks")) {
+				if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_UNLIMITED)) {
 
 					int needed = (1+(pos*2))*(1+(pos*2));
 					int available;
@@ -237,7 +238,7 @@ public class Events {
         		} else {
 					pos = chunkLoader.radiusFromSide(pos);
         			// if higher range, check if the player has enough free chunks
-        			if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission("betterchunkloader.unlimitedchunks")) {
+        			if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_UNLIMITED)) {
 
 	        			if (pos>chunkLoader.getRange()) {
 							int needed = ((1+(pos*2))*(1+(pos*2)))-chunkLoader.size();

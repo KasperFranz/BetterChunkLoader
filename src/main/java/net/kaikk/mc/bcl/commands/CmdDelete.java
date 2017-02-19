@@ -3,6 +3,7 @@ package net.kaikk.mc.bcl.commands;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
+import net.kaikk.mc.bcl.utils.BCLPermission;
 import net.kaikk.mc.bcl.utils.Messenger;
 import net.kaikk.mc.bcl.utils.Utilities;
 import org.spongepowered.api.command.CommandException;
@@ -23,7 +24,7 @@ public class CmdDelete implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource sender, CommandContext commandContext) throws CommandException {
 
-        if (!sender.hasPermission("betterchunkloader.delete")) {
+        if (!sender.hasPermission(BCLPermission.COMMAND_DELETE)) {
             Messenger.sendNoPermission(sender);
             return null;
         }

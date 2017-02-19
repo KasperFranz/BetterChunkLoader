@@ -13,6 +13,7 @@ import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.MySqlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
+import net.kaikk.mc.bcl.utils.BCLPermission;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.CommandElement;
@@ -135,7 +136,7 @@ public class BetterChunkLoader {
 
 		CommandSpec cmdInfo = CommandSpec.builder()
 				.arguments(GenericArguments.none())
-				.permission("betterchunkloader.info")
+				.permission(BCLPermission.COMMAND_INFO)
 				.description(Text.of("Get general information about the usage on the server."))
 				.executor(new CmdInfo())
 				.build();
@@ -146,8 +147,8 @@ public class BetterChunkLoader {
 
 		CommandSpec cmdBalance = CommandSpec.builder()
 				.arguments(GenericArguments.requiringPermission(
-						GenericArguments.optional(GenericArguments.string(Text.of("player"))),"betterchunkloader.balance.others"))
-				.permission("betterchunkloading.balance")
+						GenericArguments.optional(GenericArguments.string(Text.of("player"))),BCLPermission.COMMAND_BALANCE_OTHERS))
+				.permission(BCLPermission.COMMAND_BALANCE)
 				.executor(new CmdBalance())
 				.description(Text.of("Get the balance of your different types of chunkloaders."))
 				.build();
@@ -160,20 +161,20 @@ public class BetterChunkLoader {
 						GenericArguments.integer(Text.of("value"))}
 				)
 				.executor(new CmdChunks())
-				.permission("betterchunkloader.chunks")
+				.permission(BCLPermission.COMMAND_CHUNKS)
 				.description(Text.of("add, set remove a players type of chunkloaders."))
 				.build();
 
 		CommandSpec cmdDelete = CommandSpec.builder()
 				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("player"))))
 				.executor(new CmdDelete())
-				.permission("betterchunkloader.delete")
+				.permission(BCLPermission.COMMAND_DELETE)
 				.description(Text.of("Delete the specified players chunkloaders"))
 				.build();
 
 		CommandSpec cmdPurge = CommandSpec.builder()
 				.executor(new CmdPurge())
-				.permission("betterchunkloader.purge")
+				.permission(BCLPermission.COMMAND_PURGE)
 				.description(Text.of("remove all chunks there is in not existing dimensions."))
 				.build();
 

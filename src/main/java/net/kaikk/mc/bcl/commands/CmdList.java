@@ -2,6 +2,7 @@ package net.kaikk.mc.bcl.commands;
 
 import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
+import net.kaikk.mc.bcl.utils.BCLPermission;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -31,7 +32,7 @@ public class CmdList implements CommandExecutor {
 //        }
 //
 //        if (args[1].equalsIgnoreCase("all")) {
-//            if (!sender.hasPermission("betterchunkloader.list.others")) {
+//            if (!sender.hasPermission(BCLPermission.COMMAND_LIST_ALL)) {
 //                sender.sendMessage(ChatColor.RED + "You don't have permission to run this command.");
 //                return false;
 //            }
@@ -40,7 +41,7 @@ public class CmdList implements CommandExecutor {
 //
 //            printChunkLoadersList(clList, sender, page);
 //        } else if (args[1].equalsIgnoreCase("world")) {
-//            if (!sender.hasPermission("betterchunkloader.list.others")) {
+//            if (!sender.hasPermission(BCLPermission.COMMAND_LIST_OTHERS)) {
 //                sender.sendMessage(ChatColor.RED + "You don't have permission to run this command.");
 //                return false;
 //            }
@@ -60,12 +61,12 @@ public class CmdList implements CommandExecutor {
 //            }
 //
 //            if (sender.getName().equalsIgnoreCase(playerName)) {
-//                if (!sender.hasPermission("betterchunkloader.list.own")) {
+//                if (!sender.hasPermission(BCLPermission.COMMAND_LIST_OWN)) {
 //                    sender.sendMessage(ChatColor.RED + "You don't have permission to run this command.");
 //                    return false;
 //                }
 //            } else {
-//                if (!sender.hasPermission("betterchunkloader.list.others")) {
+//                if (!sender.hasPermission(BCLPermission.COMMAND_LIST_OTHERS)) {
 //                    sender.sendMessage(ChatColor.RED + "You don't have permission to run this command.");
 //                    return false;
 //                }

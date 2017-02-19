@@ -4,6 +4,7 @@ import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.IDataStore;
+import net.kaikk.mc.bcl.utils.BCLPermission;
 import net.kaikk.mc.bcl.utils.Messenger;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -23,7 +24,7 @@ public class CmdPurge implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
 
-        if (!commandSource.hasPermission("betterchunkloader.purge")) {
+        if (!commandSource.hasPermission(BCLPermission.COMMAND_PURGE)) {
             Messenger.sendNoPermission(commandSource);
             return null;
         }
