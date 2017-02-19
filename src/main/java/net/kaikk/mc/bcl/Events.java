@@ -17,6 +17,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.filter.Getter;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -30,48 +32,39 @@ import org.spongepowered.api.text.format.TextColors;
 public class Events {
 
 	@Listener
-	public void onPlayerInteract(InteractBlockEvent.Secondary event) {
-		if(!event.getCause().containsType(Player.class)){
-			return;
-		}
-	    Player player = event.getCause().last(Player.class).get();
-		BlockSnapshot clickedBlock = event.getTargetBlock();
-		
-		if (clickedBlock==null || player==null) {
-			return;
-		}
-		
+	public void onPlayerInteractBlockSecondary(InteractBlockEvent.Secondary.MainHand event, @First Player player, @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
 		if (clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) || clickedBlock.getState().getType().equals(BlockTypes.IRON_BLOCK)) {
-				//todo: This should really be with the world too
-				CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(clickedBlock.getLocation().get());
-				String serverName = Config.getConfig().get().getNode("ServerName").getString();
-				boolean ChunkLoaderOnThisServer = chunkLoader!=null && chunkLoader.getServerName().equalsIgnoreCase(serverName);
+			//todo: This should really be with the world too
+			CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(clickedBlock.getLocation().get());
+			String serverName = Config.getConfig().get().getNode("ServerName").getString();
+			boolean ChunkLoaderOnThisServer = chunkLoader!=null && chunkLoader.getServerName().equalsIgnoreCase(serverName);
 
-				if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType().equals(ItemTypes.BLAZE_ROD)) {
-					boolean adminLoader = chunkLoader.isAdminChunkLoader() && player.hasPermission(BCLPermission.ABILITY_ADMINLOADER);
-					// if the chunkloader is not on this server or the player can edit chunkloader or if it is an admin chunkloader then we should show the UI
-					if (!ChunkLoaderOnThisServer || (player.getUniqueId().equals(chunkLoader.getOwner()) || player.hasPermission(BCLPermission.ABILITY_EDIT_OTHERS) || adminLoader)) {
-						// if the chunkloader is not present lets make one!
-						if(chunkLoader == null) {
-							UUID uid = player.getUniqueId();
-							int x = (int) Math.floor(clickedBlock.getLocation().get().getBlockX() / 16.00);
-							int y = (int) Math.floor(clickedBlock.getLocation().get().getBlockZ() / 16.00);
-							String worldName = clickedBlock.getLocation().get().getExtent().getName();
-							boolean alwaysOn = clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK);
-							chunkLoader = new CChunkLoader(x, y, worldName, (byte) -1, uid, clickedBlock.getLocation().get(), null, alwaysOn, serverName);
-						}
-
-						chunkLoader.showUI(player);
-					} else {
-						player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
+			if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType().equals(ItemTypes.BLAZE_ROD)) {
+				boolean adminLoader = chunkLoader.isAdminChunkLoader() && player.hasPermission(BCLPermission.ABILITY_ADMINLOADER);
+				// if the chunkloader is not on this server or the player can edit chunkloader or if it is an admin chunkloader then we should show the UI
+				if (!ChunkLoaderOnThisServer || (player.getUniqueId().equals(chunkLoader.getOwner()) || player.hasPermission(BCLPermission.ABILITY_EDIT_OTHERS) || adminLoader)) {
+					// if the chunkloader is not present lets make one!
+					if(chunkLoader == null) {
+						UUID uid = player.getUniqueId();
+						int x = (int) Math.floor(clickedBlock.getLocation().get().getBlockX() / 16.00);
+						int y = (int) Math.floor(clickedBlock.getLocation().get().getBlockZ() / 16.00);
+						String worldName = clickedBlock.getLocation().get().getExtent().getName();
+						boolean alwaysOn = clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK);
+						chunkLoader = new CChunkLoader(x, y, worldName, (byte) -1, uid, clickedBlock.getLocation().get(), null, alwaysOn, serverName);
 					}
+
+					chunkLoader.showUI(player);
 				} else {
-					if (ChunkLoaderOnThisServer) {
-						player.sendMessage(chunkLoader.info());
-					} else {
-						player.sendMessage(Text.of(TextColors.GOLD, "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a blaze rod."));
-					}
+					player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
 				}
+			} else {
+				if (ChunkLoaderOnThisServer) {
+					player.sendMessage(chunkLoader.info());
+				} else {
+					player.sendMessage(Text.of(TextColors.GOLD, "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a blaze rod."));
+				}
+			}
+			event.setCancelled(true);
 		}
 	}
 
