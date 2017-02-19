@@ -1,6 +1,9 @@
 package net.kaikk.mc.bcl;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
@@ -15,11 +18,14 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.InventoryProperty;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -132,6 +138,18 @@ public class Events {
 		}
 	}
 
+
+	@Listener
+	public void onInventoryInteractTest(ChangeInventoryEvent event) {
+		Optional<InventoryProperty<String, ?>> optionalCChunkLoaderInvProp = event.getTargetInventory().getArchetype().getProperty("cchunkloaderinvprop");
+		if(!optionalCChunkLoaderInvProp.isPresent()) {
+			return;
+		}
+		if(!(event instanceof ClickInventoryEvent.Primary)){
+			event.setCancelled(true);
+		}
+	}
+
     @Listener
     public void onInventoryClick(ClickInventoryEvent.Primary event) {
 
@@ -140,12 +158,13 @@ public class Events {
 			return;
 		}
 
+		event.setCancelled(true);
+
+		BetterChunkLoader.instance().getLogger().info("event is cancelled");
 		CChunkLoaderInvProp cChunkLoaderInvProp = (CChunkLoaderInvProp)optionalCChunkLoaderInvProp.get();
 		CChunkLoader chunkLoader = cChunkLoaderInvProp.getValue();
     	if (event.getCause().last(Player.class).isPresent()) {
     		Player player = event.getCause().last(Player.class).get();
-
-    		event.setCancelled(true);
 
     		if (chunkLoader==null) {
     			return;
@@ -246,6 +265,24 @@ public class Events {
     }
     
     private static void closeInventory(final Player p) {
-		p.closeInventory(Cause.of(NamedCause.simulated(p)));
+		Task.builder().execute(new CancellingTimerTask(p))
+				.delay(100, TimeUnit.MILLISECONDS)
+				.name("Closing players inventory.").submit(BetterChunkLoader.instance());
     }
+
 }
+
+class CancellingTimerTask implements Consumer<Task> {
+
+	private Player player;
+
+	public CancellingTimerTask(Player player){
+		this.player = player;
+	}
+
+	@Override
+	public void accept(Task task) {
+		player.closeInventory(Cause.of(NamedCause.simulated(player)));
+	}
+}
+
