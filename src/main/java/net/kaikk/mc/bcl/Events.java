@@ -271,7 +271,7 @@ public class Events {
     
     private static void closeInventory(final Player p) {
 		Task.builder().execute(new InventoryCloseAfterADelayTask(p))
-				.delay(100, TimeUnit.MILLISECONDS)
+				.delay(10, TimeUnit.MILLISECONDS)
 				.name("Closing players inventory.").submit(BetterChunkLoader.instance());
     }
 

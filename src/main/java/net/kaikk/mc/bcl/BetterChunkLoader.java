@@ -188,6 +188,9 @@ public class BetterChunkLoader {
 				.executor(new CmdBCL())
 				.build();
 
+		Sponge.getCommandManager().register(this, bclCmdSpec, "betterchunkloader", "bcl");
+
+
 	}
 
 	public static BetterChunkLoader instance() {
