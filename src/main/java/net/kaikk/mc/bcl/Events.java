@@ -40,7 +40,7 @@ public class Events {
 			boolean ChunkLoaderOnThisServer = chunkLoader!=null && chunkLoader.getServerName().equalsIgnoreCase(serverName);
 
 			if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType().equals(ItemTypes.BLAZE_ROD)) {
-				boolean adminLoader = chunkLoader.isAdminChunkLoader() && player.hasPermission(BCLPermission.ABILITY_ADMINLOADER);
+				boolean adminLoader = chunkLoader != null && chunkLoader.isAdminChunkLoader() && player.hasPermission(BCLPermission.ABILITY_ADMINLOADER);
 				// if the chunkloader is not on this server or the player can edit chunkloader or if it is an admin chunkloader then we should show the UI
 				if (!ChunkLoaderOnThisServer || (player.getUniqueId().equals(chunkLoader.getOwner()) || player.hasPermission(BCLPermission.ABILITY_EDIT_OTHERS) || adminLoader)) {
 					// if the chunkloader is not present lets make one!
