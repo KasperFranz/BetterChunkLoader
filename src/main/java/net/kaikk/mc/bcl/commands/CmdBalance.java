@@ -20,14 +20,15 @@ import java.util.Optional;
 public class CmdBalance implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-        Optional<String> playerName = commandContext.getOne("player");
-        if(playerName.isPresent()){
-            Player player = Utilities.getPlayerFromName(playerName.get());
+        Optional<Player> optionalPlayer = commandContext.getOne("player");
+        if(optionalPlayer.isPresent()){
+            Player player = optionalPlayer.get();
+            String playername = player.getName();
             if(player != null) {
                 chunksInfo(commandSource, player);
                 return CommandResult.success();
             } else {
-                Messenger.sendTargetNotExist(commandSource, playerName.get());
+                Messenger.sendTargetNotExist(commandSource, playername);
             }
         } else {
             if(commandSource instanceof Player) {

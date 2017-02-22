@@ -147,7 +147,7 @@ public class BetterChunkLoader {
 
 		CommandSpec cmdBalance = CommandSpec.builder()
 				.arguments(GenericArguments.requiringPermission(
-						GenericArguments.optional(GenericArguments.string(Text.of("player"))),BCLPermission.COMMAND_BALANCE_OTHERS))
+						GenericArguments.optional(GenericArguments.player(Text.of("player"))),BCLPermission.COMMAND_BALANCE_OTHERS))
 				.permission(BCLPermission.COMMAND_BALANCE)
 				.executor(new CmdBalance())
 				.description(Text.of("Get the balance of your different types of chunkloaders."))
