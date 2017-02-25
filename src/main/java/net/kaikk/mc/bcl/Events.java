@@ -64,7 +64,6 @@ public class Events {
 					player.sendMessage(Text.of(TextColors.GOLD, "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a blaze rod."));
 				}
 			}
-			event.setCancelled(true);
 		}
 	}
 
@@ -89,7 +88,10 @@ public class Events {
 		String breaker = player.isPresent() ?player.get().getName() : "unknown";
 		Player owner = chunkLoader.getPlayer();
 		if (owner!=null && !owner.getName().equals(breaker)) {
-			owner.sendMessage(Text.of(TextColors.RED, "Your chunk loader at "+chunkLoader.getLoc().toString()+" has been removed by "+breaker+"."));
+			owner.sendMessage(Text.of(TextColors.RED, "Your chunk loader at "+chunkLoader.getLocationString()+" has been removed by "+breaker+"."));
+			player.get().sendMessage(Text.of(TextColors.RED,"You removed "+(owner != null ? owner.getName() : "unknown")+"'s chunk loader."));
+		}else{
+			player.get().sendMessage(Text.of(TextColors.RED,"You removed your chunk loader at "+chunkLoader.getLocationString()+"."));
 		}
 		
 		BetterChunkLoader.instance().getLogger().info(breaker+" broke "+chunkLoader.getOwnerName()+"'s chunk loader at "+chunkLoader.getLocationString());
@@ -216,7 +218,7 @@ public class Events {
 
 				chunkLoader.setRange(Byte.valueOf(""+pos));
 				chunkLoader.setCreationDate(new Date());
-				String type = chunkLoader.isAdminChunkLoader()?"adminloader ":"chunkloader";
+				String type = chunkLoader.isAdminChunkLoader()?"admin loader ":"chunk loader";
 				BetterChunkLoader.instance().getLogger().info(player.getName()+" made a new "+type +" at "+chunkLoader.getLocationString()+" with range "+pos);
 				DataStoreManager.getDataStore().addChunkLoader(chunkLoader);
 				closeInventory(player);
@@ -227,6 +229,11 @@ public class Events {
     			if (pos==0) {
         			// remove the chunk loader
         			DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
+					if(chunkLoader.getOwner().equals(player.getUniqueId())) {
+						player.sendMessage(Text.of(TextColors.RED, "You disabled your chunk loader at "+chunkLoader.getLocationString()+"."));
+					}else{
+						player.sendMessage(Text.of(TextColors.RED, player.getName() +" disabled your chunk loader at "+chunkLoader.getLocationString()+"."));
+					}
         			closeInventory(player);
         		} else {
 					pos = chunkLoader.radiusFromSide(pos);
@@ -243,13 +250,17 @@ public class Events {
 	        				}
 	        				
 	        				if (needed>available) {
-								player.sendMessage(Text.of(TextColors.RED, "You don't have enough free chunks! Needed: "+needed+". Available: "+available+"."));
+	        					if(chunkLoader.getOwner().equals(player.getUniqueId())) {
+									player.sendMessage(Text.of(TextColors.RED, "You don't have enough free chunks! Needed: " + needed + ". Available: " + available + "."));
+								}else{
+									player.sendMessage(Text.of(TextColors.RED, chunkLoader.getOwnerName() +" don't have enough free chunks! Needed: " + needed + ". Available: " + available + "."));
+								}
 	        					closeInventory(player);
 	        					return;
 	        				}
 	        			}
         			}
-        			
+
     				BetterChunkLoader.instance().getLogger().info(player.getName()+" edited "+chunkLoader.getOwnerName()+"'s chunk loader at "+chunkLoader.getLocationString()+" range from "+chunkLoader.getRange()+" to "+pos);
     				DataStoreManager.getDataStore().changeChunkLoaderRange(chunkLoader, Byte.valueOf(""+pos));
     				player.sendMessage(Text.of(TextColors.GOLD,"Chunk Loader updated."));
