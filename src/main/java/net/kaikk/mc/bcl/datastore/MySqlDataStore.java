@@ -35,14 +35,14 @@ public class MySqlDataStore extends AHashMapDataStore {
 			this.statement().executeUpdate("CREATE TABLE IF NOT EXISTS bcl_chunkloaders ("
 					+ "loc varchar(50) NOT NULL, "
 					+ "r tinyint(3) unsigned NOT NULL, "
-					+ "owner binary(16) NOT NULL, "
+					+ "owner varchar(36) NOT NULL, "
 					+ "date bigint(20) NOT NULL, "
 					+ "aon tinyint(1) NOT NULL, "
                     + "serverName varchar(50) NOT NULL, "
 					+ "UNIQUE KEY loc (loc));");
 			
 			this.statement().executeUpdate("CREATE TABLE IF NOT EXISTS bcl_playersdata ("
-					+ "pid binary(16) NOT NULL, "
+					+ "pid varchar(36) NOT NULL, "
 					+ "alwayson smallint(6) unsigned NOT NULL, "
 					+ "onlineonly smallint(6) unsigned NOT NULL, "
 					+ "UNIQUE KEY pid (pid));");
@@ -55,7 +55,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 			ResultSet rs = this.statement().executeQuery("SELECT * FROM bcl_chunkloaders");
 			while(rs.next()) {
 				try {
-					CChunkLoader chunkLoader = new CChunkLoader(rs.getString(1), rs.getByte(2), toUUID(rs.getBytes(3)), new Date(rs.getLong(4)), rs.getBoolean(5), rs.getString(6));
+					CChunkLoader chunkLoader = new CChunkLoader(rs.getString(1), rs.getByte(2), toUUID(rs.getString(3)), new Date(rs.getLong(4)), rs.getBoolean(5), rs.getString(6));
 					List<CChunkLoader> clList = this.chunkLoaders.get(chunkLoader.getWorldName());
 					if (clList == null) {
 						clList = new ArrayList<CChunkLoader>();
@@ -72,7 +72,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 		try {
 			ResultSet rs = this.statement().executeQuery("SELECT * FROM bcl_playersdata");
 			while(rs.next()) {
-				PlayerData pd = new PlayerData(toUUID(rs.getBytes(1)), rs.getInt(2), rs.getInt(3));
+				PlayerData pd = new PlayerData(toUUID(rs.getString(1)), rs.getInt(2), rs.getInt(3));
 				this.playersData.put(pd.getPlayerId(), pd);
 			}
 		} catch (SQLException e) {
@@ -212,28 +212,16 @@ public class MySqlDataStore extends AHashMapDataStore {
 		return this.dbConnection.createStatement();
 	}
 	
-	/** Converts an array of 16 bytes to an UUID */
-	public static UUID toUUID(byte[] bytes) {
-		if (bytes.length != 16) {
-			throw new IllegalArgumentException();
-		}
-		int i = 0;
-		long msl = 0;
-		for (; i < 8; i++) {
-			msl = (msl << 8) | (bytes[i] & 0xFF);
-		}
-		long lsl = 0;
-		for (; i < 16; i++) {
-			lsl = (lsl << 8) | (bytes[i] & 0xFF);
-		}
-		return new UUID(msl, lsl);
+
+	public static UUID toUUID(String string) {
+		return UUID.fromString(string);
 	}
 
 	/** Converts an UUID to an hex number using the 0x format */
 	public static String UUIDtoHexString(UUID uuid) {
 		if (uuid == null) {
-			return "0";
+			return "";
 		}
-		return "0x" + StringUtils.leftPad(Long.toHexString(uuid.getMostSignificantBits()), 16, "0") + StringUtils.leftPad(Long.toHexString(uuid.getLeastSignificantBits()), 16, "0");
+		return "\""+uuid.toString()+"\"";
 	}
 }
