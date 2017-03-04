@@ -32,19 +32,14 @@ public class CmdChunks implements CommandExecutor{
         String chunksChangeOperatorElement = commandContext.<String>getOne("change").get();
         String loaderTypeElement = commandContext.<String>getOne("type").get();
         User user = commandContext.<Player>getOne("user").get();
-        String playerName = user.getName();
         Integer changeValue = commandContext.<Integer>getOne("value").get();
 
-        if(user == null) {
-            Messenger.sendTargetNotExist(sender, playerName);
-            return null;
-        }
         if (chunksChangeOperatorElement.equalsIgnoreCase("add")) {
             PlayerData playerData = DataStoreManager.getDataStore().getPlayerData(user.getUniqueId());
             if (loaderTypeElement.equalsIgnoreCase("world")) {
                 if (playerData.getAlwaysOnChunksAmount()+changeValue> Config.getConfig().get().getNode("MaxChunksAmount").getNode("World").getInt()) {
                     sender.sendMessage(Text.builder("Couldn't add "+changeValue+" world chunks to "+user.getName()+"'s balance because it would exceed the world chunks limit of "+ Config.getConfig().get().getNode("MaxChunksAmount").getNode("World").getInt()).color(TextColors.RED).build());
-                    return null;
+                    return CommandResult.empty();
                 }
 
                 DataStoreManager.getDataStore().addAlwaysOnChunksLimit(user.getUniqueId(), changeValue);
@@ -53,19 +48,19 @@ public class CmdChunks implements CommandExecutor{
             } else if (loaderTypeElement.equalsIgnoreCase("personal")) {
                 if (playerData.getOnlineOnlyChunksAmount()+changeValue>Config.getConfig().get().getNode("MaxChunksAmount").getNode("Personal").getInt()) {
                     sender.sendMessage(Text.builder("Couldn't add "+changeValue+" personal chunks to "+user.getName()+"'s balance because it would exceed the personal chunks limit of "+Config.getConfig().get().getNode("MaxChunksAmount").getNode("Personal").getInt()).build());
-                    return null;
+                    return CommandResult.empty();
                 }
 
                 DataStoreManager.getDataStore().addOnlineOnlyChunksLimit(user.getUniqueId(), changeValue);
                 sender.sendMessage(Text.builder("Added "+changeValue+" personal chunks to "+user.getName()+"'s balance!").color(TextColors.GOLD).build().concat(Text.NEW_LINE).concat(Text.builder("Their personal chunk balance is now "+ playerData.getOnlineOnlyChunksAmount()).build()));
             } else {
                 Messenger.sendUsage(sender, "chunks");
-                return null;
+                return CommandResult.empty();
             }
         } else if (chunksChangeOperatorElement.equalsIgnoreCase("set")) {
             if (changeValue < 0) {
                 sender.sendMessage(Text.builder("Value cannot be less than 0.").build());
-                return null;
+                return CommandResult.empty();
             }
 
             if (loaderTypeElement.equalsIgnoreCase("world")) {
@@ -78,11 +73,11 @@ public class CmdChunks implements CommandExecutor{
 
             } else {
                 Messenger.sendUsage(sender, "chunks");
-                return null;
+                return CommandResult.empty();
             }
         } else {
             Messenger.sendUsage(sender, "chunks");
-            return null;
+            return CommandResult.empty();
         }
 
         return CommandResult.success();

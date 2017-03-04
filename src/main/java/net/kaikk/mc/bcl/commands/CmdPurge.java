@@ -26,7 +26,7 @@ public class CmdPurge implements CommandExecutor {
 
         if (!commandSource.hasPermission(BCLPermission.COMMAND_PURGE)) {
             Messenger.sendNoPermission(commandSource);
-            return null;
+            return CommandResult.empty();
         }
 
         IDataStore ds = DataStoreManager.getDataStore();

@@ -40,7 +40,7 @@ public class CmdBalance implements CommandExecutor {
             }
         }
 
-        return null;
+        return CommandResult.success();
     }
 
     static void chunksInfo(CommandSource sender, User user) {

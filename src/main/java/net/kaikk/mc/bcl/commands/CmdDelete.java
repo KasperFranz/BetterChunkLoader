@@ -27,23 +27,21 @@ public class CmdDelete implements CommandExecutor {
 
         if (!sender.hasPermission(BCLPermission.COMMAND_DELETE)) {
             Messenger.sendNoPermission(sender);
-            return null;
+            return CommandResult.empty();
         }
 
         if (!commandContext.getOne("user").isPresent()) {
             Messenger.sendUsage(sender, "delete");
-            return null;
+            return CommandResult.empty();
         }
+
         User user = commandContext.<User>getOne("user").get();
         UUID playerUUID = user.getUniqueId();
-        if(playerUUID == null) {
-            Messenger.sendTargetNotExist(sender, user.getName());
-        }
 
         List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(playerUUID);
         if (clList==null) {
             sender.sendMessage(Text.builder("This player doesn't have any chunk loader.").color(TextColors.RED).build());
-            return null;
+            return CommandResult.empty();
         }
 
         DataStoreManager.getDataStore().removeChunkLoaders(playerUUID);

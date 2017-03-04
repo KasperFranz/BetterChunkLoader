@@ -124,7 +124,7 @@ public class CmdList implements CommandExecutor {
 //            CChunkLoader chunkLoader=clList.get(i);
 //            sender.sendMessage(chunkLoader.getOwnerName()+" - "+chunkLoader.toString());
 //        }
-        return null;
+        return CommandResult.empty();
     }
 
 }

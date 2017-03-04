@@ -35,6 +35,4 @@ public class CmdBCL implements CommandExecutor {
         commandSource.sendMessage(message);
         return CommandResult.success();
     }
-
-    public void register(){}
 }
