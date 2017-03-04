@@ -52,7 +52,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 		// load data
 		this.chunkLoaders = new HashMap<String, List<CChunkLoader>>();
 		try {
-			ResultSet rs = this.statement().executeQuery("SELECT * FROM bcl_chunkloaders");
+			ResultSet rs = this.statement().executeQuery("SELECT * FROM bcl_chunkloaders where serverName = '"+Config.getConfig().get().getNode("ServerName").getString()+"'");
 			while(rs.next()) {
 				try {
 					CChunkLoader chunkLoader = new CChunkLoader(rs.getString(1), rs.getByte(2), toUUID(rs.getString(3)), new Date(rs.getLong(4)), rs.getBoolean(5), rs.getString(6));
