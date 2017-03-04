@@ -1,8 +1,11 @@
 package net.kaikk.mc.bcl.utils;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
+import net.kaikk.mc.bcl.config.Config;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
+
 import static org.spongepowered.api.text.format.TextStyles.*;
 
 import static org.spongepowered.api.text.format.TextColors.*;
@@ -56,4 +59,20 @@ public class Messenger {
 
         sender.sendMessage(message);
     }
+
+    public static Text getMaxChunkInfo(int added,String user,int limit,String type) {
+        return Text.builder("Couldn't add "+added+" "+type+" to "+user+"'s balance because it would exceed the "+type+" limit of "+ limit).color(TextColors.RED).build();
+    }
+
+    public static Text getAddedInfo(int added,String user,int newValue,String type) {
+        return Text.builder("Added "+added+" "+type+" to "+user+"'s balance!").color(TextColors.GOLD).build().concat(Text.NEW_LINE).concat(Text.builder("Their world chunk balance is now "+ newValue).build());
+    }
+    public static Text getSetMessage(String user,int newValue,String type) {
+        return Text.builder("Set "+user+"'s "+type+" balance to "+newValue).color(TextColors.GOLD).build();
+    }
+    public static Text getRemoveMessage(String user,int newValue,String type) {
+        return Text.builder("Removed "+newValue+" "+type+" from "+user).color(TextColors.GOLD).build();
+    }
+
+
 }

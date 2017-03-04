@@ -16,7 +16,6 @@ import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import net.kaikk.mc.bcl.utils.BCLPermission;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
@@ -146,20 +145,20 @@ public class BetterChunkLoader {
 
 
 		CommandSpec cmdBalance = CommandSpec.builder()
-				.arguments(GenericArguments.requiringPermission(
-						GenericArguments.optional(GenericArguments.user(Text.of("user"))),BCLPermission.COMMAND_BALANCE_OTHERS))
+				.arguments(GenericArguments.optional(GenericArguments.requiringPermission(
+						GenericArguments.user(Text.of("user")),BCLPermission.COMMAND_BALANCE_OTHERS)))
 				.permission(BCLPermission.COMMAND_BALANCE)
 				.executor(new CmdBalance())
-				.description(Text.of("Get the balance of your different types of chunkloaders."))
+				.description(Text.of("Get the balance of your different types of chunk loaders."))
 				.build();
 
 
 		CommandSpec cmdChunks = CommandSpec.builder()
-				.arguments(new CommandElement[]{new ChunksChangeOperatorElement(Text.of("change")),
+				.arguments(GenericArguments.seq(new ChunksChangeOperatorElement(Text.of("change")),
 						GenericArguments.user(Text.of("user")),
 						new LoaderTypeElement(Text.of("type")),
-						GenericArguments.integer(Text.of("value"))}
-				)
+						GenericArguments.integer(Text.of("value"))
+				))
 				.executor(new CmdChunks())
 				.permission(BCLPermission.COMMAND_CHUNKS)
 				.description(Text.of("add, set remove a players type of chunkloaders."))
