@@ -50,7 +50,7 @@ public class MySqlDataStore extends AHashMapDataStore {
 			throw new RuntimeException(e);
 		}
 		// load data
-		this.chunkLoaders = new HashMap<String, List<CChunkLoader>>();
+		this.chunkLoaders = new HashMap<>();
 		try {
 			ResultSet rs = this.statement().executeQuery("SELECT * FROM bcl_chunkloaders where serverName = '"+Config.getConfig().get().getNode("ServerName").getString()+"'");
 			while(rs.next()) {
@@ -58,17 +58,17 @@ public class MySqlDataStore extends AHashMapDataStore {
 					CChunkLoader chunkLoader = new CChunkLoader(rs.getString(1), rs.getByte(2), toUUID(rs.getString(3)), new Date(rs.getLong(4)), rs.getBoolean(5), rs.getString(6));
 					List<CChunkLoader> clList = this.chunkLoaders.get(chunkLoader.getWorldName());
 					if (clList == null) {
-						clList = new ArrayList<CChunkLoader>();
+						clList = new ArrayList<>();
 						chunkLoaders.put(chunkLoader.getWorldName(), clList);
 					}
 					clList.add(chunkLoader);
-				}catch(Exception e){}
+				}catch(Exception ignored){}
             }
 		} catch (SQLException e) {
 			BetterChunkLoader.instance().getLogger().info("Couldn't read chunk loaders data from MySQL server.");
 			throw new RuntimeException(e);
 		}
-		this.playersData = new HashMap<UUID, PlayerData>();
+		this.playersData = new HashMap<>();
 		try {
 			ResultSet rs = this.statement().executeQuery("SELECT * FROM bcl_playersdata");
 			while(rs.next()) {
@@ -110,7 +110,6 @@ public class MySqlDataStore extends AHashMapDataStore {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-        return;
 	}
 
 	@Override
@@ -213,12 +212,12 @@ public class MySqlDataStore extends AHashMapDataStore {
 	}
 	
 
-	public static UUID toUUID(String string) {
+	private static UUID toUUID(String string) {
 		return UUID.fromString(string);
 	}
 
-	/** Converts an UUID to an hex number using the 0x format */
-	public static String UUIDtoHexString(UUID uuid) {
+
+	private static String UUIDtoHexString(UUID uuid) {
 		if (uuid == null) {
 			return "";
 		}
