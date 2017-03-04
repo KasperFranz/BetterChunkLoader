@@ -26,6 +26,7 @@ public class Utilities {
         }
         return null;
     }
+
     public static Player getPlayerFromName(String name) {
         Optional<Player> onlinePlayer = Sponge.getServer().getPlayer(name);
         if(onlinePlayer.isPresent()) {

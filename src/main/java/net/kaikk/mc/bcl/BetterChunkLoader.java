@@ -147,7 +147,7 @@ public class BetterChunkLoader {
 
 		CommandSpec cmdBalance = CommandSpec.builder()
 				.arguments(GenericArguments.requiringPermission(
-						GenericArguments.optional(GenericArguments.player(Text.of("player"))),BCLPermission.COMMAND_BALANCE_OTHERS))
+						GenericArguments.optional(GenericArguments.user(Text.of("user"))),BCLPermission.COMMAND_BALANCE_OTHERS))
 				.permission(BCLPermission.COMMAND_BALANCE)
 				.executor(new CmdBalance())
 				.description(Text.of("Get the balance of your different types of chunkloaders."))
@@ -156,7 +156,7 @@ public class BetterChunkLoader {
 
 		CommandSpec cmdChunks = CommandSpec.builder()
 				.arguments(new CommandElement[]{new ChunksChangeOperatorElement(Text.of("change")),
-						GenericArguments.player(Text.of("player")),
+						GenericArguments.user(Text.of("user")),
 						new LoaderTypeElement(Text.of("type")),
 						GenericArguments.integer(Text.of("value"))}
 				)
@@ -166,7 +166,7 @@ public class BetterChunkLoader {
 				.build();
 
 		CommandSpec cmdDelete = CommandSpec.builder()
-				.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("player"))))
+				.arguments(GenericArguments.onlyOne(GenericArguments.user(Text.of("user"))))
 				.executor(new CmdDelete())
 				.permission(BCLPermission.COMMAND_DELETE)
 				.description(Text.of("Delete the specified players chunkloaders"))

@@ -11,6 +11,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 
 import java.util.Optional;
 
@@ -20,12 +21,12 @@ import java.util.Optional;
 public class CmdBalance implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-        Optional<Player> optionalPlayer = commandContext.getOne("player");
-        if(optionalPlayer.isPresent()){
-            Player player = optionalPlayer.get();
-            String playername = player.getName();
-            if(player != null) {
-                chunksInfo(commandSource, player);
+        Optional<User> optionalUser = commandContext.getOne("user");
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            String playername = user.getName();
+            if(user != null) {
+                chunksInfo(commandSource, user);
                 return CommandResult.success();
             } else {
                 Messenger.sendTargetNotExist(commandSource, playername);
@@ -42,14 +43,14 @@ public class CmdBalance implements CommandExecutor {
         return null;
     }
 
-    static void chunksInfo(CommandSource sender, Player player) {
+    static void chunksInfo(CommandSource sender, User user) {
         IDataStore dataStore = DataStoreManager.getDataStore();
-        int freeWorld = dataStore.getAlwaysOnFreeChunksAmount(player.getUniqueId());
-        int freePersonal = dataStore.getOnlineOnlyFreeChunksAmount(player.getUniqueId());
-        PlayerData pd=dataStore.getPlayerData(player.getUniqueId());
+        int freeWorld = dataStore.getAlwaysOnFreeChunksAmount(user.getUniqueId());
+        int freePersonal = dataStore.getOnlineOnlyFreeChunksAmount(user.getUniqueId());
+        PlayerData pd=dataStore.getPlayerData(user.getUniqueId());
         int totalWorld = pd.getAlwaysOnChunksAmount();
         int totalPersonal = pd.getOnlineOnlyChunksAmount();
 
-        Messenger.sendChunkBalance(sender, player.getName(), freePersonal, freeWorld, totalPersonal, totalWorld);
+        Messenger.sendChunkBalance(sender, user.getName(), freePersonal, freeWorld, totalPersonal, totalWorld);
     }
 }

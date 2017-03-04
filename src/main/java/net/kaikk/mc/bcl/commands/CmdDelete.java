@@ -11,6 +11,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -29,14 +30,14 @@ public class CmdDelete implements CommandExecutor {
             return null;
         }
 
-        if (!commandContext.getOne("player").isPresent()) {
+        if (!commandContext.getOne("user").isPresent()) {
             Messenger.sendUsage(sender, "delete");
             return null;
         }
-        String playerName = (String)commandContext.getOne("player").get();
-        UUID playerUUID = Utilities.getUUIDFromName(playerName);
+        User user = commandContext.<User>getOne("user").get();
+        UUID playerUUID = user.getUniqueId();
         if(playerUUID == null) {
-            Messenger.sendTargetNotExist(sender, playerName);
+            Messenger.sendTargetNotExist(sender, user.getName());
         }
 
         List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(playerUUID);
@@ -47,7 +48,7 @@ public class CmdDelete implements CommandExecutor {
 
         DataStoreManager.getDataStore().removeChunkLoaders(playerUUID);
         sender.sendMessage(Text.builder("All chunk loaders placed by this player have been removed!").color(TextColors.GREEN).build());
-        BetterChunkLoader.instance().getLogger().info(sender.getName()+" deleted all chunk loaders placed by "+playerName);
+        BetterChunkLoader.instance().getLogger().info(sender.getName()+" deleted all chunk loaders placed by "+user.getName());
 
         return CommandResult.success();
     }
