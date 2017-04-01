@@ -43,7 +43,7 @@ public class CChunkLoader extends ChunkLoader {
 	private String serverName;
 	
 	public CChunkLoader() { }
-	
+
 	public CChunkLoader(int chunkX, int chunkZ, String worldName, byte range, UUID owner, Location<World> loc, Date creationDate, boolean isAlwaysOn, String serverName) {
 		super(chunkX, chunkZ, worldName, range);
 		this.owner = owner;
@@ -51,6 +51,11 @@ public class CChunkLoader extends ChunkLoader {
 		this.creationDate = creationDate;
 		this.isAlwaysOn = isAlwaysOn;
 		this.serverName = serverName;
+	}
+
+	public CChunkLoader(int chunkX, int chunkZ, String worldName, byte range, UUID owner, Location<World> loc, Date creationDate, boolean isAlwaysOn) {
+		this(chunkX, chunkZ, worldName, range,owner,loc,creationDate,isAlwaysOn,Config.getConfig().get().getNode("ServerName").getString());
+
 	}
 	
 	public CChunkLoader(String location, byte range, UUID owner, Date creationDate, boolean isAlwaysOn, String serverName) {

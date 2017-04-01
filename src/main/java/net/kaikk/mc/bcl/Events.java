@@ -34,10 +34,8 @@ public class Events {
 	@Listener
 	public void onPlayerInteractBlockSecondary(InteractBlockEvent.Secondary.MainHand event, @First Player player, @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
 		if (clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) || clickedBlock.getState().getType().equals(BlockTypes.IRON_BLOCK)) {
-			//todo: This should really be with the world too
 			CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(clickedBlock.getLocation().get());
-			String serverName = Config.getConfig().get().getNode("ServerName").getString();
-			boolean ChunkLoaderOnThisServer = chunkLoader!=null && chunkLoader.getServerName().equalsIgnoreCase(serverName);
+			boolean ChunkLoaderOnThisServer = chunkLoader!=null;
 
 			if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType().equals(ItemTypes.BLAZE_ROD)) {
 				boolean adminLoader = chunkLoader != null && chunkLoader.isAdminChunkLoader() && player.hasPermission(BCLPermission.ABILITY_ADMINLOADER);
@@ -50,7 +48,7 @@ public class Events {
 						int y = (int) Math.floor(clickedBlock.getLocation().get().getBlockZ() / 16.00);
 						String worldName = clickedBlock.getLocation().get().getExtent().getName();
 						boolean alwaysOn = clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK);
-						chunkLoader = new CChunkLoader(x, y, worldName, (byte) -1, uid, clickedBlock.getLocation().get(), null, alwaysOn, serverName);
+						chunkLoader = new CChunkLoader(x, y, worldName, (byte) -1, uid, clickedBlock.getLocation().get(), null, alwaysOn);
 					}
 
 					chunkLoader.showUI(player);
@@ -74,13 +72,10 @@ public class Events {
 			return;
 		}
 
-		//todo: This should really be with the world too
 		CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(block.getLocation().get());
 		if (chunkLoader==null) {
 			return;
-		} else if (!chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
-		    return;
-        }
+		}
 		
 		DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
 		
@@ -272,7 +267,6 @@ public class Events {
     
     @Listener
     public void onWorldLoad(LoadWorldEvent event) {
-		//todo: shouldn't this also include the world?
 		for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders(event.getTargetWorld().getName())) {
 			if (cl.isLoadable()) {
 				BCLForgeLib.instance().addChunkLoader(cl);
