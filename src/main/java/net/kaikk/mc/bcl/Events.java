@@ -8,10 +8,8 @@ import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import net.kaikk.mc.bcl.utils.BCLPermission;
 import net.kaikk.mc.bcl.utils.InventoryCloseAfterADelayTask;
-import net.kaikk.mc.bcl.utils.Messenger;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -19,12 +17,9 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.InventoryProperty;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -122,148 +117,6 @@ public class Events {
 		}
 	}
 
-	//This is only here to make sure that you ca't do weird shit with the inventory.
-	//Todo: I saw on the forum somehow to merge the 2 events, But i forgot where i found it, if this is found again it might be usefull to merge these 2
-	@Listener
-	public void onInventoryInteract(ClickInventoryEvent event) {
-		Optional<InventoryProperty<String, ?>> optionalCChunkLoaderInvProp = event.getTargetInventory().getArchetype().getProperty("cchunkloaderinvprop");
-		if(!optionalCChunkLoaderInvProp.isPresent()) {
-			return;
-		}
-		if(!(event instanceof ClickInventoryEvent.Primary)){
-			event.setCancelled(true);
-		}
-	}
-
-	//This is only here to make sure that you ca't do weird shit with the inventory.
-	//Todo: I saw on the forum somehow to merge the 2 events, But i forgot where i found it, if this is found again it might be usefull to merge these 2
-	@Listener
-	public void onInventoryInteractTest(ChangeInventoryEvent event) {
-		Optional<InventoryProperty<String, ?>> optionalCChunkLoaderInvProp = event.getTargetInventory().getArchetype().getProperty("cchunkloaderinvprop");
-		if(!optionalCChunkLoaderInvProp.isPresent()) {
-			return;
-		}
-		if(!(event instanceof ClickInventoryEvent.Primary)){
-			event.setCancelled(true);
-		}
-	}
-
-    @Listener
-    public void onInventoryClick(ClickInventoryEvent.Primary event) {
-
-		Optional<InventoryProperty<String, ?>> optionalCChunkLoaderInvProp = event.getTargetInventory().getArchetype().getProperty("cchunkloaderinvprop");
-		if(!optionalCChunkLoaderInvProp.isPresent()) {
-			return;
-		}
-
-		event.setCancelled(true);
-
-		CChunkLoaderInvProp cChunkLoaderInvProp = (CChunkLoaderInvProp)optionalCChunkLoaderInvProp.get();
-		CChunkLoader chunkLoader = cChunkLoaderInvProp.getValue();
-    	if (event.getCause().last(Player.class).isPresent()) {
-    		Player player = event.getCause().last(Player.class).get();
-
-    		if (chunkLoader==null) {
-    			return;
-    		}
-    		
-    		if (chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_ADMINLOADER)) {
-				Messenger.sendNoPermission(player);
-				return;
-    		}
-
-			if (!player.getUniqueId().equals(chunkLoader.getOwner()) && !player.hasPermission(BCLPermission.ABILITY_EDIT_OTHERS)) {
-				player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
-				return;
-			}
-
-    		if(!event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).isPresent()) {
-    			return;
-            }
-			String firstChar = String.valueOf(event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).get().toPlain().charAt(5));
-    		Integer pos;
-
-    		try {
-                pos = Integer.parseInt(firstChar);
-            } catch(NumberFormatException e){
-    		    pos = 0;
-            }
-
-
-			//todo these 2 might be more useful combined as most of the logic is the same!.
-            // -1 == create new chunkloader (as the old chunkLoaders range was 0)
-			if(chunkLoader.getRange() == -1){
-				pos = chunkLoader.radiusFromSide(pos);
-				if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_UNLIMITED)) {
-
-					int needed = (1+(pos*2))*(1+(pos*2));
-					int available;
-					if (chunkLoader.isAlwaysOn()) {
-						available=DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
-					} else {
-						available=DataStoreManager.getDataStore().getOnlineOnlyFreeChunksAmount(chunkLoader.getOwner());
-					}
-
-					if (needed>available) {
-						player.sendMessage(Text.of(TextColors.RED, "You don't have enough free chunks! Needed: "+needed+". Available: "+available+"."));
-						closeInventory(player);
-						return;
-					}
-				}
-
-				chunkLoader.setRange(Byte.valueOf(""+pos));
-				chunkLoader.setCreationDate(new Date());
-				String type = chunkLoader.isAdminChunkLoader()?"admin loader ":"chunk loader";
-				BetterChunkLoader.instance().getLogger().info(player.getName()+" made a new "+type +" at "+chunkLoader.getLocationString()+" with range "+pos);
-				DataStoreManager.getDataStore().addChunkLoader(chunkLoader);
-				closeInventory(player);
-				player.sendMessage(Text.of(TextColors.GOLD, "Chunk Loader created."));
-				return;
-			}
-    		if(chunkLoader.getRange()!=-1) {
-    			if (pos==0) {
-        			// remove the chunk loader
-        			DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
-					if(chunkLoader.getOwner().equals(player.getUniqueId())) {
-						player.sendMessage(Text.of(TextColors.RED, "You disabled your chunk loader at "+chunkLoader.getLocationString()+"."));
-					}else{
-						player.sendMessage(Text.of(TextColors.RED, player.getName() +" disabled your chunk loader at "+chunkLoader.getLocationString()+"."));
-					}
-        			closeInventory(player);
-        		} else {
-					pos = chunkLoader.radiusFromSide(pos);
-        			// if higher range, check if the player has enough free chunks
-        			if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_UNLIMITED)) {
-
-	        			if (pos>chunkLoader.getRange()) {
-							int needed = ((1+(pos*2))*(1+(pos*2)))-chunkLoader.size();
-	        				int available;
-	        				if (chunkLoader.isAlwaysOn()) {
-	        					available=DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
-	        				} else {
-	        					available=DataStoreManager.getDataStore().getOnlineOnlyFreeChunksAmount(chunkLoader.getOwner());
-	        				}
-	        				
-	        				if (needed>available) {
-	        					if(chunkLoader.getOwner().equals(player.getUniqueId())) {
-									player.sendMessage(Text.of(TextColors.RED, "You don't have enough free chunks! Needed: " + needed + ". Available: " + available + "."));
-								}else{
-									player.sendMessage(Text.of(TextColors.RED, chunkLoader.getOwnerName() +" don't have enough free chunks! Needed: " + needed + ". Available: " + available + "."));
-								}
-	        					closeInventory(player);
-	        					return;
-	        				}
-	        			}
-        			}
-
-    				BetterChunkLoader.instance().getLogger().info(player.getName()+" edited "+chunkLoader.getOwnerName()+"'s chunk loader at "+chunkLoader.getLocationString()+" range from "+chunkLoader.getRange()+" to "+pos);
-    				DataStoreManager.getDataStore().changeChunkLoaderRange(chunkLoader, Byte.valueOf(""+pos));
-    				player.sendMessage(Text.of(TextColors.GOLD,"Chunk Loader updated."));
-    				closeInventory(player);
-        		}
-    		}
-    	}
-    }
     
     @Listener
     public void onWorldLoad(LoadWorldEvent event) {

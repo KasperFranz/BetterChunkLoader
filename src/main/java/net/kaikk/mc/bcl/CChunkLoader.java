@@ -4,6 +4,8 @@ package net.kaikk.mc.bcl;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -11,8 +13,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.kaikk.mc.bcl.config.Config;
+import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.ChunkLoader;
 
+import net.kaikk.mc.bcl.utils.BCLPermission;
+import net.kaikk.mc.bcl.utils.InventoryCloseAfterADelayTask;
+import net.kaikk.mc.bcl.utils.Messenger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
@@ -20,10 +26,12 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
@@ -217,8 +225,15 @@ public class CChunkLoader extends ChunkLoader {
 		if (title.length()>32) {
 			title=title.substring(0, 32);
 		}
-		InventoryArchetype inventoryArchetype = InventoryArchetype.builder().from(InventoryArchetypes.MENU_ROW).property(CChunkLoaderInvProp.of(this)).build("archid","archname");
-		Inventory inventory = Inventory.builder().of(inventoryArchetype).property(InventoryTitle.PROPERTY_NAME , InventoryTitle.of(Text.of(title))).build(BetterChunkLoader.instance());
+		InventoryArchetype inventoryArchetype = InventoryArchetype.builder()
+				.from(InventoryArchetypes.MENU_ROW)
+				.property(CChunkLoaderInvProp.of(this)).build("archid","archname");
+
+		Inventory inventory = Inventory.builder()
+				.of(inventoryArchetype)
+				.property(InventoryTitle.PROPERTY_NAME , InventoryTitle.of(Text.of(title)))
+				.listener(ClickInventoryEvent.class,createClickEventConsumer(this))
+				.build(BetterChunkLoader.instance());
 		if(this.range!=-1) {
             addInventoryOption(inventory, 0, ItemTypes.REDSTONE_TORCH, "Remove");
         }
@@ -282,6 +297,120 @@ public class CChunkLoader extends ChunkLoader {
 	
 	public boolean isAdminChunkLoader() {
 		return adminUUID.equals(this.owner);
+	}
+
+	public static Consumer<ClickInventoryEvent> createClickEventConsumer(CChunkLoader chunkLoader) {
+		return event -> {
+			if (event.getCause().last(Player.class).isPresent()) {
+				Player player = event.getCause().last(Player.class).get();
+
+				if (chunkLoader == null) {
+					return;
+				}
+
+				if (chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_ADMINLOADER)) {
+					Messenger.sendNoPermission(player);
+					return;
+				}
+
+				if (!player.getUniqueId().equals(chunkLoader.getOwner()) && !player.hasPermission(BCLPermission.ABILITY_EDIT_OTHERS)) {
+					player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
+					return;
+				}
+
+				if (!event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).isPresent()) {
+					return;
+				}
+				String firstChar = String.valueOf(event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).get().toPlain().charAt(5));
+				Integer pos;
+
+				try {
+					pos = Integer.parseInt(firstChar);
+				} catch (NumberFormatException e) {
+					pos = 0;
+				}
+
+
+				//todo these 2 might be more useful combined as most of the logic is the same!.
+				// -1 == create new chunkloader (as the old chunkLoaders range was 0)
+				if (chunkLoader.getRange() == -1) {
+					pos = chunkLoader.radiusFromSide(pos);
+					if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_UNLIMITED)) {
+
+						int needed = (1 + (pos * 2)) * (1 + (pos * 2));
+						int available;
+						if (chunkLoader.isAlwaysOn()) {
+							available = DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
+						} else {
+							available = DataStoreManager.getDataStore().getOnlineOnlyFreeChunksAmount(chunkLoader.getOwner());
+						}
+
+						if (needed > available) {
+							player.sendMessage(Text.of(TextColors.RED, "You don't have enough free chunks! Needed: " + needed + ". Available: " + available + "."));
+							closeInventory(player);
+							return;
+						}
+					}
+
+					chunkLoader.setRange(Byte.valueOf("" + pos));
+					chunkLoader.setCreationDate(new Date());
+					String type = chunkLoader.isAdminChunkLoader() ? "admin loader " : "chunk loader";
+					BetterChunkLoader.instance().getLogger().info(player.getName() + " made a new " + type + " at " + chunkLoader.getLocationString() + " with range " + pos);
+					DataStoreManager.getDataStore().addChunkLoader(chunkLoader);
+					closeInventory(player);
+					player.sendMessage(Text.of(TextColors.GOLD, "Chunk Loader created."));
+					return;
+				}
+				if (chunkLoader.getRange() != -1) {
+					if (pos == 0) {
+						// remove the chunk loader
+						DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
+						if (chunkLoader.getOwner().equals(player.getUniqueId())) {
+							player.sendMessage(Text.of(TextColors.RED, "You disabled your chunk loader at " + chunkLoader.getLocationString() + "."));
+						} else {
+							player.sendMessage(Text.of(TextColors.RED, player.getName() + " disabled your chunk loader at " + chunkLoader.getLocationString() + "."));
+						}
+						closeInventory(player);
+					} else {
+						pos = chunkLoader.radiusFromSide(pos);
+						// if higher range, check if the player has enough free chunks
+						if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_UNLIMITED)) {
+
+							if (pos > chunkLoader.getRange()) {
+								int needed = ((1 + (pos * 2)) * (1 + (pos * 2))) - chunkLoader.size();
+								int available;
+								if (chunkLoader.isAlwaysOn()) {
+									available = DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
+								} else {
+									available = DataStoreManager.getDataStore().getOnlineOnlyFreeChunksAmount(chunkLoader.getOwner());
+								}
+
+								if (needed > available) {
+									if (chunkLoader.getOwner().equals(player.getUniqueId())) {
+										player.sendMessage(Text.of(TextColors.RED, "You don't have enough free chunks! Needed: " + needed + ". Available: " + available + "."));
+									} else {
+										player.sendMessage(Text.of(TextColors.RED, chunkLoader.getOwnerName() + " don't have enough free chunks! Needed: " + needed + ". Available: " + available + "."));
+									}
+									closeInventory(player);
+									return;
+								}
+							}
+						}
+
+						BetterChunkLoader.instance().getLogger().info(player.getName() + " edited " + chunkLoader.getOwnerName() + "'s chunk loader at " + chunkLoader.getLocationString() + " range from " + chunkLoader.getRange() + " to " + pos);
+						DataStoreManager.getDataStore().changeChunkLoaderRange(chunkLoader, Byte.valueOf("" + pos));
+						player.sendMessage(Text.of(TextColors.GOLD, "Chunk Loader updated."));
+						closeInventory(player);
+					}
+				}
+			}
+		};
+	}
+
+	private static void closeInventory(final Player p) {
+		Task.builder().execute(new InventoryCloseAfterADelayTask(p))
+				.delay(10, TimeUnit.MILLISECONDS)
+				.name("Closing players inventory.").submit(BetterChunkLoader.instance());
 	}
 
 }
