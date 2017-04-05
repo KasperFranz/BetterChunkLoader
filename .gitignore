@@ -2,7 +2,7 @@
 lib/
 src/test/
 .settings/
-target/
+build/
 .idea/
 *.iml
 .classpath
