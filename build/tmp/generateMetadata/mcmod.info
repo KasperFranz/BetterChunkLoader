@@ -1,0 +1,14 @@
+[
+    {
+        "modid": "betterchunkloader",
+        "name": "BetterChunkLoader",
+        "version": "1.0",
+        "description": "A Crates plugin for Sponge",
+        "authorList": [
+            "KaiNoMood, Rob5Underscores, KasperFranz"
+        ],
+        "requiredMods": [
+            "spongeapi@5.2.0-SNAPSHOT"
+        ]
+    }
+]

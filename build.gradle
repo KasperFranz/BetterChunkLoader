@@ -1,0 +1,24 @@
+plugins {
+    id 'org.spongepowered.plugin' version '0.8.1'
+}
+
+group = 'net.kaikk.mc'
+version = '3.0.0'
+description = 'A Crates plugin for Sponge'
+
+dependencies {
+    compile 'org.spongepowered:spongeapi:5.2.0-SNAPSHOT'
+    compile 'net.kaikk.mc:BCLForgeLib:1.0'
+}
+
+repositories {
+    jcenter()
+    maven {
+        name 'Sponge maven repo'
+        url 'http://repo.spongepowered.org/maven'
+    }
+    maven {
+        name 'net.kaikk.mc'
+        url 'http://kaikk.net/mc/repo/'
+    }
+}
