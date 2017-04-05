@@ -117,7 +117,6 @@ public class MySqlDataStore extends AHashMapDataStore {
 		super.addChunkLoader(chunkLoader);
 		try {
 		    String statement = "REPLACE INTO bcl_chunkloaders VALUES (\""+chunkLoader.getLocationString()+"\", "+chunkLoader.getRange()+", "+UUIDtoHexString(chunkLoader.getOwner())+", "+chunkLoader.getCreationDate().getTime()+", "+(chunkLoader.isAlwaysOn()?1:0)+", \""+ Config.getConfig().get().getNode("ServerName").getString() +"\")";
-            BetterChunkLoader.instance().getLogger().info(statement);
 			this.statement().executeUpdate(statement);
 		} catch (SQLException e) {
 			e.printStackTrace();
