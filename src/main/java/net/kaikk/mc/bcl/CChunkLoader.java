@@ -301,6 +301,7 @@ public class CChunkLoader extends ChunkLoader {
 
 	public static Consumer<ClickInventoryEvent> createClickEventConsumer(CChunkLoader chunkLoader) {
 		return event -> {
+			event.setCancelled(true);
 			if (event.getCause().last(Player.class).isPresent()) {
 				Player player = event.getCause().last(Player.class).get();
 
