@@ -8,9 +8,10 @@ import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by ROB on 08/12/2016.
@@ -25,16 +26,16 @@ public class ChunksChangeOperatorElement extends CommandElement {
     @Override
     protected Object parseValue(CommandSource commandSource, CommandArgs commandArgs) throws ArgumentParseException {
         String arg = commandArgs.next();
-        if(arg.equalsIgnoreCase("set")){
+        if (arg.equalsIgnoreCase("set")) {
             return arg;
         }
-        if(arg.equalsIgnoreCase("add")){
+        if (arg.equalsIgnoreCase("add")) {
             return arg;
         }
-        if(arg.equalsIgnoreCase("remove")){
+        if (arg.equalsIgnoreCase("remove")) {
             return arg;
         }
-        throw commandArgs.createError(Text.of(new Object[] { TextColors.RED, arg, " is not a valid argument!" }));
+        throw commandArgs.createError(Text.of(new Object[]{TextColors.RED, arg, " is not a valid argument!"}));
     }
 
     @Override

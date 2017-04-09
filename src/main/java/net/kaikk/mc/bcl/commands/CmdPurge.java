@@ -21,6 +21,7 @@ import java.util.List;
  * Created by ROB on 08/12/2016.
  */
 public class CmdPurge implements CommandExecutor {
+
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
 

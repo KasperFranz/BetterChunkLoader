@@ -5,7 +5,6 @@ import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.utils.BCLPermission;
 import net.kaikk.mc.bcl.utils.Messenger;
-import net.kaikk.mc.bcl.utils.Utilities;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -22,6 +21,7 @@ import java.util.UUID;
  * Created by ROB on 08/12/2016.
  */
 public class CmdDelete implements CommandExecutor {
+
     @Override
     public CommandResult execute(CommandSource sender, CommandContext commandContext) throws CommandException {
 
@@ -39,14 +39,14 @@ public class CmdDelete implements CommandExecutor {
         UUID playerUUID = user.getUniqueId();
 
         List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(playerUUID);
-        if (clList==null) {
+        if (clList == null) {
             sender.sendMessage(Text.builder("This player doesn't have any chunk loader.").color(TextColors.RED).build());
             return CommandResult.empty();
         }
 
         DataStoreManager.getDataStore().removeChunkLoaders(playerUUID);
         sender.sendMessage(Text.builder("All chunk loaders placed by this player have been removed!").color(TextColors.GREEN).build());
-        BetterChunkLoader.instance().getLogger().info(sender.getName()+" deleted all chunk loaders placed by "+user.getName());
+        BetterChunkLoader.instance().getLogger().info(sender.getName() + " deleted all chunk loaders placed by " + user.getName());
 
         return CommandResult.success();
     }

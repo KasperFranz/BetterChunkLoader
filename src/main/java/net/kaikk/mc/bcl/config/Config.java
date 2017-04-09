@@ -15,31 +15,25 @@ import java.nio.file.attribute.FileAttribute;
 /**
  * Created by Rob5Underscores on 10/12/2016.
  */
-public class Config implements Configurable
-{
+public class Config implements Configurable {
+
     private static Config config = new Config();
-
-    public static Config getConfig()
-    {
-        return config;
-    }
-
     private Path configFile = Paths.get(BetterChunkLoader.instance().getConfigDir() + "/config.conf", new String[0]);
     private ConfigurationLoader<CommentedConfigurationNode> configLoader = HoconConfigurationLoader.builder().setPath(configFile).build();
     private CommentedConfigurationNode configNode;
 
-    public void setup()
-    {
+    public static Config getConfig() {
+        return config;
+    }
+
+    public void setup() {
         if (!Files.exists(this.configFile, new LinkOption[0])) {
-            try
-            {
+            try {
                 Files.createFile(this.configFile, new FileAttribute[0]);
                 load();
                 populate();
                 save();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
@@ -47,32 +41,23 @@ public class Config implements Configurable
         }
     }
 
-    public void load()
-    {
-        try
-        {
-            this.configNode = ((CommentedConfigurationNode)this.configLoader.load());
-        }
-        catch (IOException e)
-        {
+    public void load() {
+        try {
+            this.configNode = ((CommentedConfigurationNode) this.configLoader.load());
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void save()
-    {
-        try
-        {
+    public void save() {
+        try {
             this.configLoader.save(this.configNode);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void populate()
-    {
+    public void populate() {
         get().getNode("ServerName").setValue("aServer").setComment("Unique name of server");
         get().getNode("MaxHoursOffline").setValue(72).setComment("Time in hours before player's chunkloaders become inactive.");
         get().getNode("DataStore").setValue("MySQL").setComment("Currently the only DataStore...");
@@ -87,8 +72,7 @@ public class Config implements Configurable
         get().getNode("MySQL", "Database").setValue("db");
     }
 
-    public CommentedConfigurationNode get()
-    {
+    public CommentedConfigurationNode get() {
         return this.configNode;
     }
 }
