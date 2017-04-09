@@ -306,6 +306,21 @@ public class CChunkLoader extends ChunkLoader {
         return (this.isAlwaysOn ? "y" : "n") + " - " + this.sizeX() + " - " + this.loc.toString() + " - " + this.serverName;
     }
 
+
+    public Text toText() {
+        TextColor color = this.isAlwaysOn ? TextColors.AQUA : TextColors.GRAY;
+        String text = this.isAlwaysOn ? "World" : "Personal";
+        return Text.builder()
+                .append(Text.builder("[" + text + "] ").color(color).build())
+                .append(Text.builder(getPrettyLocationString() + " ").color(TextColors.GOLD).build())
+                .append(Text.of(" - radius"))
+                .append(Text.builder(sizeX(getRange())).color(TextColors.GOLD).build())
+                .toText();
+
+        // (this.isAlwaysOn ? "y" : "n") + " - " + this.sizeX() + " - " + this.loc.toString() + " - " + this.serverName;
+    }
+
+
     public UUID getOwner() {
         return owner;
     }
@@ -320,9 +335,7 @@ public class CChunkLoader extends ChunkLoader {
     }
 
     public String getLocationString() {
-        String locString = "";
-        locString += loc.getExtent().getName() + ":" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
-        return locString;
+        return loc.getExtent().getName() + ":" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
     }
 
     @XmlAttribute(name = "loc")
@@ -344,6 +357,11 @@ public class CChunkLoader extends ChunkLoader {
         } catch (Exception e) {
             throw new RuntimeException("Wrong chunk loader location: " + location);
         }
+    }
+
+    public String getPrettyLocationString() {
+        return loc.getExtent().getName() + " (" + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ() + ")";
+
     }
 
     public String getServerName() {
@@ -368,9 +386,6 @@ public class CChunkLoader extends ChunkLoader {
         this.isAlwaysOn = isAlwaysOn;
     }
 
-    public Inventory getInventory() {
-        return null;
-    }
 
     /** Shows the chunk loader's user interface to the specified player */
     void showUI(Player player) {

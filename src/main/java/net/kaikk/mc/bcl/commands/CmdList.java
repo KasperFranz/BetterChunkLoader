@@ -1,10 +1,22 @@
 package net.kaikk.mc.bcl.commands;
 
+import com.google.common.collect.Lists;
+import net.kaikk.mc.bcl.CChunkLoader;
+import net.kaikk.mc.bcl.datastore.DataStoreManager;
+import net.kaikk.mc.bcl.utils.Messenger;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.service.pagination.PaginationList;
+import org.spongepowered.api.text.Text;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Created by ROB on 08/12/2016.
@@ -13,110 +25,39 @@ public class CmdList implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-        //
-        //        int page = 1;
-        //        if(commandContext.getOne("page").isPresent()){
-        //            try {
-        //                page = (Integer)commandContext.getOne("page").get();
-        //            } catch (Exception e) {
-        //                commandSource.sendMessage(Text.builder("Invalid page").color(TextColors.RED).build());
-        //                return null;
-        //            }
-        //        }
-        //
-        //        if (args[1].equalsIgnoreCase("all")) {
-        //            if (!sender.hasPermission(BCLPermission.COMMAND_LIST_ALL)) {
-        //                sender.sendMessage(ChatColor.RED + "You don't have permission to run this command.");
-        //                return false;
-        //            }
-        //
-        //            List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders();
-        //
-        //            printChunkLoadersList(clList, sender, page);
-        //        } else if (args[1].equalsIgnoreCase("world")) {
-        //            if (!sender.hasPermission(BCLPermission.COMMAND_LIST_OTHERS)) {
-        //                sender.sendMessage(ChatColor.RED + "You don't have permission to run this command.");
-        //                return false;
-        //            }
-        //
-        //            List<CChunkLoader> clList = new ArrayList<CChunkLoader>();
-        //            for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
-        //                if (cl.isAlwaysOn()) {
-        //                    clList.add(cl);
-        //                }
-        //            }
-        //
-        //            printChunkLoadersList(clList, sender, page);
-        //        } else {
-        //            String playerName = args[1];
-        //            if (playerName.equalsIgnoreCase("own")) {
-        //                playerName = sender.getName();
-        //            }
-        //
-        //            if (sender.getName().equalsIgnoreCase(playerName)) {
-        //                if (!sender.hasPermission(BCLPermission.COMMAND_LIST_OWN)) {
-        //                    sender.sendMessage(ChatColor.RED + "You don't have permission to run this command.");
-        //                    return false;
-        //                }
-        //            } else {
-        //                if (!sender.hasPermission(BCLPermission.COMMAND_LIST_OTHERS)) {
-        //                    sender.sendMessage(ChatColor.RED + "You don't have permission to run this command.");
-        //                    return false;
-        //                }
-        //            }
-        //
-        //            OfflinePlayer player = instance.getServer().getOfflinePlayer(playerName);
-        //            if (player == null || !player.hasPlayedBefore()) {
-        //                sender.sendMessage(ChatColor.RED + "Player not found.");
-        //                return false;
-        //            }
-        //            List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(player.getUniqueId());
-        //            if (clList == null || clList.size() == 0) {
-        //                sender.sendMessage(ChatColor.RED + "This player doesn't have any chunk loader.");
-        //                return false;
-        //            }
-        //
-        //            int clSize = clList.size();
-        //            int pages = (int) Math.ceil(clSize / 5.00);
-        //
-        //            if (page > pages) {
-        //                sender.sendMessage(ChatColor.RED + "Invalid page");
-        //                return false;
-        //            }
-        //
-        //            sender.sendMessage(ChatColor.GOLD + "== " + player.getName() + "'s loaded chunks (" + page + "/" + pages + ") ==");
-        //            sender.sendMessage(ChatColor.GRAY + "(World Loader? - Size - Position)");
-        //
-        //            for (int i = (page - 1) * 5; i < page * 5 && i < clSize; i++) {
-        //                CChunkLoader chunkLoader = clList.get(i);
-        //                sender.sendMessage(chunkLoader.toString());
-        //            }
-        //
-        //        }
-        //        return true;
-        //    }
-        //    static private boolean printChunkLoadersList(List<CChunkLoader> clList, CommandSender sender, int page) {
-        //
-        //        int clSize=clList.size();
-        //        if (clSize==0) {
-        //            sender.sendMessage(ChatColor.RED + "There isn't loaded chunks yet!");
-        //            return false;
-        //        }
-        //
-        //        int pages=(int) Math.ceil(clSize/5.00);
-        //
-        //        if (page>pages) {
-        //            sender.sendMessage(ChatColor.RED + "Invalid page");
-        //            return false;
-        //        }
-        //
-        //        sender.sendMessage(ChatColor.GOLD + "== Loaded Chunks List ("+page+"/"+pages+") ==");
-        //        sender.sendMessage(ChatColor.GRAY + "(Owner - World Loader? - Size - Position)");
-        //
-        //        for(int i=(page-1)*5; i<page*5 && i<clSize; i++) {
-        //            CChunkLoader chunkLoader=clList.get(i);
-        //            sender.sendMessage(chunkLoader.getOwnerName()+" - "+chunkLoader.toString());
-        //        }
+        Optional<User> optionalUser = commandContext.getOne("user");
+        UUID user;
+        String name;
+
+        if (optionalUser.isPresent()) {
+            user = optionalUser.get().getUniqueId();
+            name = optionalUser.get().getName();
+        } else if (commandSource instanceof Player) {
+            user = ((Player) commandSource).getUniqueId();
+            name = commandSource.getName();
+
+        } else {
+            Messenger.senderNotPlayerError(commandSource);
+            return CommandResult.empty();
+        }
+
+
+        List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(user);
+        List<Text> texts = Lists.newArrayList();
+        clList.forEach(chunkLoader -> {
+            texts.add(chunkLoader.toText());
+        });
+
+        if (texts.isEmpty()) {
+            texts.add(Messenger.getNoChunkLoaders(name));
+        }
+
+        PaginationList.builder()
+                .title(Text.of(name + "'s Chunkloaders"))
+                .contents(texts)
+                .footer(Text.of("Footer"))
+                .sendTo(commandSource);
+
         return CommandResult.empty();
     }
 

@@ -92,4 +92,7 @@ public class Messenger {
     }
 
 
+    public static Text getNoChunkLoaders(String name) {
+        return Text.builder(name + " has no chunkloaders").color(TextColors.GOLD).build();
+    }
 }

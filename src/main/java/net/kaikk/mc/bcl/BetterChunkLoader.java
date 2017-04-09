@@ -6,6 +6,7 @@ import net.kaikk.mc.bcl.commands.CmdBalance;
 import net.kaikk.mc.bcl.commands.CmdChunks;
 import net.kaikk.mc.bcl.commands.CmdDelete;
 import net.kaikk.mc.bcl.commands.CmdInfo;
+import net.kaikk.mc.bcl.commands.CmdList;
 import net.kaikk.mc.bcl.commands.CmdPurge;
 import net.kaikk.mc.bcl.commands.elements.ChunksChangeOperatorElement;
 import net.kaikk.mc.bcl.commands.elements.LoaderTypeElement;
@@ -203,6 +204,14 @@ public class BetterChunkLoader {
                 .description(Text.of("Get the balance of your different types of chunk loaders."))
                 .build();
 
+        CommandSpec cmdList = CommandSpec.builder()
+                .arguments(GenericArguments.optional(GenericArguments.requiringPermission(
+                        GenericArguments.user(Text.of("user")), BCLPermission.COMMAND_LIST_OTHERS)))
+                .permission(BCLPermission.COMMAND_LIST_SELF)
+                .executor(new CmdList())
+                .description(Text.of("Get the list of your chunk loaders."))
+                .build();
+
 
         CommandSpec cmdChunks = CommandSpec.builder()
                 .arguments(GenericArguments.seq(new ChunksChangeOperatorElement(Text.of("change")),
@@ -231,7 +240,7 @@ public class BetterChunkLoader {
         CommandSpec bclCmdSpec = CommandSpec.builder()
                 .child(cmdBalance, new String[]{"balance", "bal"})
                 .child(cmdInfo, new String[]{"info"})
-                //.child(cmdList, new String[] { "list", "ls" })
+                .child(cmdList, new String[]{"list", "ls"})
                 .child(cmdChunks, new String[]{"chunks"})
                 .child(cmdDelete, new String[]{"delete", "del"})
                 .child(cmdPurge, new String[]{"purge"})
