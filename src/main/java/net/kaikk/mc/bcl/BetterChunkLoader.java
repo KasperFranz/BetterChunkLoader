@@ -75,6 +75,7 @@ public class BetterChunkLoader {
         //				return getPlayerDataLastModified(playerId);
         //			}
         //		}
+        //TODO: maybe make a call to nucleus and check when the user was last online (if they have nucleus enabled)
         //TODO: Reimplement the above. Ref: https://forums.spongepowered.org/t/get-last-played-instance-of-offline-player/16829/11
         return getPlayerDataLastModified(playerId);
 

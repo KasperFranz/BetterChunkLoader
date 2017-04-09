@@ -17,24 +17,32 @@ public class CmdBCL implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-        Text message = BetterChunkLoader.getPrefix().concat(Text.builder("Commands").color(TextColors.LIGHT_PURPLE).build());
+        Text.Builder message = Text.builder().append(BetterChunkLoader.getPrefix()).append(Text.builder("Commands").color(TextColors.LIGHT_PURPLE)
+                .build());
         if (commandSource.hasPermission(BCLPermission.COMMAND_BALANCE)) {
-            message = message.concat(Text.NEW_LINE).concat(Text.builder("/bcl bal").color(TextColors.BLUE).build());
+            message.append(Text.NEW_LINE).append(Text.builder("/bcl bal").color(TextColors.BLUE).build());
+        }
+        if (commandSource.hasPermission(BCLPermission.COMMAND_LIST_SELF)) {
+            if(commandSource.hasPermission(BCLPermission.COMMAND_LIST_OTHERS)){
+                message.append(Text.NEW_LINE).append(Text.builder("/bcl list [player]").color(TextColors.BLUE).build());
+            }else {
+                message.append(Text.NEW_LINE).append(Text.builder("/bcl list").color(TextColors.BLUE).build());
+            }
         }
         if (commandSource.hasPermission(BCLPermission.COMMAND_INFO)) {
-            message = message.concat(Text.NEW_LINE).concat(Text.builder("/bcl info").color(TextColors.BLUE).build());
+            message.append(Text.NEW_LINE).append(Text.builder("/bcl info").color(TextColors.BLUE).build());
         }
         if (commandSource.hasPermission(BCLPermission.COMMAND_CHUNKS)) {
-            message = message.concat(Text.NEW_LINE)
-                    .concat(Text.builder("/bcl chunks <add|set|remove> <player> <type> <amount>").color(TextColors.BLUE).build());
+            message.append(Text.NEW_LINE)
+                    .append(Text.builder("/bcl chunks <add|set|remove> <player> <type> <amount>").color(TextColors.BLUE).build());
         }
         if (commandSource.hasPermission(BCLPermission.COMMAND_DELETE)) {
-            message = message.concat(Text.NEW_LINE).concat(Text.builder("/bcl delete <player>").color(TextColors.BLUE).build());
+            message.append(Text.NEW_LINE).append(Text.builder("/bcl delete <player>").color(TextColors.BLUE).build());
         }
         if (commandSource.hasPermission(BCLPermission.COMMAND_PURGE)) {
-            message = message.concat(Text.NEW_LINE).concat(Text.builder("/bcl purge").color(TextColors.BLUE).build());
+            message.append(Text.NEW_LINE).append(Text.builder("/bcl purge").color(TextColors.BLUE).build());
         }
-        commandSource.sendMessage(message);
+        commandSource.sendMessage(message.build());
         return CommandResult.success();
     }
 }

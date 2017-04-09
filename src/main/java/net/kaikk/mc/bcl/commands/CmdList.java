@@ -62,8 +62,9 @@ public class CmdList implements CommandExecutor {
         }
 
         PaginationList.builder()
-                .title(Text.builder(name + " Chunkloaders").color(TextColors.GOLD).build())
+                .title(Text.of(TextColors.GOLD,name + " Chunkloaders"))
                 .contents(texts)
+                .padding(Text.of("-"))
                 .sendTo(commandSource);
 
         return CommandResult.empty();
