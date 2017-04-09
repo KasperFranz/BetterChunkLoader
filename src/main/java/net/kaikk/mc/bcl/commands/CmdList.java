@@ -13,6 +13,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,12 +41,20 @@ public class CmdList implements CommandExecutor {
             Messenger.senderNotPlayerError(commandSource);
             return CommandResult.empty();
         }
+        List<CChunkLoader> clList;
+        boolean showUser = false;
+        if (commandContext.getOne("all").isPresent()) {
+            clList = DataStoreManager.getDataStore().getChunkLoaders();
+            name = "all";
+            showUser = true;
+        } else {
+            clList = DataStoreManager.getDataStore().getChunkLoaders(user);
+        }
 
-
-        List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(user);
         List<Text> texts = Lists.newArrayList();
+        boolean finalShowUser = showUser;
         clList.forEach(chunkLoader -> {
-            texts.add(chunkLoader.toText());
+            texts.add(chunkLoader.toText(finalShowUser));
         });
 
         if (texts.isEmpty()) {
@@ -53,9 +62,8 @@ public class CmdList implements CommandExecutor {
         }
 
         PaginationList.builder()
-                .title(Text.of(name + "'s Chunkloaders"))
+                .title(Text.builder(name + " Chunkloaders").color(TextColors.GOLD).build())
                 .contents(texts)
-                .footer(Text.of("Footer"))
                 .sendTo(commandSource);
 
         return CommandResult.empty();

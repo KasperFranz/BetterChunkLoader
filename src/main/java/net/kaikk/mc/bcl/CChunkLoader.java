@@ -307,14 +307,21 @@ public class CChunkLoader extends ChunkLoader {
     }
 
 
-    public Text toText() {
+    public Text toText(boolean showUser) {
         TextColor color = this.isAlwaysOn ? TextColors.AQUA : TextColors.GRAY;
         String text = this.isAlwaysOn ? "World" : "Personal";
-        return Text.builder()
-                .append(Text.builder("[" + text + "] ").color(color).build())
-                .append(Text.builder(getPrettyLocationString() + " ").color(TextColors.GOLD).build())
-                .append(Text.of(" - radius"))
+
+        Text.Builder builder = Text.builder()
+                .append(Text.builder("[" + text + "] ").color(color).build());
+
+        if (showUser) {
+            builder.append(Text.of(getOwnerName() + " "));
+        }
+
+        return builder
                 .append(Text.builder(sizeX(getRange())).color(TextColors.GOLD).build())
+                .append(Text.of(" - "))
+                .append(Text.builder(getPrettyLocationString() + " ").color(TextColors.GOLD).build())
                 .toText();
 
         // (this.isAlwaysOn ? "y" : "n") + " - " + this.sizeX() + " - " + this.loc.toString() + " - " + this.serverName;

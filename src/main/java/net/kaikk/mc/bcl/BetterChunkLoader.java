@@ -205,8 +205,14 @@ public class BetterChunkLoader {
                 .build();
 
         CommandSpec cmdList = CommandSpec.builder()
-                .arguments(GenericArguments.optional(GenericArguments.requiringPermission(
-                        GenericArguments.user(Text.of("user")), BCLPermission.COMMAND_LIST_OTHERS)))
+                .arguments(
+                        // TODO: figure out a good way to do this.
+                        //                        GenericArguments.optional(GenericArguments.requiringPermission(new AllElement(Text.of("all")),
+                        // BCLPermission
+                        //                .COMMAND_LIST_ALL)),
+                        GenericArguments.optional(
+                                GenericArguments.requiringPermission(GenericArguments.user(Text.of("user")), BCLPermission.COMMAND_LIST_OTHERS))
+                )
                 .permission(BCLPermission.COMMAND_LIST_SELF)
                 .executor(new CmdList())
                 .description(Text.of("Get the list of your chunk loaders."))
