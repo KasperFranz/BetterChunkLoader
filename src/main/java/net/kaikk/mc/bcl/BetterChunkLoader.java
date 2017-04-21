@@ -22,7 +22,7 @@ import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.event.game.state.GameStoppedServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -170,7 +170,7 @@ public class BetterChunkLoader {
     }
 
     @Listener
-    public void onDisable(GameStoppedServerEvent event) {
+    public void onDisable(GameStoppingServerEvent event) {
         for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
             if (cl.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
                 BCLForgeLib.instance().removeChunkLoader(cl);
