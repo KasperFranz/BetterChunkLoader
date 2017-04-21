@@ -10,6 +10,9 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Fixed
 
 
-## 2017-04-21 3.2.1
+## 2017-04-21 3.3.0
 ### Changed
  - Using the gameStoppingEvent instead of the GameStopped event to be sure that we can unforce properly.
+ 
+### Fixed
+- setting a players personal/world is not going out from the base config option instead of 0.

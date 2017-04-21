@@ -204,9 +204,14 @@ public class MySqlDataStore extends AHashMapDataStore {
     public void addAlwaysOnChunksLimit(UUID playerId, int amount) {
         super.addAlwaysOnChunksLimit(playerId, amount);
         try {
+            int world = Config.getConfig().get()
+                    .getNode("DefaultChunksAmount").getNode("World").getInt();
+            int personal = Config.getConfig().get()
+                    .getNode("DefaultChunksAmount").getNode("Personal").getInt()+amount;
             this.statement().executeUpdate(
-                    "INSERT INTO bcl_playersdata VALUES (" + UUIDtoHexString(playerId) + ", " + amount + ", " + Config.getConfig().get()
-                            .getNode("DefaultChunksAmount").getNode("World").getInt() + ") ON DUPLICATE KEY UPDATE alwayson=alwayson+" + amount);
+                    "INSERT INTO bcl_playersdata VALUES (" + UUIDtoHexString(playerId) + ", " + personal + ", " + world + ") ON DUPLICATE KEY "
+                            + "UPDATE "
+                            + "alwayson=alwayson+" + amount);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -216,8 +221,13 @@ public class MySqlDataStore extends AHashMapDataStore {
     public void addOnlineOnlyChunksLimit(UUID playerId, int amount) {
         super.addOnlineOnlyChunksLimit(playerId, amount);
         try {
-            this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES (" + UUIDtoHexString(playerId) + ", " + Config.getConfig().get()
-                    .getNode("DefaultChunksAmount").getNode("Personal").getInt() + ", " + amount + ") ON DUPLICATE KEY UPDATE onlineonly=onlineonly+"
+            int world = Config.getConfig().get()
+                    .getNode("DefaultChunksAmount").getNode("World").getInt()+amount;
+            int personal = Config.getConfig().get()
+                    .getNode("DefaultChunksAmount").getNode("Personal").getInt();
+            this.statement().executeUpdate("INSERT INTO bcl_playersdata VALUES (" + UUIDtoHexString(playerId) + ", " + personal + ", " + world +
+                    ") "
+                    + "ON DUPLICATE KEY UPDATE onlineonly=onlineonly+"
                     + amount);
         } catch (SQLException e) {
             e.printStackTrace();
