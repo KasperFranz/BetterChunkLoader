@@ -19,6 +19,7 @@ public class CmdBCL implements CommandExecutor {
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
         Text.Builder message = Text.builder().append(BetterChunkLoader.getPrefix()).append(Text.builder("Commands").color(TextColors.LIGHT_PURPLE)
                 .build());
+
         if (commandSource.hasPermission(BCLPermission.COMMAND_BALANCE)) {
             message.append(Text.NEW_LINE).append(Text.builder("/bcl bal").color(TextColors.BLUE).build());
         }

@@ -5,7 +5,7 @@ package net.kaikk.mc.bcl.utils;
  */
 public class BCLPermission {
 
-    public static final String COMMAND_BALANCE = "betterchunkloader.balance";
+    public static final String COMMAND_BALANCE = "betterchunkloader.balance.own";
     public static final String COMMAND_BALANCE_OTHERS = "betterchunkloader.balance.others";
     public static final String COMMAND_CHUNKS = "betterchunkloader.chunks";
     public static final String COMMAND_DELETE = "betterchunkloader.delete";

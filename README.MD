@@ -11,3 +11,18 @@ the database is NOT compatible with the 1.7 version of this mod, since this is m
 If you have any issues with it please make an issue.
 
 The latest builds can be found on our [CI server](http://ci.communitybuilt.net/job/BCLForgeLib/) which is provided by Community Built
+
+
+## Commands
+The base command is betterchunkloader (with the alias of bcl), this gives the general usage and what commands is avaliable.
+
+| Subcommand        | paramaters           | Permission  | Description |
+| ------------- |:-------------:| -----:| ----- |
+| `balance` |   | `betterchunkloader.balance.own` | Get your balance of chunkloaders.
+| `balance` | [User]  | `betterchunkloader.balance.others` | Get your balance of  another player
+| `info` |  | `betterchunkloader.info`  | get general information about chunk loaders on the server.
+| `list` |  | `betterchunkloader.list.own` | get a list of your chunk loaders with the coordinates.
+| `list` | [User] | `betterchunkloader.list.others` | get a list of the users chunk loaders with the coordinates.
+| `chunks` | [ add \| set \| remove ] [User] [Type] [Amount] | `betterchunkloader.chunks` | change a players amount of the different chunk loaders (personal or world)
+| `delete` | [User] | `betterchunkloader.delete`  | Remove the specified players chunk loaders.
+| `purge` |  | `betterchunkloader.purge` | Remove Chunk loaders in not existing worlds (eg. after removing a world)

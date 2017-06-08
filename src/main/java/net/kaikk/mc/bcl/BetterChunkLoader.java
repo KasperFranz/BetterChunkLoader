@@ -186,6 +186,14 @@ public class BetterChunkLoader {
     private void initializeCommands() {
 
 
+        CommandSpec cmdBalance = CommandSpec.builder()
+                .arguments(GenericArguments.optional(GenericArguments.requiringPermission(
+                        GenericArguments.user(Text.of("user")), BCLPermission.COMMAND_BALANCE_OTHERS)))
+                .permission(BCLPermission.COMMAND_BALANCE)
+                .executor(new CmdBalance())
+                .description(Text.of("Get the balance of your different types of chunk loaders."))
+                .build();
+
         CommandSpec cmdInfo = CommandSpec.builder()
                 .arguments(GenericArguments.none())
                 .permission(BCLPermission.COMMAND_INFO)
@@ -194,16 +202,6 @@ public class BetterChunkLoader {
                 .build();
 
 
-        //private CommandSpec cmdList = CommandSpec.builder().arguments(GenericArguments.none()).build();
-
-
-        CommandSpec cmdBalance = CommandSpec.builder()
-                .arguments(GenericArguments.optional(GenericArguments.requiringPermission(
-                        GenericArguments.user(Text.of("user")), BCLPermission.COMMAND_BALANCE_OTHERS)))
-                .permission(BCLPermission.COMMAND_BALANCE)
-                .executor(new CmdBalance())
-                .description(Text.of("Get the balance of your different types of chunk loaders."))
-                .build();
 
         CommandSpec cmdList = CommandSpec.builder()
                 .arguments(
