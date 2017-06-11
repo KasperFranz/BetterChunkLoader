@@ -11,7 +11,7 @@ project.ext.authors = 'KaiNoMood, Rob5Underscores, KasperFranz'
 
 dependencies {
     compile 'org.spongepowered:spongeapi:5.2.0-SNAPSHOT'
-    compile 'net.kaikk.mc:bclforgelib:1.1.18'
+    compile 'com.github.KasperFranz:BCLForgeLib:master-SNAPSHOT'
 }
 
 blossom {
@@ -36,8 +36,6 @@ repositories {
         name 'Sponge maven repo'
         url 'http://repo.spongepowered.org/maven'
     }
-    maven {
-        name 'net.kaikk.mc'
-        url 'http://kaikk.net/mc/repo/'
-    }
+    maven { url 'https://jitpack.io' }
 }
+
