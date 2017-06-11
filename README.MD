@@ -26,3 +26,7 @@ The base command is betterchunkloader (with the alias of bcl), this gives the ge
 | `chunks` | [ add \| set \| remove ] [User] [Type] [Amount] | `betterchunkloader.chunks` | change a players amount of the different chunk loaders (personal or world)
 | `delete` | [User] | `betterchunkloader.delete`  | Remove the specified players chunk loaders.
 | `purge` |  | `betterchunkloader.purge` | Remove Chunk loaders in not existing worlds (eg. after removing a world)
+
+
+## Permissions
+An up to date version of the permissions can be found in [/src/main/java/net/kaikk/mc/bcl/utils/BCLPermission.java](src/main/java/net/kaikk/mc/bcl/utils/BCLPermission.java)
