@@ -11,8 +11,14 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 
 ## 2017-06-12 3.4.0
+### Changed
+ - changed permission to read your own balance from `betterchunkloader.balance` to `betterchunkloader.balance.own`
+
 ### Fixed
- - fixed an issue where the insert was done to the wrong part (world add as personal and persoanl as world, if using the add while nothing was in the DB)
+ - fixed an issue where the insert was done to the wrong part (world add as personal and personal as world, if using the add while nothing was in the DB)
+-fixed a permission issue (you was able to see everyone's balance without the right permission and updated the readme with the subcommands
+
+
 
 
 ## 2017-04-21 3.3.0
