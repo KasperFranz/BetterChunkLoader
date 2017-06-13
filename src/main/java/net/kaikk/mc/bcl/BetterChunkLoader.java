@@ -31,7 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
+import java.util.*;
 
 @Plugin(id = "betterchunkloader",
         name = "@name@",
@@ -48,6 +48,7 @@ public class BetterChunkLoader {
     @Inject
     @ConfigDir(sharedRoot = false)
     private Path configDir;
+    private Map<String, List<CChunkLoader>> activeChunkLoaders;
 
     public static BetterChunkLoader instance() {
         return instance;
@@ -96,6 +97,7 @@ public class BetterChunkLoader {
     }
 
     public void onLoad() {
+        this.activeChunkLoaders = new HashMap<>();
         // Register MySQL DataStore
         DataStoreManager.registerDataStore("MySQL", MySqlDataStore.class);
     }
@@ -149,7 +151,7 @@ public class BetterChunkLoader {
             for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
                 if (cl.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
                     if (cl.isLoadable()) {
-                        BCLForgeLib.instance().addChunkLoader(cl);
+                        this.loadChunks(cl);
                         count++;
                     }
                 }
@@ -171,11 +173,10 @@ public class BetterChunkLoader {
 
     @Listener
     public void onDisable(GameStoppingServerEvent event) {
-        for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
-            if (cl.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
-                BCLForgeLib.instance().removeChunkLoader(cl);
-            }
+        for (CChunkLoader cl : this.getActiveChunkloaders()) {
+            this.unloadChunks(cl);
         }
+
         instance = null;
     }
 
@@ -263,5 +264,35 @@ public class BetterChunkLoader {
 
     public Path getConfigDir() {
         return configDir;
+    }
+
+
+    public void loadChunks(CChunkLoader chunkloader){
+        if (chunkloader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+            BCLForgeLib.instance().addChunkLoader(chunkloader);
+            List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
+            if (clList == null) {
+                clList = new ArrayList<>();
+                activeChunkLoaders.put(chunkloader.getWorldName(), clList);
+            }
+            clList.add(chunkloader);
+        }
+    }
+
+
+    public void unloadChunks(CChunkLoader chunkloader){
+        if (chunkloader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+            BCLForgeLib.instance().removeChunkLoader(chunkloader);
+            List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
+            clList.remove(chunkloader);
+        }
+    }
+
+    public List<CChunkLoader> getActiveChunkloaders() {
+        List<CChunkLoader> chunkLoaders = new ArrayList<>();
+        for (List<CChunkLoader> clList : activeChunkLoaders.values()) {
+            chunkLoaders.addAll(clList);
+        }
+        return chunkLoaders;
     }
 }

@@ -1,5 +1,6 @@
 package net.kaikk.mc.bcl.commands;
 
+import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.utils.Messenger;
@@ -22,7 +23,7 @@ public class CmdInfo implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
 
-        List<CChunkLoader> chunkLoaders = DataStoreManager.getDataStore().getChunkLoaders();
+        List<CChunkLoader> chunkLoaders = BetterChunkLoader.instance().getActiveChunkloaders();
         if (chunkLoaders.isEmpty()) {
             Messenger.sendNoInfoMessage(commandSource);
             return CommandResult.success();
@@ -51,7 +52,7 @@ public class CmdInfo implements CommandExecutor {
 
         loadedChunksForPlayer.remove(CChunkLoader.adminUUID);
         players = loadedChunksForPlayer.size();
-
+/*
         for (Map.Entry<UUID, Integer> entry : loadedChunksForPlayer.entrySet()) {
             if (maxChunksCount < entry.getValue()) {
                 maxChunksCount = entry.getValue();
@@ -59,7 +60,7 @@ public class CmdInfo implements CommandExecutor {
             }
         }
 
-
+*/
         Messenger.sendInfoMessage(commandSource, onlineOnlyLoaders, alwaysOnLoaders, onlineOnlyChunks, alwaysOnChunks, players);
         return CommandResult.success();
     }

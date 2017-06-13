@@ -1,8 +1,8 @@
 package net.kaikk.mc.bcl.datastore;
 
+import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.config.Config;
-import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.world.Location;
@@ -24,7 +24,7 @@ public abstract class AHashMapDataStore implements IDataStore {
 
     @Override
     public List<CChunkLoader> getChunkLoaders() {
-        List<CChunkLoader> chunkLoaders = new ArrayList<CChunkLoader>();
+        List<CChunkLoader> chunkLoaders = new ArrayList<>();
         for (List<CChunkLoader> clList : this.chunkLoaders.values()) {
             chunkLoaders.addAll(clList);
         }
@@ -42,7 +42,7 @@ public abstract class AHashMapDataStore implements IDataStore {
 
     @Override
     public List<CChunkLoader> getChunkLoadersAt(String worldName, int chunkX, int chunkZ) {
-        List<CChunkLoader> chunkLoaders = new ArrayList<CChunkLoader>();
+        List<CChunkLoader> chunkLoaders = new ArrayList<>();
         for (CChunkLoader cl : this.getChunkLoaders(worldName)) {
             if (cl.getChunkX() == chunkX && cl.getChunkZ() == chunkZ) {
                 chunkLoaders.add(cl);
@@ -53,7 +53,7 @@ public abstract class AHashMapDataStore implements IDataStore {
 
     @Override
     public List<CChunkLoader> getChunkLoaders(UUID ownerId) {
-        List<CChunkLoader> chunkLoaders = new ArrayList<CChunkLoader>();
+        List<CChunkLoader> chunkLoaders = new ArrayList<>();
         for (CChunkLoader cl : this.getChunkLoaders()) {
             if (cl.getOwner().equals(ownerId)) {
                 chunkLoaders.add(cl);
@@ -77,7 +77,7 @@ public abstract class AHashMapDataStore implements IDataStore {
     public void addChunkLoader(CChunkLoader chunkLoader) {
         List<CChunkLoader> clList = this.chunkLoaders.get(chunkLoader.getWorldName());
         if (clList == null) {
-            clList = new ArrayList<CChunkLoader>();
+            clList = new ArrayList<>();
             this.chunkLoaders.put(chunkLoader.getWorldName(), clList);
         }
 
@@ -86,7 +86,7 @@ public abstract class AHashMapDataStore implements IDataStore {
             chunkLoader.getPlayer().spawnParticles(ParticleEffect.builder().type(ParticleTypes.MOBSPAWNER_FLAMES).quantity(10).build(),
                     chunkLoader.getLoc().getPosition());
             if (chunkLoader.isLoadable()) {
-                BCLForgeLib.instance().addChunkLoader(chunkLoader);
+                BetterChunkLoader.instance().loadChunks(chunkLoader);
             }
         }
     }
@@ -101,7 +101,7 @@ public abstract class AHashMapDataStore implements IDataStore {
             }
             clList.remove(chunkLoader);
             if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
-                BCLForgeLib.instance().removeChunkLoader(chunkLoader);
+                BetterChunkLoader.instance().unloadChunks(chunkLoader);
             }
         }
     }
@@ -117,13 +117,13 @@ public abstract class AHashMapDataStore implements IDataStore {
     @Override
     public void changeChunkLoaderRange(CChunkLoader chunkLoader, byte range) {
         if (chunkLoader.isLoadable()) {
-            BCLForgeLib.instance().removeChunkLoader(chunkLoader);
+            BetterChunkLoader.instance().unloadChunks(chunkLoader);
         }
 
         chunkLoader.setRange(range);
 
         if (chunkLoader.isLoadable()) {
-            BCLForgeLib.instance().addChunkLoader(chunkLoader);
+            BetterChunkLoader.instance().loadChunks(chunkLoader);
         }
     }
 
@@ -187,6 +187,6 @@ public abstract class AHashMapDataStore implements IDataStore {
 
     @Override
     public List<PlayerData> getPlayersData() {
-        return new ArrayList<PlayerData>(this.playersData.values());
+        return new ArrayList<>(this.playersData.values());
     }
 }

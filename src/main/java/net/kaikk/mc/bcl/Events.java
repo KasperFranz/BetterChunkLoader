@@ -2,12 +2,12 @@ package net.kaikk.mc.bcl;
 
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
-import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import net.kaikk.mc.bcl.utils.BCLPermission;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -81,7 +81,7 @@ public class Events {
         DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
 
         Optional<Player> player = event.getCause().last(Player.class);
-        String breaker = player.isPresent() ? player.get().getName() : "unknown";
+        String breaker = player.map(User::getName).orElse("unknown");
         Player owner = chunkLoader.getPlayer();
         if (owner != null && !owner.getName().equals(breaker)) {
             owner.sendMessage(
@@ -105,7 +105,7 @@ public class Events {
         for (CChunkLoader chunkLoader : clList) {
             if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
                 if (!chunkLoader.isAlwaysOn() && chunkLoader.blockCheck()) {
-                    BCLForgeLib.instance().addChunkLoader(chunkLoader);
+                    BetterChunkLoader.instance().loadChunks(chunkLoader);
                 }
             }
         }
@@ -119,7 +119,7 @@ public class Events {
         for (CChunkLoader chunkLoader : clList) {
             if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
                 if (!chunkLoader.isAlwaysOn()) {
-                    BCLForgeLib.instance().removeChunkLoader(chunkLoader);
+                    BetterChunkLoader.instance().unloadChunks(chunkLoader);
                 }
             }
         }
@@ -130,7 +130,7 @@ public class Events {
     public void onWorldLoad(LoadWorldEvent event) {
         for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders(event.getTargetWorld().getName())) {
             if (cl.isLoadable()) {
-                BCLForgeLib.instance().addChunkLoader(cl);
+                BetterChunkLoader.instance().loadChunks(cl);
             }
         }
     }

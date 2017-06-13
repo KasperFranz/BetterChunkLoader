@@ -6,8 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Added
  
 ### Changed
+ -  the info command is now only showing active currently loaded chunks.
 
 ### Fixed
+ - Fixed the spam when shutting down the server, since it tried to unload chunks we didn't load.
 
 
 ## 2017-06-12 3.4.0
