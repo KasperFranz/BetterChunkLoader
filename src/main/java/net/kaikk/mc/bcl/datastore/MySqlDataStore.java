@@ -94,8 +94,13 @@ public class MySqlDataStore extends AHashMapDataStore {
         try {
             ResultSet rs = this.statement().executeQuery("SELECT * FROM bcl_playersdata");
             while (rs.next()) {
-                PlayerData pd = new PlayerData(toUUID(rs.getString(1)), rs.getInt(2), rs.getInt(3));
-                this.playersData.put(pd.getPlayerId(), pd);
+                try {
+                    PlayerData pd = new PlayerData(toUUID(rs.getString(1)), rs.getInt(2), rs.getInt(3));
+                    this.playersData.put(pd.getPlayerId(), pd);
+                }catch(IllegalArgumentException e){
+                    BetterChunkLoader.instance().getLogger().info("We had a problem while loading the player: "+rs.getString(1));
+
+                }
             }
         } catch (SQLException e) {
             BetterChunkLoader.instance().getLogger().info("Couldn't read players data from MySQL server.");

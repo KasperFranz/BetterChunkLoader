@@ -10,7 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 ### Fixed
  - Fixed the spam when shutting down the server, since it tried to unload chunks we didn't load.
-
+ - A Illegal Exception if the data in the database isn't a valid UUID, then we now just say so instead of not loading the plugin.
 
 ## 2017-06-12 3.4.0
 ### Changed
