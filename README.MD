@@ -1,7 +1,11 @@
 # BetterChunkLoader
 [![Build Status](http://ci.communitybuilt.net/job/BetterChunkLoader/badge/icon)](http://ci.communitybuilt.net/job/BetterChunkLoader/)
+[![Discord](https://img.shields.io/badge/Support-Discord-7289DA.svg)](https://discord.gg/MD6qGAd)
 
 This Sponge plugin also requires the [BCLForge mod](https://github.com/KasperFranz/BCLForgeLib) which is used to save the chunks and make them loaded.
+
+## Support
+You can recieve support for using this plugin on my [Discord Chat](https://discord.gg/MD6qGAd).
 
 
 ## Known issues
