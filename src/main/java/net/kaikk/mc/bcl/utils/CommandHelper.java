@@ -53,7 +53,6 @@ public class CommandHelper {
                 return;
             }
             Player player = (Player) src;
-            // if not owner of claim, validate perms
             if (!player.hasPermission(BCLPermission.ABILITY_TELEPORT)) {
                 player.sendMessage(Text.of(Messenger.errorColor, "You do not have permission to use the teleport feature."));
                 return;
