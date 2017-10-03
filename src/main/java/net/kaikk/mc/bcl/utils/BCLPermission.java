@@ -18,4 +18,5 @@ public class BCLPermission {
     public static final String ABILITY_ADMINLOADER = "betterchunkloader.adminloader";
     public static final String ABILITY_EDIT_OTHERS = "betterchunkloader.edit.others";
     public static final String ABILITY_UNLIMITED = "betterchunkloader.unlimitedchunks";
+    public static final String ABILITY_TELEPORT = "betterchunkloader.teleport";
 }

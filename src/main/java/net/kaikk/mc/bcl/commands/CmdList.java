@@ -54,7 +54,7 @@ public class CmdList implements CommandExecutor {
         List<Text> texts = Lists.newArrayList();
         boolean finalShowUser = showUser;
         clList.forEach(chunkLoader -> {
-            texts.add(chunkLoader.toText(finalShowUser));
+            texts.add(chunkLoader.toText(finalShowUser,commandSource));
         });
 
         if (texts.isEmpty()) {

@@ -9,6 +9,7 @@ import net.kaikk.mc.bcl.utils.InventoryCloseAfterADelayTask;
 import net.kaikk.mc.bcl.utils.Messenger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
@@ -307,24 +308,8 @@ public class CChunkLoader extends ChunkLoader {
     }
 
 
-    public Text toText(boolean showUser) {
-        TextColor color = this.isAlwaysOn ? TextColors.AQUA : TextColors.GRAY;
-        String text = this.isAlwaysOn ? "World" : "Personal";
-
-        Text.Builder builder = Text.builder()
-                .append(Text.builder("[" + text + "] ").color(color).build());
-
-        if (showUser) {
-            builder.append(Text.of(getOwnerName() + " "));
-        }
-
-        return builder
-                .append(Text.builder(sizeX(getRange())).color(TextColors.GOLD).build())
-                .append(Text.of(" - "))
-                .append(Text.builder(getPrettyLocationString() + " ").color(TextColors.GOLD).build())
-                .toText();
-
-        // (this.isAlwaysOn ? "y" : "n") + " - " + this.sizeX() + " - " + this.loc.toString() + " - " + this.serverName;
+    public Text toText(boolean showUser, CommandSource source) {
+        return Messenger.getChunkText(source,this,showUser);
     }
 
 
@@ -432,7 +417,7 @@ public class CChunkLoader extends ChunkLoader {
         return 1 + (i * 2);
     }
 
-    private String sizeX(byte i) {
+    public String sizeX(byte i) {
         return this.side(i) + "x" + this.side(i);
     }
 

@@ -8,14 +8,22 @@ import static org.spongepowered.api.text.format.TextColors.RED;
 import static org.spongepowered.api.text.format.TextStyles.BOLD;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
+import net.kaikk.mc.bcl.CChunkLoader;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 /**
  * Created by Rob5Underscores on 10/12/2016.
  */
 public class Messenger {
+
+    public static TextColor errorColor = TextColors.RED;
 
     public static void sendInfoMessage(CommandSource sender, Integer personalLoaders, Integer worldLoaders, Integer personalChunks,
             Integer worldChunks, Integer playersLoading) {
@@ -94,5 +102,36 @@ public class Messenger {
 
     public static Text getNoChunkLoaders(String name) {
         return Text.builder(name + " has no chunkloaders").color(TextColors.GOLD).build();
+    }
+
+
+    public static Text getChunkText(CommandSource source, CChunkLoader chunkLoader, boolean showUser){
+        TextColor color = chunkLoader.isAlwaysOn() ? TextColors.AQUA : TextColors.GREEN;
+        String text = chunkLoader.isAlwaysOn() ? "World" : "Personal";
+
+        Text.Builder builder = Text.builder()
+                .append(Text.builder("[" + text + "] ").color(color).build());
+
+        if(source.hasPermission(BCLPermission.ABILITY_TELEPORT) && source instanceof Player){
+            Location<World> location = chunkLoader.getLoc().add(0,1,0);
+            Text tp = Text.builder("[TP] ").color(TextColors.DARK_BLUE)
+                    .onClick(TextActions.executeCallback(CommandHelper.createTeleportConsumer(source, location )))
+                    .onHover(TextActions.showText(Text.of("Click to teleport on top of the chunkloader")))
+                    .build();
+            builder.append(tp);
+        }
+
+        if (showUser) {
+            builder.append(Text.of(chunkLoader.getOwnerName() + " "));
+        }
+
+
+        return builder
+                .append(Text.builder(chunkLoader.sizeX(chunkLoader.getRange())).color(TextColors.GOLD).build())
+                .append(Text.of(" - "))
+                .append(Text.builder(chunkLoader.getPrettyLocationString() + " ").color(TextColors.GOLD).build())
+                .toText();
+
+
     }
 }
