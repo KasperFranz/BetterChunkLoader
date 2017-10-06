@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ## [Unreleased][unreleased]
 ### Added
  - added an option to teleport to a chunkloader (if you have the permission)
+ - Added message when not able to load config. (#20)
 
 ### Changed
  -  the info command is now only showing active currently loaded chunks.

@@ -170,7 +170,7 @@ public class BetterChunkLoader {
             logger.info("Load complete.");
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Load failed!");
+            logger.error("Load failed: "+e.getMessage());
             //TODO: DISABLE PLUGIN HERE
         }
     }
