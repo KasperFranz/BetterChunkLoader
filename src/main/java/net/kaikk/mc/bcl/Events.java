@@ -25,10 +25,6 @@ import java.util.UUID;
 
 public class Events {
 
-    public Events() {
-
-    }
-
     @Listener
     public void onPlayerInteractBlockSecondary(InteractBlockEvent.Secondary.MainHand event, @First Player player,
             @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
