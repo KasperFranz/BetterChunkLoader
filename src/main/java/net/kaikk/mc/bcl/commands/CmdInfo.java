@@ -2,7 +2,6 @@ package net.kaikk.mc.bcl.commands;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.utils.Messenger;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -12,7 +11,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -30,7 +28,6 @@ public class CmdInfo implements CommandExecutor {
         }
 
         int alwaysOnLoaders = 0, onlineOnlyLoaders = 0, alwaysOnChunks = 0, onlineOnlyChunks = 0, maxChunksCount = 0, players = 0;
-        UUID maxChunksPlayer = null;
         HashMap<UUID, Integer> loadedChunksForPlayer = new HashMap<>();
 
         for (CChunkLoader chunkLoader : chunkLoaders) {

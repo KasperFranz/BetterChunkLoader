@@ -153,11 +153,9 @@ public class BetterChunkLoader {
             // load always on chunk loaders
             int count = 0;
             for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
-                if (cl.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
-                    if (cl.isLoadable()) {
-                        this.loadChunks(cl);
-                        count++;
-                    }
+                if (cl.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString()) && cl.isLoadable()) {
+                    this.loadChunks(cl);
+                    count++;
                 }
             }
 

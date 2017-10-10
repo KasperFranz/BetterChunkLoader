@@ -176,29 +176,26 @@ public class CChunkLoader extends ChunkLoader {
                     } else {
                         pos = chunkLoader.radiusFromSide(pos);
                         // if higher range, check if the player has enough free chunks
-                        if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_UNLIMITED)) {
+                        if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_UNLIMITED) &&  pos > chunkLoader.getRange()) {
+                            int needed = ((1 + (pos * 2)) * (1 + (pos * 2))) - chunkLoader.size();
+                            int available;
+                            if (chunkLoader.isAlwaysOn()) {
+                                available = DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
+                            } else {
+                                available = DataStoreManager.getDataStore().getOnlineOnlyFreeChunksAmount(chunkLoader.getOwner());
+                            }
 
-                            if (pos > chunkLoader.getRange()) {
-                                int needed = ((1 + (pos * 2)) * (1 + (pos * 2))) - chunkLoader.size();
-                                int available;
-                                if (chunkLoader.isAlwaysOn()) {
-                                    available = DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
+                            if (needed > available) {
+                                if (chunkLoader.getOwner().equals(player.getUniqueId())) {
+                                    player.sendMessage(Text.of(TextColors.RED,
+                                            "You don't have enough free chunks! Needed: " + needed + ". Available: " + available + "."));
                                 } else {
-                                    available = DataStoreManager.getDataStore().getOnlineOnlyFreeChunksAmount(chunkLoader.getOwner());
+                                    player.sendMessage(Text.of(TextColors.RED,
+                                            chunkLoader.getOwnerName() + " don't have enough free chunks! Needed: " + needed + ". Available: "
+                                                    + available + "."));
                                 }
-
-                                if (needed > available) {
-                                    if (chunkLoader.getOwner().equals(player.getUniqueId())) {
-                                        player.sendMessage(Text.of(TextColors.RED,
-                                                "You don't have enough free chunks! Needed: " + needed + ". Available: " + available + "."));
-                                    } else {
-                                        player.sendMessage(Text.of(TextColors.RED,
-                                                chunkLoader.getOwnerName() + " don't have enough free chunks! Needed: " + needed + ". Available: "
-                                                        + available + "."));
-                                    }
-                                    closeInventory(player);
-                                    return;
-                                }
+                                closeInventory(player);
+                                return;
                             }
                         }
 

@@ -11,6 +11,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.text.Text;
 
 import java.util.Optional;
 
@@ -19,7 +20,23 @@ import java.util.Optional;
  */
 public class CmdBalance implements CommandExecutor {
 
-    static void chunksInfo(CommandSource sender, User user) {
+    @Override
+    public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
+        Optional<User> optionalUser = commandContext.getOne("user");
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            commandSource.sendMessage(chunksInfo(user));
+        } else if (commandSource instanceof Player) {
+            commandSource.sendMessage(chunksInfo((Player) commandSource));
+        } else {
+            commandSource.sendMessage(Messenger.senderNotPlayerError());
+        }
+
+
+        return CommandResult.success();
+    }
+
+    private static Text chunksInfo(User user) {
         IDataStore dataStore = DataStoreManager.getDataStore();
         int freeWorld = dataStore.getAlwaysOnFreeChunksAmount(user.getUniqueId());
         int freePersonal = dataStore.getOnlineOnlyFreeChunksAmount(user.getUniqueId());
@@ -27,30 +44,6 @@ public class CmdBalance implements CommandExecutor {
         int totalWorld = pd.getAlwaysOnChunksAmount();
         int totalPersonal = pd.getOnlineOnlyChunksAmount();
 
-        Messenger.sendChunkBalance(sender, user.getName(), freePersonal, freeWorld, totalPersonal, totalWorld);
-    }
-
-    @Override
-    public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-        Optional<User> optionalUser = commandContext.getOne("user");
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            String playername = user.getName();
-            if (user != null) {
-                chunksInfo(commandSource, user);
-                return CommandResult.success();
-            } else {
-                Messenger.sendTargetNotExist(commandSource, playername);
-            }
-        } else {
-            if (commandSource instanceof Player) {
-                chunksInfo(commandSource, (Player) commandSource);
-                return CommandResult.success();
-            } else {
-                Messenger.senderNotPlayerError(commandSource);
-            }
-        }
-
-        return CommandResult.success();
+        return Messenger.sendChunkBalance(user.getName(), freePersonal, freeWorld, totalPersonal, totalWorld);
     }
 }

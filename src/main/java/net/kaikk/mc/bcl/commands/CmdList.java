@@ -38,7 +38,7 @@ public class CmdList implements CommandExecutor {
             name = commandSource.getName();
 
         } else {
-            Messenger.senderNotPlayerError(commandSource);
+            commandSource.sendMessage(Messenger.senderNotPlayerError());
             return CommandResult.empty();
         }
         List<CChunkLoader> clList;
