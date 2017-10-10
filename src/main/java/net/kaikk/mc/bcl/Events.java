@@ -25,6 +25,10 @@ import java.util.UUID;
 
 public class Events {
 
+    public Events() {
+
+    }
+
     @Listener
     public void onPlayerInteractBlockSecondary(InteractBlockEvent.Secondary.MainHand event, @First Player player,
             @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
@@ -103,11 +107,11 @@ public class Events {
         List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(event.getTargetEntity().getUniqueId());
 
         for (CChunkLoader chunkLoader : clList) {
-            if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
-                if (!chunkLoader.isAlwaysOn() && chunkLoader.blockCheck()) {
-                    BetterChunkLoader.instance().loadChunks(chunkLoader);
-                }
+            if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())
+                && !chunkLoader.isAlwaysOn() && chunkLoader.blockCheck()) {
+                BetterChunkLoader.instance().loadChunks(chunkLoader);
             }
+
         }
     }
 
@@ -117,10 +121,8 @@ public class Events {
         List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(event.getTargetEntity().getUniqueId());
 
         for (CChunkLoader chunkLoader : clList) {
-            if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
-                if (!chunkLoader.isAlwaysOn()) {
-                    BetterChunkLoader.instance().unloadChunks(chunkLoader);
-                }
+            if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString()) && !chunkLoader.isAlwaysOn()) {
+                BetterChunkLoader.instance().unloadChunks(chunkLoader);
             }
         }
     }
