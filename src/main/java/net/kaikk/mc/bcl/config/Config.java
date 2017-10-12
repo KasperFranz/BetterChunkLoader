@@ -1,16 +1,18 @@
 package net.kaikk.mc.bcl.config;
 
+import com.google.common.reflect.TypeToken;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.FileAttribute;
 
 /**
  * Created by Rob5Underscores on 10/12/2016.
@@ -18,18 +20,20 @@ import java.nio.file.attribute.FileAttribute;
 public class Config implements Configurable {
 
     private static Config config = new Config();
-    private Path configFile = Paths.get(BetterChunkLoader.instance().getConfigDir() + "/config.conf", new String[0]);
+    private Path configFile = Paths.get(BetterChunkLoader.instance().getConfigDir() + "/config.conf");
     private ConfigurationLoader<CommentedConfigurationNode> configLoader = HoconConfigurationLoader.builder().setPath(configFile).build();
     private CommentedConfigurationNode configNode;
+
+    private ItemType itemType;
 
     public static Config getConfig() {
         return config;
     }
 
     public void setup() {
-        if (!Files.exists(this.configFile, new LinkOption[0])) {
+        if (!Files.exists(this.configFile)) {
             try {
-                Files.createFile(this.configFile, new FileAttribute[0]);
+                Files.createFile(this.configFile);
                 load();
                 populate();
                 save();
@@ -43,7 +47,15 @@ public class Config implements Configurable {
 
     public void load() {
         try {
-            this.configNode = ((CommentedConfigurationNode) this.configLoader.load());
+            this.configNode = (this.configLoader.load());
+
+            try {
+                itemType = get().getNode("item","type").getValue(TypeToken.of(ItemType.class));
+            } catch (ObjectMappingException e) {
+                e.printStackTrace();
+                itemType = ItemTypes.BLAZE_ROD;
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,6 +77,7 @@ public class Config implements Configurable {
         get().getNode("DefaultChunksAmount", "Personal").setValue(0);
         get().getNode("MaxChunksAmount", "World").setValue(250);
         get().getNode("MaxChunksAmount", "Personal").setValue(250);
+        get().getNode("item", "type").setValue("minecraft:blaze_rod");
 
         get().getNode("MySQL", "Hostname").setValue("host");
         get().getNode("MySQL", "Username").setValue("user");
@@ -74,5 +87,13 @@ public class Config implements Configurable {
 
     public CommentedConfigurationNode get() {
         return this.configNode;
+    }
+
+    public ItemType getItemType() {
+        return itemType;
+    }
+
+    public String getItemName() {
+        return itemType.getTranslation().get();
     }
 }

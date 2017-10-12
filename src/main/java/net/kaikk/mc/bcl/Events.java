@@ -33,7 +33,7 @@ public class Events {
             boolean ChunkLoaderOnThisServer = chunkLoader != null;
 
             if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType()
-                    .equals(ItemTypes.BLAZE_ROD)) {
+                    .equals(Config.getConfig().getItemType())) {
                 boolean adminLoader =
                         chunkLoader != null && chunkLoader.isAdminChunkLoader() && player.hasPermission(BCLPermission.ABILITY_ADMINLOADER);
                 // if the chunkloader is not on this server or the player can edit chunkloader or if it is an admin chunkloader then we should show
@@ -59,7 +59,7 @@ public class Events {
                     player.sendMessage(chunkLoader.info());
                 } else {
                     player.sendMessage(Text.of(TextColors.GOLD,
-                            "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a blaze rod."));
+                            "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a ",Config.getConfig().getItemName(),"."));
                 }
             }
         }
