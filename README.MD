@@ -1,4 +1,5 @@
 # BetterChunkLoader
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3fb6acd7449047798d24928bc94ca347)](https://www.codacy.com/app/KasperFranz/BetterChunkLoader?utm_source=github.com&utm_medium=referral&utm_content=KasperFranz/BetterChunkLoader&utm_campaign=badger)
 [![Build Status](http://ci.communitybuilt.net/job/BetterChunkLoader/badge/icon)](http://ci.communitybuilt.net/job/BetterChunkLoader/)
 [![Discord](https://img.shields.io/badge/Support-Discord-7289DA.svg)](https://discord.gg/MD6qGAd)
 
