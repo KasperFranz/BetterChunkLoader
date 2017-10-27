@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Changed
 
 ### Fixed
-
+ - Now the default blazerod is also doing what it is supposed to.
 
 ## 2017-10-27 3.5.0
 ### Added

@@ -51,6 +51,9 @@ public class Config implements Configurable {
 
             try {
                 itemType = get().getNode("item","type").getValue(TypeToken.of(ItemType.class));
+                if(itemType == null){
+                    itemType = ItemTypes.BLAZE_ROD;
+                }
             } catch (ObjectMappingException e) {
                 e.printStackTrace();
                 itemType = ItemTypes.BLAZE_ROD;
