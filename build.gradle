@@ -4,14 +4,14 @@ plugins {
 }
 
 group = 'net.kaikk.mc'
-version = '3.4.0-dev'
+version = '5.2.0-3.5.0'
 description = 'Better Chunkloading.'
 project.ext.authors = 'KaiNoMood, Rob5Underscores, KasperFranz'
 
 
 dependencies {
     compile 'org.spongepowered:spongeapi:5.2.0-SNAPSHOT'
-    compile 'com.github.KasperFranz:BCLForgeLib:master-SNAPSHOT'
+    compile 'com.github.KasperFranz:BCLForgeLib:master'
 }
 
 blossom {

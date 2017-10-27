@@ -4,6 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 ## [Unreleased][unreleased]
 ### Added
+
+### Changed
+
+### Fixed
+
+
+## 2017-10-27 3.5.0
+### Added
  - added an option to teleport to a chunkloader (if you have the permission)
  - Added message when not able to load config. (#20)
  - Added option to use another item instead of a blaze rod to init the chunk loaders.
@@ -22,8 +30,6 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Fixed
  - fixed an issue where the insert was done to the wrong part (world add as personal and personal as world, if using the add while nothing was in the DB)
 -fixed a permission issue (you was able to see everyone's balance without the right permission and updated the readme with the subcommands
-
-
 
 
 ## 2017-04-21 3.3.0
