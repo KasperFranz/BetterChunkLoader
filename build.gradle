@@ -10,8 +10,8 @@ project.ext.authors = 'KaiNoMood, Rob5Underscores, KasperFranz'
 
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:5.2.0-SNAPSHOT'
-    compile 'com.github.KasperFranz:BCLForgeLib:master-SNAPSHOT'
+    compile 'org.spongepowered:spongeapi:7.0.0-SNAPSHOT'
+    compile 'com.github.KasperFranz:BCLForgeLib:master'
 }
 
 blossom {
