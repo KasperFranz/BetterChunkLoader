@@ -1,8 +1,6 @@
 package net.kaikk.mc.bcl.utils;
 
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.scheduler.Task;
 
 import java.util.function.Consumer;
@@ -20,6 +18,6 @@ public class InventoryCloseAfterADelayTask implements Consumer<Task> {
 
     @Override
     public void accept(Task task) {
-        player.closeInventory(Cause.of(NamedCause.simulated(player)));
+        player.closeInventory();
     }
 }
