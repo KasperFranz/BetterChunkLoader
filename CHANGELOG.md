@@ -4,16 +4,26 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 ## [Unreleased][unreleased]
 ### Added
+
+### Changed
+
+### Fixed
+
+
+## 2017-10-27 3.5.0
+### Added
  - added an option to teleport to a chunkloader (if you have the permission)
  - Added message when not able to load config. (#20)
  - Added option to use another item instead of a blaze rod to init the chunk loaders.
 
 ### Changed
+ -  Upgrade to use Sponge API 7
  -  the info command is now only showing active currently loaded chunks.
 
 ### Fixed
  - Fixed the spam when shutting down the server, since it tried to unload chunks we didn't load.
  - A Illegal Exception if the data in the database isn't a valid UUID, then we now just say so instead of not loading the plugin.
+
 
 ## 2017-06-12 3.4.0
 ### Changed
