@@ -250,7 +250,7 @@ public class MySqlDataStore extends AHashMapDataStore {
             final String connectionString = 
                     "jdbc:mysql://" + Config.getConfig().get().getNode("MySQL").getNode("Hostname").getString() + "/" + Config.getConfig().get()
                             .getNode("MySQL").getNode("Database").getString() + "?autoReconnect=true";
-            BetterChunkLoader.instance().getLogger().error(connectionString);
+
             this.dbConnection = DriverManager.getConnection(connectionString, connectionProps);
         }
     }
