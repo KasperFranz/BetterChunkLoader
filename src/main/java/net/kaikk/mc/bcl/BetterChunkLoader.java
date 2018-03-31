@@ -150,6 +150,9 @@ public class BetterChunkLoader {
             logger.info("Loaded " + DataStoreManager.getDataStore().getChunkLoaders().size() + " chunk loaders data.");
             logger.info("Loaded " + DataStoreManager.getDataStore().getPlayersData().size() + " players data.");
 
+            // Cleanup old loaded chunks!
+            this.cleanupLoadedChunks();
+
             // load always on chunk loaders
             int count = 0;
             for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
@@ -289,6 +292,12 @@ public class BetterChunkLoader {
             clList.remove(chunkloader);
         }
     }
+
+
+    private void cleanupLoadedChunks() {
+        BCLForgeLib.instance().cleanupChunkLoaders();
+    }
+
 
     public List<CChunkLoader> getActiveChunkloaders() {
         List<CChunkLoader> chunkLoaders = new ArrayList<>();
