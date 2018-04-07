@@ -5,6 +5,8 @@
 
 This Sponge plugin also requires the [BCLForge mod](https://github.com/KasperFranz/BCLForgeLib) which is used to save the chunks and make them loaded.
 
+NB: This is made for sponge 8. for other version change branch.
+
 ## Support
 You can recieve support for using this plugin on my [Discord Chat](https://discord.gg/MD6qGAd).
 
