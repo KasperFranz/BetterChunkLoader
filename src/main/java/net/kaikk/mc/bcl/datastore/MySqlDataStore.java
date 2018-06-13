@@ -2,6 +2,7 @@ package net.kaikk.mc.bcl.datastore;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
+import net.kaikk.mc.bcl.Exceptions.MysqlConnectionException;
 import net.kaikk.mc.bcl.Exceptions.NegativeValueException;
 import net.kaikk.mc.bcl.config.Config;
 import org.spongepowered.api.world.Location;
@@ -42,12 +43,15 @@ public class MySqlDataStore extends AHashMapDataStore {
     }
 
     @Override
-    public void load() {
+
+    public void load() throws MysqlConnectionException {
         try {
             // init connection
             this.refreshConnection();
-        } catch (final Exception e) {
+        }catch (final SQLSyntaxErrorException e) {
             BetterChunkLoader.instance().getLogger().error("Unable to connect to database. Check your config file settings.");
+            throw new MysqlConnectionException(e.getMessage());
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
         // create table, if not exists
