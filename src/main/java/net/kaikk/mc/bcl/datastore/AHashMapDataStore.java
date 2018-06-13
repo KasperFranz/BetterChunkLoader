@@ -2,6 +2,7 @@ package net.kaikk.mc.bcl.datastore;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
+import net.kaikk.mc.bcl.Exceptions.NegativeValueException;
 import net.kaikk.mc.bcl.config.Config;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -152,13 +153,19 @@ public abstract class AHashMapDataStore implements IDataStore {
     }
 
     @Override
-    public void setAlwaysOnChunksLimit(UUID playerId, int amount) {
+    public void setAlwaysOnChunksLimit(UUID playerId, int amount)  throws NegativeValueException {
+        if(amount < 0){
+            throw new NegativeValueException();
+        }
         PlayerData playerData = this.getPlayerData(playerId);
         playerData.setAlwaysOnChunksAmount(amount);
     }
 
     @Override
-    public void setOnlineOnlyChunksLimit(UUID playerId, int amount) {
+    public void setOnlineOnlyChunksLimit(UUID playerId, int amount)  throws NegativeValueException {
+        if(amount < 0){
+            throw new NegativeValueException();
+        }
         PlayerData playerData = this.getPlayerData(playerId);
         playerData.setOnlineOnlyChunksAmount(amount);
     }
@@ -174,7 +181,6 @@ public abstract class AHashMapDataStore implements IDataStore {
         PlayerData playerData = this.getPlayerData(playerId);
         playerData.setOnlineOnlyChunksAmount(playerData.getOnlineOnlyChunksAmount() + amount);
     }
-
     @Override
     public PlayerData getPlayerData(UUID playerId) {
         PlayerData playerData = this.playersData.get(playerId);

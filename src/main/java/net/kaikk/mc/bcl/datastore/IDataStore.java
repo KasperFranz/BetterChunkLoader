@@ -1,6 +1,8 @@
 package net.kaikk.mc.bcl.datastore;
 
 import net.kaikk.mc.bcl.CChunkLoader;
+import net.kaikk.mc.bcl.Exceptions.MyException;
+import net.kaikk.mc.bcl.Exceptions.NegativeValueException;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -19,7 +21,7 @@ public interface IDataStore {
 
     /** Loads data from the datastore.
      *  This is called while BCL is loading */
-    public abstract void load();
+    public abstract void load() throws MyException;
 
     /** Get chunk loaders */
     public abstract List<CChunkLoader> getChunkLoaders();
@@ -58,10 +60,10 @@ public interface IDataStore {
     public abstract int getOnlineOnlyFreeChunksAmount(UUID playerId);
 
     /** Set the max amount of always on chunks that this player can load */
-    public abstract void setAlwaysOnChunksLimit(UUID playerId, int amount);
+    public abstract void setAlwaysOnChunksLimit(UUID playerId, int amount) throws NegativeValueException;
 
     /** Set the max amount of online only chunks that this player can load */
-    public abstract void setOnlineOnlyChunksLimit(UUID playerId, int amount);
+    public abstract void setOnlineOnlyChunksLimit(UUID playerId, int amount) throws NegativeValueException;
 
     /** Add an amount of chunks to the max amount of always on chunks that this player can load */
     public abstract void addAlwaysOnChunksLimit(UUID playerId, int amount);
