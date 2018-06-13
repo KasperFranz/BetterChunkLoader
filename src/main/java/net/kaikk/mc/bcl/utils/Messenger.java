@@ -54,9 +54,15 @@ public class Messenger {
                 break;
             default:
                 message = message.concat(Text.builder("Unkown usage").color(errorColor).build());
-            break;
+                break;
 
         }
+        sender.sendMessage(message);
+    }
+
+    public static void sendNegativeValue(CommandSource sender) {
+        Text message = BetterChunkLoader.getPrefix();
+        message = message.concat(Text.builder("The new value can not be less than 0.").color(errorColor).build());
         sender.sendMessage(message);
     }
 

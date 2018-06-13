@@ -6,8 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Added
 
 ### Changed
+ - added some more clean message to the error when there is a mysql error.
 
 ### Fixed
+ - It was not possible to remove chunk loaders
 
 ## 2018-04-07 3.6.0
 ### Fixed

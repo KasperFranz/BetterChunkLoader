@@ -2,6 +2,7 @@ package net.kaikk.mc.bcl.datastore;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
+import net.kaikk.mc.bcl.Exceptions.NegativeValueException;
 import net.kaikk.mc.bcl.config.Config;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -10,6 +11,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -183,7 +185,7 @@ public class MySqlDataStore extends AHashMapDataStore {
     }
 
     @Override
-    public void setAlwaysOnChunksLimit(UUID playerId, int amount) {
+    public void setAlwaysOnChunksLimit(UUID playerId, int amount)  throws NegativeValueException{
         super.setAlwaysOnChunksLimit(playerId, amount);
         try {
             this.statement().executeUpdate(
@@ -195,7 +197,7 @@ public class MySqlDataStore extends AHashMapDataStore {
     }
 
     @Override
-    public void setOnlineOnlyChunksLimit(UUID playerId, int amount) {
+    public void setOnlineOnlyChunksLimit(UUID playerId, int amount)  throws NegativeValueException {
         super.setOnlineOnlyChunksLimit(playerId, amount);
         try {
             this.statement().executeUpdate("INSERT INTO bcl_playersdata (pid,alwayson,onlineonly) VALUES (" + UUIDtoHexString(playerId) + ", " + Config.getConfig().get()
@@ -232,8 +234,7 @@ public class MySqlDataStore extends AHashMapDataStore {
                     .getNode("DefaultChunksAmount").getNode("Personal").getInt()+amount;
             this.statement().executeUpdate("INSERT INTO bcl_playersdata (pid,alwayson,onlineonly)  VALUES (" + UUIDtoHexString(playerId) + ", " + world + ", " + personal +
                     ") "
-                    + "ON DUPLICATE KEY UPDATE onlineonly=onlineonly+"
-                    + amount);
+                    + "ON DUPLICATE KEY UPDATE onlineonly=onlineonly+"+ amount);
         } catch (SQLException e) {
             e.printStackTrace();
         }
