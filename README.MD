@@ -5,7 +5,8 @@
 
 This Sponge plugin also requires the [BCLForge mod](https://github.com/KasperFranz/BCLForgeLib) which is used to save the chunks and make them loaded.
 
-NB: This is branch is for sponge 8. if you are using other version of sponge then change branch.
+NB: This is branch is for sponge 5.2. if you are using other version of sponge then change branch.
+NBB: this is no longer being developed and is only here for archive purpose.
 
 ## Support
 You can recieve support for using this plugin on my [Discord Chat](https://discord.gg/MD6qGAd).
@@ -34,6 +35,12 @@ The base command is betterchunkloader (with the alias of bcl), this gives the ge
 | `delete` | [User] | `betterchunkloader.delete`  | Remove the specified players chunk loaders.
 | `purge` |  | `betterchunkloader.purge` | Remove Chunk loaders in not existing worlds (eg. after removing a world)
 
+## Types
+There is 2 types of bcl which is `personal` or `world` (they are available with tab)
+### personal
+A Personal chunkloader is working when the player who placed it is online.
+### world
+A world chunkloader is working when the player is online or offline (it will work for x hours when the player is offline, this value can be set in the config `MaxHoursOffline`)
 
 ## Permissions
 An up to date version of the permissions can be found in [/src/main/java/net/kaikk/mc/bcl/utils/BCLPermission.java](src/main/java/net/kaikk/mc/bcl/utils/BCLPermission.java)
