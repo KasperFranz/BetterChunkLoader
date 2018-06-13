@@ -8,6 +8,8 @@ This Sponge plugin also requires the [BCLForge mod](https://github.com/KasperFra
 NB: This is branch is for sponge 5.2. if you are using other version of sponge then change branch.
 NBB: this is no longer being developed and is only here for archive purpose.
 
+This plugin requires a mySQL database. 
+
 ## Support
 You can recieve support for using this plugin on my [Discord Chat](https://discord.gg/MD6qGAd).
 
