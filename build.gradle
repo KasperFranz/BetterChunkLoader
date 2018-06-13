@@ -4,13 +4,13 @@ plugins {
 }
 
 group = 'net.kaikk.mc'
-version = '7.0.0-3.7.0-dev'
+version = '7.1.0-3.7.0-dev'
 description = 'Better Chunkloading.'
 project.ext.authors = 'KaiNoMood, Rob5Underscores, KasperFranz'
 
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:7.0.0-SNAPSHOT'
+    compile 'org.spongepowered:spongeapi:7.1.0-SNAPSHOT'
     compile 'com.github.KasperFranz:BCLForgeLib:master'
 }
 
