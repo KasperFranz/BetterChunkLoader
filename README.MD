@@ -35,5 +35,12 @@ The base command is betterchunkloader (with the alias of bcl), this gives the ge
 | `purge` |  | `betterchunkloader.purge` | Remove Chunk loaders in not existing worlds (eg. after removing a world)
 
 
+## Types
+There is 2 types of bcl which is `personal` or `world` (they are available with tab)
+### personal
+A Personal chunkloader is working when the player who placed it is online.
+
+### world
+A world chunkloader is working when the player is online or offline (it will work for x hours when the player is offline, this value can be set in the config `MaxHoursOffline`)
 ## Permissions
 An up to date version of the permissions can be found in [/src/main/java/net/kaikk/mc/bcl/utils/BCLPermission.java](src/main/java/net/kaikk/mc/bcl/utils/BCLPermission.java)
