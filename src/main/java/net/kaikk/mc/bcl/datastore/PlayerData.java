@@ -2,10 +2,9 @@ package net.kaikk.mc.bcl.datastore;
 
 import net.kaikk.mc.bcl.config.Config;
 
-import java.util.UUID;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.UUID;
 
 @XmlRootElement
 public class PlayerData {

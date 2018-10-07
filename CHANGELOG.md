@@ -6,6 +6,12 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Added
 
 ### Changed
+
+### Fixed
+
+
+## 2018-10-07 3.7.0
+### Changed
  - added some more clean message to the error when there is a mysql error.
 
 ### Fixed
