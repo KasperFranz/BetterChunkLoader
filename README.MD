@@ -1,6 +1,5 @@
 # BetterChunkLoader
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3fb6acd7449047798d24928bc94ca347)](https://www.codacy.com/app/KasperFranz/BetterChunkLoader?utm_source=github.com&utm_medium=referral&utm_content=KasperFranz/BetterChunkLoader&utm_campaign=badger)
-[![Build Status](http://ci.communitybuilt.net/job/BetterChunkLoader/badge/icon)](http://ci.communitybuilt.net/job/BetterChunkLoader/)
 [![Discord](https://img.shields.io/badge/Support-Discord-7289DA.svg)](https://discord.gg/MD6qGAd)
 
 This Sponge plugin also requires the [BCLForge mod](https://github.com/KasperFranz/BCLForgeLib) which is used to save the chunks and make them loaded.
@@ -19,7 +18,7 @@ the database is NOT compatible with the 1.7 version of this mod, since this is m
 
 If you have any issues with it please make an issue.
 
-The latest builds can be found on our [CI server](http://ci.communitybuilt.net/job/BCLForgeLib/) which is provided by Community Built
+~~The latest builds can be found on our [CI server](http://ci.communitybuilt.net/job/BCLForgeLib/)~~ The latest version can right now be found under releases.
 
 
 ## Commands
