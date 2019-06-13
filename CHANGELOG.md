@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Changed
 
 ### Fixed
-
+ - Fixed an NPE when using purge and the world is empty (#27)
 
 ## 2018-10-07 3.7.0
 ### Changed
