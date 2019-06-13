@@ -286,6 +286,10 @@ public class BetterChunkLoader {
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
             BCLForgeLib.instance().removeChunkLoader(chunkloader);
             List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
+            if(clList == null){
+                return;
+            }
+
             clList.remove(chunkloader);
         }
     }
