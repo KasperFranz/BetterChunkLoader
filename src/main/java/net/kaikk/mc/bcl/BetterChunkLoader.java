@@ -246,12 +246,12 @@ public class BetterChunkLoader {
                 .build();
 
         CommandSpec bclCmdSpec = CommandSpec.builder()
-                .child(cmdBalance, new String[]{"balance", "bal"})
-                .child(cmdInfo, new String[]{"info"})
-                .child(cmdList, new String[]{"list", "ls"})
-                .child(cmdChunks, new String[]{"chunks"})
-                .child(cmdDelete, new String[]{"delete", "del"})
-                .child(cmdPurge, new String[]{"purge"})
+                .child(cmdBalance, "balance", "bal")
+                .child(cmdInfo, "info")
+                .child(cmdList, "list", "ls")
+                .child(cmdChunks, "chunks")
+                .child(cmdDelete, "delete", "del")
+                .child(cmdPurge, "purge")
                 .executor(new CmdBCL())
                 .build();
 

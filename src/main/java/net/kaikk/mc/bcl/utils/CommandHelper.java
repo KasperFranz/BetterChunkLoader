@@ -17,9 +17,7 @@ public class CommandHelper {
 
 
     public static Consumer<CommandSource> createTeleportConsumer(CommandSource src, Location<World> location) {
-        return teleport -> {
-            CommandHelper.sendTeleport(src, location);
-        };
+        return teleport -> CommandHelper.sendTeleport(src, location);
     }
 
     public static void sendTeleport(CommandSource src, Location<World> location) {

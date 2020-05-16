@@ -28,7 +28,7 @@ public class AllElement extends CommandElement {
         if (arg.equalsIgnoreCase("all")) {
             return arg;
         }
-        throw commandArgs.createError(Text.of(new Object[]{TextColors.RED, arg, " is not a valid argument!"}));
+        throw commandArgs.createError(Text.of(TextColors.RED, arg, " is not a valid argument!"));
     }
 
     @Override
