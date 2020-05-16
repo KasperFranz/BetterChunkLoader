@@ -1,7 +1,7 @@
 package net.kaikk.mc.bcl.utils;
 
+import net.kaikk.mc.bcl.Exceptions.UserNotFound;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
 
@@ -13,35 +13,13 @@ import java.util.UUID;
  */
 public class Utilities {
 
-    public static UUID getUUIDFromName(String name) {
-        Optional<Player> onlinePlayer = Sponge.getServer().getPlayer(name);
-        if (onlinePlayer.isPresent()) {
-            return onlinePlayer.get().getUniqueId();
-        } else {
-            Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
-            Optional<User> optUser = userStorage.get().get(name);
-            if (optUser.isPresent()) {
-                User user = optUser.get();
-                return user.getUniqueId();
-            }
-        }
-        return null;
+    public static User getUserFromUUID(UUID uuid) throws UserNotFound {
+        return Sponge.getServiceManager().provideUnchecked(UserStorageService.class).get(uuid).orElseThrow(UserNotFound::new);
     }
 
-    public static Player getPlayerFromName(String name) {
-        Optional<Player> onlinePlayer = Sponge.getServer().getPlayer(name);
-        if (onlinePlayer.isPresent()) {
-            return onlinePlayer.get();
-        } else {
-            Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
-            Optional<User> optUser = userStorage.get().get(name);
-            if (optUser.isPresent()) {
-                User user = optUser.get();
-                if (user.getPlayer().isPresent()) {
-                    return user.getPlayer().get();
-                }
-            }
-        }
-        return null;
+    public static int getOptionOrDefault(User player, String key, int defaultValue){
+        Optional<String> option = player.getOption(key);
+        return option.map(Integer::parseInt).orElse(defaultValue);
+
     }
 }

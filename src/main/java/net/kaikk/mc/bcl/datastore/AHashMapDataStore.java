@@ -3,6 +3,7 @@ package net.kaikk.mc.bcl.datastore;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.Exceptions.NegativeValueException;
+import net.kaikk.mc.bcl.Exceptions.UserNotFound;
 import net.kaikk.mc.bcl.config.Config;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -185,7 +186,11 @@ public abstract class AHashMapDataStore implements IDataStore {
     public PlayerData getPlayerData(UUID playerId) {
         PlayerData playerData = this.playersData.get(playerId);
         if (playerData == null) {
-            playerData = new PlayerData(playerId);
+            try {
+                playerData = new PlayerData(playerId);
+            } catch (UserNotFound e) {
+                BetterChunkLoader.instance().getLogger().info("No user found");
+            }
             this.playersData.put(playerId, playerData);
         }
         return playerData;

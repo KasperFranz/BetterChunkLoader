@@ -1,9 +1,18 @@
 package net.kaikk.mc.bcl.datastore;
 
+import net.kaikk.mc.bcl.BetterChunkLoader;
+import net.kaikk.mc.bcl.Exceptions.MyException;
+import net.kaikk.mc.bcl.Exceptions.UserNotFound;
 import net.kaikk.mc.bcl.config.Config;
+import net.kaikk.mc.bcl.utils.Utilities;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.service.permission.Subject;
+import org.spongepowered.api.service.user.UserStorageService;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Optional;
 import java.util.UUID;
 
 @XmlRootElement
@@ -12,10 +21,11 @@ public class PlayerData {
     private UUID playerId;
     private int alwaysOnChunksAmount, onlineOnlyChunksAmount;
 
-    public PlayerData(UUID playerId) {
+    public PlayerData(UUID playerId) throws UserNotFound {
         this.playerId = playerId;
-        this.alwaysOnChunksAmount = Config.getConfig().get().getNode("DefaultChunksAmount").getNode("World").getInt();
-        this.onlineOnlyChunksAmount = Config.getConfig().get().getNode("DefaultChunksAmount").getNode("Personal").getInt();
+        User player = Utilities.getUserFromUUID(playerId);
+        this.alwaysOnChunksAmount = Utilities.getOptionOrDefault(player, "bcl.world", Config.getConfig().get().getNode("DefaultChunksAmount").getNode("World").getInt());
+        this.onlineOnlyChunksAmount = Utilities.getOptionOrDefault(player, "bcl.personal", Config.getConfig().get().getNode("DefaultChunksAmount").getNode("Personal").getInt());
     }
 
     public PlayerData(UUID playerId, int alwaysOnChunksAmount, int onlineOnlyChunksAmount) {

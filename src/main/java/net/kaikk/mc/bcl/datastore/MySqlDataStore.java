@@ -133,11 +133,14 @@ public class MySqlDataStore extends AHashMapDataStore {
         try {
             String statement = "SELECT * FROM bcl_playersdata WHERE pid=" + UUIDtoHexString(uuid) + " LIMIT 1";
             ResultSet rs = this.statement().executeQuery(statement);
+            this.playersData.remove(uuid);
+
+            //we should always clear the local storage to be sure we refresh the user and not just take what we got in the DB
+            PlayerData playerData = this.getPlayerData(uuid);
+
             while (rs.next()) {
-                PlayerData playerData = this.getPlayerData(uuid);
                 playerData.setAlwaysOnChunksAmount(rs.getInt(2));
                 playerData.setOnlineOnlyChunksAmount(rs.getInt(3));
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
