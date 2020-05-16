@@ -15,6 +15,7 @@ import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.MySqlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import net.kaikk.mc.bcl.utils.BCLPermission;
+import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
@@ -44,15 +45,21 @@ import java.util.UUID;
         authors = "@authors@"
 )
 public class BetterChunkLoader {
-
+    private static final int BSTATS_PLUGIN_ID = 7560;
     private static final Text prefix = Text.builder("[BetterChunkLoader] ").color(TextColors.GOLD).build();
     private static BetterChunkLoader instance;
+    private Metrics2 metrics;
     @Inject
     private Logger logger;
     @Inject
     @ConfigDir(sharedRoot = false)
     private Path configDir;
     private Map<String, List<CChunkLoader>> activeChunkLoaders;
+
+    @Inject
+    public BetterChunkLoader(Metrics2.Factory metricsFactory){
+        metrics = metricsFactory.make(BSTATS_PLUGIN_ID);
+     }
 
     public static BetterChunkLoader instance() {
         return instance;

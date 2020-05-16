@@ -12,6 +12,7 @@ project.ext.authors = 'KaiNoMood, Rob5Underscores, KasperFranz'
 dependencies {
     compile 'org.spongepowered:spongeapi:7.1.0-SNAPSHOT'
     compile 'com.github.KasperFranz:BCLForgeLib:master'
+    compile 'org.bstats:bstats-sponge:1.7'
 }
 
 blossom {
@@ -37,5 +38,6 @@ repositories {
         url 'http://repo.spongepowered.org/maven'
     }
     maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.codemc.org/repository/maven-public/'}
 }
 

@@ -34,7 +34,7 @@ The base command is betterchunkloader (with the alias of bcl), this gives the ge
 | `purge` |  | `betterchunkloader.purge` | Remove Chunk loaders in not existing worlds (eg. after removing a world)
 
 ## metadata
-As part of version 7.4.0, you can now set up metadata on the user for a few defaults.
+As part of version 3.8.0, you can now set up metadata on the user for a few defaults.
 
 | meta name        | description |
 | ------------- | ----- |
