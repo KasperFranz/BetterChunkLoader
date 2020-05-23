@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.utils;
+package guru.franz.mc.bcl.inventory;
 
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.scheduler.Task;
@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  */
 public class InventoryCloseAfterADelayTask implements Consumer<Task> {
 
-    private Player player;
+    private final Player player;
 
     public InventoryCloseAfterADelayTask(Player player) {
         this.player = player;

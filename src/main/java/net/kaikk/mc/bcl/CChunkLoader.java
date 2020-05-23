@@ -1,11 +1,12 @@
 package net.kaikk.mc.bcl;
 
 
+import guru.franz.mc.bcl.inventory.ChunkLoaderInvProp;
+import guru.franz.mc.bcl.inventory.InventoryCloseAfterADelayTask;
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.ChunkLoader;
 import net.kaikk.mc.bcl.utils.BCLPermission;
-import net.kaikk.mc.bcl.utils.InventoryCloseAfterADelayTask;
 import net.kaikk.mc.bcl.utils.Messenger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
@@ -382,7 +383,7 @@ public class CChunkLoader extends ChunkLoader {
         }
         InventoryArchetype inventoryArchetype = InventoryArchetype.builder()
                 .from(InventoryArchetypes.MENU_ROW)
-                .property(CChunkLoaderInvProp.of(this)).build("archid", "archname");
+                .property(ChunkLoaderInvProp.of(this)).build("archid", "archname");
 
         Inventory inventory = Inventory.builder()
                 .of(inventoryArchetype)
