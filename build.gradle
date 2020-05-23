@@ -17,12 +17,11 @@ dependencies {
 }
 
 blossom {
-    def location = 'src/main/java/net/kaikk/mc/bcl/BetterChunkLoader.java'
+    def location = 'src/main/java/guru/franz/mc/bcl/BetterChunkLoaderPluginInfo.java'
 
     replaceToken '@name@', project.name, location
     replaceToken '@version@', project.version+"-"+getGitHash(), location
     replaceToken '@description@', project.description, location
-    replaceToken '@authors@', rootProject.authors, location
 }
 
 static String getGitHash() {

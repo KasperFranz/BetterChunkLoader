@@ -1,6 +1,7 @@
 package net.kaikk.mc.bcl;
 
 import com.google.inject.Inject;
+import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
 import net.kaikk.mc.bcl.commands.CmdBCL;
 import net.kaikk.mc.bcl.commands.CmdBalance;
 import net.kaikk.mc.bcl.commands.CmdChunks;
@@ -39,10 +40,9 @@ import java.util.Map;
 import java.util.UUID;
 
 @Plugin(id = "betterchunkloader",
-        name = "@name@",
-        description = "@description@",
-        version = "@version@",
-        authors = "@authors@"
+        name = BetterChunkLoaderPluginInfo.NAME,
+        description = BetterChunkLoaderPluginInfo.DESCRIPTION,
+        version = BetterChunkLoaderPluginInfo.VERSION
 )
 public class BetterChunkLoader {
     private static final int BSTATS_PLUGIN_ID = 7560;
