@@ -1,6 +1,6 @@
 package net.kaikk.mc.bcl.utils;
 
-import net.kaikk.mc.bcl.Exceptions.UserNotFound;
+import net.kaikk.mc.bcl.exceptions.UserNotFound;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;

@@ -1,6 +1,6 @@
 package net.kaikk.mc.bcl.commands;
 
-import net.kaikk.mc.bcl.Exceptions.NegativeValueException;
+import net.kaikk.mc.bcl.exceptions.NegativeValueException;
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.PlayerData;

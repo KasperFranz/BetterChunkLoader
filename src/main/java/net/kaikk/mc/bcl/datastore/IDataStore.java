@@ -1,8 +1,8 @@
 package net.kaikk.mc.bcl.datastore;
 
 import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.Exceptions.MyException;
-import net.kaikk.mc.bcl.Exceptions.NegativeValueException;
+import net.kaikk.mc.bcl.exceptions.MyException;
+import net.kaikk.mc.bcl.exceptions.NegativeValueException;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 

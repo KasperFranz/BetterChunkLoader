@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.Exceptions;
+package net.kaikk.mc.bcl.exceptions;
 
 public class UserNotFound extends MyException {
 

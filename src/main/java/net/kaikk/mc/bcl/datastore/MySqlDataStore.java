@@ -2,8 +2,8 @@ package net.kaikk.mc.bcl.datastore;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.Exceptions.MysqlConnectionException;
-import net.kaikk.mc.bcl.Exceptions.NegativeValueException;
+import net.kaikk.mc.bcl.exceptions.MysqlConnectionException;
+import net.kaikk.mc.bcl.exceptions.NegativeValueException;
 import net.kaikk.mc.bcl.config.Config;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;

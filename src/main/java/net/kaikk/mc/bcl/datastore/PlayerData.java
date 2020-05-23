@@ -1,18 +1,12 @@
 package net.kaikk.mc.bcl.datastore;
 
-import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.Exceptions.MyException;
-import net.kaikk.mc.bcl.Exceptions.UserNotFound;
+import net.kaikk.mc.bcl.exceptions.UserNotFound;
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.utils.Utilities;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.service.permission.Subject;
-import org.spongepowered.api.service.user.UserStorageService;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Optional;
 import java.util.UUID;
 
 @XmlRootElement
