@@ -261,6 +261,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         String password = mysql.getNode("Password").getString();
         String hostname = mysql.getNode("Hostname").getString();
         String database = mysql.getNode("Database").getString();
+
         connectionProps.put("user", user);
         connectionProps.put("password", password);
 

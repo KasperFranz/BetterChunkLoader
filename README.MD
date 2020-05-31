@@ -34,6 +34,7 @@ The base command is betterchunkloader (with the alias of bcl), this gives the ge
 | `chunks` | [ add \| set \| remove ] [User] [Type] [Amount] | `betterchunkloader.chunks` | change a players amount of the different chunk loaders (personal or world)
 | `delete` | [User] | `betterchunkloader.delete`  | Remove the specified players chunk loaders.
 | `purge` |  | `betterchunkloader.purge` | Remove Chunk loaders in not existing worlds (eg. after removing a world)
+| `reload` |  | `betterchunkloader.reload` | Reloads the configuration (implemented in v.3.8.RC3) 
 
 ## metadata
 As part of version 3.8.0, you can now set up metadata on the user for a few defaults.

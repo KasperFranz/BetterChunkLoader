@@ -1,5 +1,6 @@
 package net.kaikk.mc.bcl;
 
+import guru.franz.mc.bcl.utils.Messenger;
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.utils.BCLPermission;
@@ -13,6 +14,7 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.text.Text;
@@ -129,6 +131,16 @@ public class Events {
             if (cl.isLoadable()) {
                 BetterChunkLoader.instance().loadChunks(cl);
             }
+        }
+    }
+
+    @Listener
+    public void onReload(GameReloadEvent event){
+
+        try {
+            BetterChunkLoader.instance().setupPlugin();
+        } catch (Exception e) {
+            Messenger.logException(e);
         }
     }
 }
