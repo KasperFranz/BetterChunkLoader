@@ -5,6 +5,7 @@ import net.kaikk.mc.bcl.CChunkLoader;
 import guru.franz.mc.bcl.exceptions.mysql.MySQLConnectionException;
 import net.kaikk.mc.bcl.exceptions.NegativeValueException;
 import net.kaikk.mc.bcl.config.Config;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -12,7 +13,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,11 +48,9 @@ public class MySqlDataStore extends AHashMapDataStore {
         try {
             // init connection
             this.refreshConnection();
-        }catch (final SQLSyntaxErrorException e) {
+        }catch (final MySQLConnectionException e) {
             BetterChunkLoader.instance().getLogger().error("Unable to connect to database. Check your config file settings.");
             throw new MySQLConnectionException(e.getMessage());
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
         }
         // create table, if not exists
         try {
@@ -247,22 +245,54 @@ public class MySqlDataStore extends AHashMapDataStore {
         }
     }
 
-    private void refreshConnection() throws SQLException {
-        if (this.dbConnection == null || this.dbConnection.isClosed()) {
-            // set username/pass properties
-            final Properties connectionProps = new Properties();
-            connectionProps.put("user", Config.getConfig().get().getNode("MySQL").getNode("Username").getString());
-            connectionProps.put("password", Config.getConfig().get().getNode("MySQL").getNode("Password").getString());
+    private void refreshConnection() throws MySQLConnectionException {
+        try {
+            if (this.dbConnection != null && !this.dbConnection.isClosed()) {
+                this.dbConnection.close();
+            }
+        }catch(SQLException ignored){
+            //if the connection is not already closed and we can't close it, it should be safe to recreate!
+        }
 
-            // establish connection
+        final Properties connectionProps = new Properties();
+        CommentedConfigurationNode mysql = Config.getConfig().get().getNode("MySQL");
+
+        String user = mysql.getNode("Username").getString();
+        String password = mysql.getNode("Password").getString();
+        String hostname = mysql.getNode("Hostname").getString();
+        String database = mysql.getNode("Database").getString();
+        connectionProps.put("user", user);
+        connectionProps.put("password", password);
+
+
+
+        if(user == null || user.isEmpty()){
+            throw new MySQLConnectionException("No user provided");
+        }
+
+        if(database == null || database.isEmpty()){
+            throw new MySQLConnectionException("No database selected");
+        }
+
+        if(hostname == null || hostname.isEmpty()){
+            throw new MySQLConnectionException("No hostname provided");
+        }
+
+        // establish connection
+        try {
             this.dbConnection = DriverManager.getConnection(
-                    "jdbc:mysql://" + Config.getConfig().get().getNode("MySQL").getNode("Hostname").getString() + "/" + Config.getConfig().get()
-                            .getNode("MySQL").getNode("Database").getString() + "?autoReconnect=true", connectionProps);
+                    "jdbc:mysql://" + hostname + "/" + database + "?autoReconnect=true", connectionProps);
+        } catch (SQLException exception) {
+            throw new MySQLConnectionException(exception.getMessage());
         }
     }
 
     private Statement statement() throws SQLException {
-        this.refreshConnection();
+        try{
+            this.refreshConnection();
+        }catch(MySQLConnectionException exception){
+            throw new SQLException(exception.getMessage());
+        }
         return this.dbConnection.createStatement();
     }
 }
