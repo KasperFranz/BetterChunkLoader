@@ -2,7 +2,9 @@
 [![Codacy Badge][CodacyImg]][codacyLink]
 [![Discord][discordImg]][discordLink]
 
-This Sponge plugin requires the [BCLForge mod][BCLForgeMod]. we use a secondary mod to do this reliable.
+This Sponge plugin requires the [BCLForge mod][BCLForgeMod]. we use this secondary mod to do chunloading reliable.
+
+You can find the latest version under [releases][ReleaseLink].
 
 ## Requirements 
  - [BCLForge mod][BCLForgeMod]
@@ -60,3 +62,4 @@ A personal loader is only active when the player is online while a world loader 
 [CodacyImg]: https://api.codacy.com/project/badge/Grade/3fb6acd7449047798d24928bc94ca347
 [CodacyLink]: https://www.codacy.com/app/KasperFranz/BetterChunkLoader?utm_source=github.com&utm_medium=referral&utm_content=KasperFranz/BetterChunkLoader&utm_campaign=badger
 [bclForgeMod]: https://github.com/KasperFranz/BCLForgeLib
+[ReleaseLink]: https://github.com/KasperFranz/BetterChunkLoader/releases
