@@ -2,6 +2,8 @@ package net.kaikk.mc.bcl;
 
 import com.google.inject.Inject;
 import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
+import guru.franz.mc.bcl.command.Reload;
+import guru.franz.mc.bcl.utils.Messenger;
 import net.kaikk.mc.bcl.commands.CmdBCL;
 import net.kaikk.mc.bcl.commands.CmdBalance;
 import net.kaikk.mc.bcl.commands.CmdChunks;
@@ -16,6 +18,7 @@ import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.MySqlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import net.kaikk.mc.bcl.utils.BCLPermission;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -55,6 +58,7 @@ public class BetterChunkLoader {
     @ConfigDir(sharedRoot = false)
     private Path configDir;
     private Map<String, List<CChunkLoader>> activeChunkLoaders;
+    public boolean enabled = false;
 
     @Inject
     public BetterChunkLoader(Metrics2.Factory metricsFactory){
@@ -130,7 +134,16 @@ public class BetterChunkLoader {
         }
 
         instance = this;
+        try{
+            setupPlugin();
+        } catch (Exception e){
+            Messenger.logException(e);
+        }
 
+        initializeCommands();
+    }
+
+    public void setupPlugin() throws Exception {
         // Config File
         if (!Files.exists(configDir)) {
             try {
@@ -141,13 +154,15 @@ public class BetterChunkLoader {
         }
         Config.getConfig().setup();
 
-        try {
             // load config
             logger.info("Loading config...");
             onLoad();
             // instantiate data store, if needed
             if (DataStoreManager.getDataStore() == null) {
-                DataStoreManager.setDataStoreInstance(Config.getConfig().get().getNode("DataStore").getString());
+                CommentedConfigurationNode configNode = Config.getConfig().get();
+                CommentedConfigurationNode configNode1 = configNode.getNode("DataStore");
+                String dataStore = configNode1.getString();
+                DataStoreManager.setDataStoreInstance(dataStore);
             }
 
             // load datastore
@@ -170,23 +185,9 @@ public class BetterChunkLoader {
 
             logger.info("Loading Listeners...");
             initializeListeners();
-            initializeCommands();
 
             logger.info("Load complete.");
-        } catch (Exception e) {
-
-            StackTraceElement error = e.getStackTrace()[0];
-            logger.error("Load failed: " + e.getMessage() + " (" + error.getClassName() + ":" + error.getLineNumber() + ")");
-
-            /*
-            for(StackTraceElement er :e.getStackTrace()){
-                logger.error(er.getClassName() + ":" + er.getLineNumber());
-
-            }
-             */
-
-            //TODO: DISABLE PLUGIN HERE
-        }
+            enabled = true;
     }
 
     @Listener
@@ -261,6 +262,12 @@ public class BetterChunkLoader {
                 .description(Text.of("remove all chunks there is in not existing dimensions."))
                 .build();
 
+        CommandSpec cmdReload = CommandSpec.builder()
+                .permission(BCLPermission.COMMAND_RELOAD)
+                .executor(new Reload())
+                .description(Text.of("Reloads the plugin configuration."))
+                .build();
+
         CommandSpec bclCmdSpec = CommandSpec.builder()
                 .child(cmdBalance, "balance", "bal")
                 .child(cmdInfo, "info")
@@ -268,13 +275,13 @@ public class BetterChunkLoader {
                 .child(cmdChunks, "chunks")
                 .child(cmdDelete, "delete", "del")
                 .child(cmdPurge, "purge")
+                .child(cmdReload, "reload")
                 .executor(new CmdBCL())
                 .build();
 
         Sponge.getCommandManager().register(this, bclCmdSpec, "betterchunkloader", "bcl");
-
-
     }
+
 
     public Logger getLogger() {
         return logger;

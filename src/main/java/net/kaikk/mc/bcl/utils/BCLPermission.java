@@ -14,6 +14,7 @@ public class BCLPermission {
     public static final String COMMAND_LIST_SELF = "betterchunkloader.list.own";
     public static final String COMMAND_LIST_ALL = "betterchunkloader.list.all";
     public static final String COMMAND_PURGE = "betterchunkloader.purge";
+    public static final String COMMAND_RELOAD = "betterchunkloader.reload";
 
     public static final String ABILITY_ADMINLOADER = "betterchunkloader.adminloader";
     public static final String ABILITY_EDIT_OTHERS = "betterchunkloader.edit.others";

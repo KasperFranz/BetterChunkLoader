@@ -3,6 +3,9 @@ package guru.franz.mc.bcl.utils;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
+import net.kaikk.mc.bcl.utils.BCLPermission;
+import net.kaikk.mc.bcl.utils.CommandHelper;
+import org.slf4j.Logger;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -133,5 +136,19 @@ public class Messenger {
                 .toText();
 
 
+    }
+
+    public static void logException(Throwable e){
+        Logger logger = BetterChunkLoader.instance().getLogger();
+        StackTraceElement error = e.getStackTrace()[0];
+        logger.error("Load failed: " + e.getMessage() + " (" + error.getClassName() + ":" + error.getLineNumber() + ")");
+
+
+        logger.error("DEBUG!");
+        logger.error(e.getLocalizedMessage());
+        for(StackTraceElement er :e.getStackTrace()){
+            logger.error(er.getClassName() + ":" + er.getLineNumber());
+
+        }
     }
 }

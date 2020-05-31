@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
  - Added Bstats for visibility of how many are using the version.
  - Added the option to use metadata for the amount of chunk loaders a player can have.
  - Added more exceptions around the MySQL database connection start.
+ - Added a reload command to reload the configuration! (still not fully integrated)
  
 ### Changed
 
