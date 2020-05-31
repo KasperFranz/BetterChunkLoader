@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.utils;
+package guru.franz.mc.bcl.utils;
 
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
@@ -13,9 +13,7 @@ import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-/**
- * Created by Rob5Underscores on 10/12/2016.
- */
+
 public class Messenger {
 
     public static TextColor errorColor = TextColors.RED;

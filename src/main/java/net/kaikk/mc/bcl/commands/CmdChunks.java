@@ -5,7 +5,7 @@ import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.PlayerData;
 import net.kaikk.mc.bcl.utils.BCLPermission;
-import net.kaikk.mc.bcl.utils.Messenger;
+import guru.franz.mc.bcl.utils.Messenger;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
