@@ -41,10 +41,11 @@ As part of version 3.8.0, you can now set up metadata on the user for a few defa
 
 | meta name        | description |
 | ------------- | ----- |
-| bcl.world* | The number of world chunk loaders a user can have. |
-| bcl.personal* | The number of personal chunk loaders a user can have. |
+| bcl.world | The number of world chunk loaders a user can have. |
+| bcl.personal | The number of personal chunk loaders a user can have. |
 
-* The user currently has to log out and log in for this to take effect, this will also not work if the user has a set/added value (I am working on a solution for this)
+**The user currently has to log out and log in for this to take effect, this will also not work if the user has a set/added value (I am working on a
+ solution for this)**
  
 
 ## Permissions
