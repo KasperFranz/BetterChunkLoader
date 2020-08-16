@@ -1,10 +1,10 @@
 package net.kaikk.mc.bcl.commands;
 
+import guru.franz.mc.bcl.utils.Messenger;
+import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
-import net.kaikk.mc.bcl.utils.BCLPermission;
-import guru.franz.mc.bcl.utils.Messenger;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -25,7 +25,7 @@ public class CmdDelete implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource sender, CommandContext commandContext) throws CommandException {
 
-        if (!sender.hasPermission(BCLPermission.COMMAND_DELETE)) {
+        if (!sender.hasPermission(Permission.COMMAND_DELETE)) {
             Messenger.sendNoPermission(sender);
             return CommandResult.empty();
         }

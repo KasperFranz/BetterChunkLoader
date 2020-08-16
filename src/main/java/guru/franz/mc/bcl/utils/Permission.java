@@ -1,9 +1,6 @@
-package net.kaikk.mc.bcl.utils;
+package guru.franz.mc.bcl.utils;
 
-/**
- * Created by KasperFranz on 19-02-2017.
- */
-public class BCLPermission {
+public class Permission {
 
     public static final String COMMAND_BALANCE = "betterchunkloader.balance.own";
     public static final String COMMAND_BALANCE_OTHERS = "betterchunkloader.balance.others";

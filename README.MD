@@ -2,7 +2,7 @@
 [![Codacy Badge][CodacyImg]][codacyLink]
 [![Discord][discordImg]][discordLink]
 
-This Sponge plugin requires the [BCLForge mod][BCLForgeMod]. we use this secondary mod to do chunloading reliable.
+This Sponge plugin requires the [BCLForge mod][BCLForgeMod]. we use this secondary mod to do chunkloading reliable.
 
 You can find the latest version under [releases][ReleaseLink].
 
@@ -18,13 +18,13 @@ You can receive support for using this plugin on my [Discord Chat][discordLink].
 the database is NOT compatible with the 1.7 version of this mod since this is making the table readable instead of being bytes - Sorry
 
 
-If you have any issues with it, please make an issue.
+If you find any issues when using this plugin, please create an issue.
 
 
 ## Commands
 The base command is betterchunkloader (with the alias of bcl), this gives the general usage and what commands are available.
 
-| Subcommand        | paramaters           | Permission  | Description |
+| Sub command        | parameters           | Permission  | Description |
 | ------------- |:-------------: | -----| ----- |
 | `balance` |   | `betterchunkloader.balance.own` | Get your balance of chunkloaders.
 | `balance` | [User]  | `betterchunkloader.balance.others` | Get your balance of  another player
@@ -49,7 +49,7 @@ As part of version 3.8.0, you can now set up metadata on the user for a few defa
  
 
 ## Permissions
-The up to date version of permission is located in [/src/main/java/net/kaikk/mc/bcl/utils/BCLPermission.java](src/main/java/net/kaikk/mc/bcl/utils/BCLPermission.java).
+The up to date version of permission can be found at [permissions][permissions] file.
 
 
 ## FAQ 
@@ -65,3 +65,4 @@ A personal loader is only active when the player is online while a world loader 
 [CodacyLink]: https://www.codacy.com/app/KasperFranz/BetterChunkLoader?utm_source=github.com&utm_medium=referral&utm_content=KasperFranz/BetterChunkLoader&utm_campaign=badger
 [bclForgeMod]: https://github.com/KasperFranz/BCLForgeLib
 [ReleaseLink]: https://github.com/KasperFranz/BetterChunkLoader/releases
+[permissions]: /src/main/java/guru/franz/mc/bcl/utils/Permission.java

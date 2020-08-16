@@ -2,6 +2,7 @@ package net.kaikk.mc.bcl.utils;
 
 
 import guru.franz.mc.bcl.utils.Messenger;
+import guru.franz.mc.bcl.utils.Permission;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
@@ -28,7 +29,7 @@ public class CommandHelper {
         }
         Player player = (Player) src;
 
-        if (!player.hasPermission(BCLPermission.ABILITY_TELEPORT)) {
+        if (!player.hasPermission(Permission.ABILITY_TELEPORT)) {
             player.sendMessage(Text.of(Messenger.errorColor, "You do not have permission to use the teleport feature."));
             return;
         }
@@ -52,7 +53,7 @@ public class CommandHelper {
                 return;
             }
             Player player = (Player) src;
-            if (!player.hasPermission(BCLPermission.ABILITY_TELEPORT)) {
+            if (!player.hasPermission(Permission.ABILITY_TELEPORT)) {
                 player.sendMessage(Text.of(Messenger.errorColor, "You do not have permission to use the teleport feature."));
                 return;
             }

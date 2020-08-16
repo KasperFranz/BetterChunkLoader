@@ -4,10 +4,10 @@ package net.kaikk.mc.bcl;
 import guru.franz.mc.bcl.inventory.ChunkLoaderInvProp;
 import guru.franz.mc.bcl.inventory.InventoryCloseAfterADelayTask;
 import guru.franz.mc.bcl.utils.Messenger;
+import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.ChunkLoader;
-import net.kaikk.mc.bcl.utils.BCLPermission;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandSource;
@@ -106,12 +106,12 @@ public class CChunkLoader extends ChunkLoader {
                     return;
                 }
 
-                if (chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_ADMINLOADER)) {
+                if (chunkLoader.isAdminChunkLoader() && !player.hasPermission(Permission.ABILITY_ADMINLOADER)) {
                     Messenger.sendNoPermission(player);
                     return;
                 }
 
-                if (!player.getUniqueId().equals(chunkLoader.getOwner()) && !player.hasPermission(BCLPermission.ABILITY_EDIT_OTHERS)) {
+                if (!player.getUniqueId().equals(chunkLoader.getOwner()) && !player.hasPermission(Permission.ABILITY_EDIT_OTHERS)) {
                     player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
                     return;
                 }
@@ -133,7 +133,7 @@ public class CChunkLoader extends ChunkLoader {
                 // -1 == create new chunkloader (as the old chunkLoaders range was 0)
                 if (chunkLoader.getRange() == -1) {
                     pos = chunkLoader.radiusFromSide(pos);
-                    if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_UNLIMITED)) {
+                    if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(Permission.ABILITY_UNLIMITED)) {
 
                         int needed = (1 + (pos * 2)) * (1 + (pos * 2));
                         int available;
@@ -175,7 +175,7 @@ public class CChunkLoader extends ChunkLoader {
                     } else {
                         pos = chunkLoader.radiusFromSide(pos);
                         // if higher range, check if the player has enough free chunks
-                        if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(BCLPermission.ABILITY_UNLIMITED) &&  pos > chunkLoader.getRange()) {
+                        if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(Permission.ABILITY_UNLIMITED) &&  pos > chunkLoader.getRange()) {
                             int needed = ((1 + (pos * 2)) * (1 + (pos * 2))) - chunkLoader.size();
                             int available;
                             if (chunkLoader.isAlwaysOn()) {

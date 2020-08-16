@@ -1,7 +1,7 @@
 package net.kaikk.mc.bcl.commands;
 
+import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.utils.BCLPermission;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -20,27 +20,27 @@ public class CmdBCL implements CommandExecutor {
         Text.Builder message = Text.builder().append(BetterChunkLoader.getPrefix()).append(Text.builder("Commands").color(TextColors.LIGHT_PURPLE)
                 .build());
 
-        if (commandSource.hasPermission(BCLPermission.COMMAND_BALANCE)) {
+        if (commandSource.hasPermission(Permission.COMMAND_BALANCE)) {
             message.append(Text.NEW_LINE).append(Text.builder("/bcl bal").color(TextColors.BLUE).build());
         }
-        if (commandSource.hasPermission(BCLPermission.COMMAND_LIST_SELF)) {
-            if(commandSource.hasPermission(BCLPermission.COMMAND_LIST_OTHERS)){
+        if (commandSource.hasPermission(Permission.COMMAND_LIST_SELF)) {
+            if(commandSource.hasPermission(Permission.COMMAND_LIST_OTHERS)){
                 message.append(Text.NEW_LINE).append(Text.builder("/bcl list [player]").color(TextColors.BLUE).build());
             }else {
                 message.append(Text.NEW_LINE).append(Text.builder("/bcl list").color(TextColors.BLUE).build());
             }
         }
-        if (commandSource.hasPermission(BCLPermission.COMMAND_INFO)) {
+        if (commandSource.hasPermission(Permission.COMMAND_INFO)) {
             message.append(Text.NEW_LINE).append(Text.builder("/bcl info").color(TextColors.BLUE).build());
         }
-        if (commandSource.hasPermission(BCLPermission.COMMAND_CHUNKS)) {
+        if (commandSource.hasPermission(Permission.COMMAND_CHUNKS)) {
             message.append(Text.NEW_LINE)
                     .append(Text.builder("/bcl chunks <add|set|remove> <player> <type> <amount>").color(TextColors.BLUE).build());
         }
-        if (commandSource.hasPermission(BCLPermission.COMMAND_DELETE)) {
+        if (commandSource.hasPermission(Permission.COMMAND_DELETE)) {
             message.append(Text.NEW_LINE).append(Text.builder("/bcl delete <player>").color(TextColors.BLUE).build());
         }
-        if (commandSource.hasPermission(BCLPermission.COMMAND_PURGE)) {
+        if (commandSource.hasPermission(Permission.COMMAND_PURGE)) {
             message.append(Text.NEW_LINE).append(Text.builder("/bcl purge").color(TextColors.BLUE).build());
         }
         commandSource.sendMessage(message.build());

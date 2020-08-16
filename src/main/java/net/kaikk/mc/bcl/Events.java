@@ -1,9 +1,9 @@
 package net.kaikk.mc.bcl;
 
 import guru.franz.mc.bcl.utils.Messenger;
+import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
-import net.kaikk.mc.bcl.utils.BCLPermission;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.type.HandTypes;
@@ -36,11 +36,11 @@ public class Events {
             if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType()
                     .equals(Config.getConfig().getItemType())) {
                 boolean adminLoader =
-                        chunkLoader != null && chunkLoader.isAdminChunkLoader() && player.hasPermission(BCLPermission.ABILITY_ADMINLOADER);
+                        chunkLoader != null && chunkLoader.isAdminChunkLoader() && player.hasPermission(Permission.ABILITY_ADMINLOADER);
                 // if the chunkloader is not on this server or the player can edit chunkloader or if it is an admin chunkloader then we should show
                 // the UI
                 if (!ChunkLoaderOnThisServer || (player.getUniqueId().equals(chunkLoader.getOwner()) || player
-                        .hasPermission(BCLPermission.ABILITY_EDIT_OTHERS) || adminLoader)) {
+                        .hasPermission(Permission.ABILITY_EDIT_OTHERS) || adminLoader)) {
                     // if the chunkloader is not present lets make one!
                     if (chunkLoader == null) {
                         UUID uid = player.getUniqueId();

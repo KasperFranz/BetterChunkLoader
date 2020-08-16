@@ -3,7 +3,6 @@ package guru.franz.mc.bcl.utils;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.utils.BCLPermission;
 import net.kaikk.mc.bcl.utils.CommandHelper;
 import org.slf4j.Logger;
 import org.spongepowered.api.command.CommandSource;
@@ -115,7 +114,7 @@ public class Messenger {
         Text.Builder builder = Text.builder()
                 .append(Text.builder("[" + text + "] ").color(color).build());
 
-        if(source.hasPermission(BCLPermission.ABILITY_TELEPORT) && source instanceof Player){
+        if(source.hasPermission(Permission.ABILITY_TELEPORT) && source instanceof Player){
             Location<World> location = chunkLoader.getLoc().add(0,1,0);
             Text tp = Text.builder("[TP] ").color(TextColors.DARK_BLUE)
                     .onClick(TextActions.executeCallback(CommandHelper.createTeleportConsumer(source, location )))

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
 import guru.franz.mc.bcl.command.Reload;
 import guru.franz.mc.bcl.utils.Messenger;
+import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.commands.CmdBCL;
 import net.kaikk.mc.bcl.commands.CmdBalance;
 import net.kaikk.mc.bcl.commands.CmdChunks;
@@ -17,7 +18,6 @@ import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.MySqlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
-import net.kaikk.mc.bcl.utils.BCLPermission;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
@@ -208,15 +208,15 @@ public class BetterChunkLoader {
 
         CommandSpec cmdBalance = CommandSpec.builder()
                 .arguments(GenericArguments.optional(GenericArguments.requiringPermission(
-                        GenericArguments.user(Text.of("user")), BCLPermission.COMMAND_BALANCE_OTHERS)))
-                .permission(BCLPermission.COMMAND_BALANCE)
+                        GenericArguments.user(Text.of("user")), Permission.COMMAND_BALANCE_OTHERS)))
+                .permission(Permission.COMMAND_BALANCE)
                 .executor(new CmdBalance())
                 .description(Text.of("Get the balance of your different types of chunk loaders."))
                 .build();
 
         CommandSpec cmdInfo = CommandSpec.builder()
                 .arguments(GenericArguments.none())
-                .permission(BCLPermission.COMMAND_INFO)
+                .permission(Permission.COMMAND_INFO)
                 .description(Text.of("Get general information about the usage on the server."))
                 .executor(new CmdInfo())
                 .build();
@@ -227,12 +227,12 @@ public class BetterChunkLoader {
                 .arguments(
                         // TODO: figure out a good way to do this.
                         //                        GenericArguments.optional(GenericArguments.requiringPermission(new AllElement(Text.of("all")),
-                        // BCLPermission
+                        // Permissions
                         //                .COMMAND_LIST_ALL)),
                         GenericArguments.optional(
-                                GenericArguments.requiringPermission(GenericArguments.user(Text.of("user")), BCLPermission.COMMAND_LIST_OTHERS))
+                                GenericArguments.requiringPermission(GenericArguments.user(Text.of("user")), Permission.COMMAND_LIST_OTHERS))
                 )
-                .permission(BCLPermission.COMMAND_LIST_SELF)
+                .permission(Permission.COMMAND_LIST_SELF)
                 .executor(new CmdList())
                 .description(Text.of("Get the list of your chunk loaders."))
                 .build();
@@ -245,25 +245,25 @@ public class BetterChunkLoader {
                         GenericArguments.integer(Text.of("value"))
                 ))
                 .executor(new CmdChunks())
-                .permission(BCLPermission.COMMAND_CHUNKS)
+                .permission(Permission.COMMAND_CHUNKS)
                 .description(Text.of("add, set remove a players type of chunkloaders."))
                 .build();
 
         CommandSpec cmdDelete = CommandSpec.builder()
                 .arguments(GenericArguments.onlyOne(GenericArguments.user(Text.of("user"))))
                 .executor(new CmdDelete())
-                .permission(BCLPermission.COMMAND_DELETE)
+                .permission(Permission.COMMAND_DELETE)
                 .description(Text.of("Delete the specified players chunkloaders"))
                 .build();
 
         CommandSpec cmdPurge = CommandSpec.builder()
                 .executor(new CmdPurge())
-                .permission(BCLPermission.COMMAND_PURGE)
+                .permission(Permission.COMMAND_PURGE)
                 .description(Text.of("remove all chunks there is in not existing dimensions."))
                 .build();
 
         CommandSpec cmdReload = CommandSpec.builder()
-                .permission(BCLPermission.COMMAND_RELOAD)
+                .permission(Permission.COMMAND_RELOAD)
                 .executor(new Reload())
                 .description(Text.of("Reloads the plugin configuration."))
                 .build();
