@@ -33,7 +33,7 @@ public class Events {
             CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(clickedBlock.getLocation().get());
             boolean ChunkLoaderOnThisServer = chunkLoader != null;
 
-            if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getItem().getType()
+            if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getType()
                     .equals(Config.getConfig().getItemType())) {
                 boolean adminLoader =
                         chunkLoader != null && chunkLoader.isAdminChunkLoader() && player.hasPermission(Permission.ABILITY_ADMINLOADER);
