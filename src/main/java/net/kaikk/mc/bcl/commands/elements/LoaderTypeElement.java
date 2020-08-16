@@ -23,18 +23,16 @@ public class LoaderTypeElement extends CommandElement {
     @Override
     protected Object parseValue(CommandSource commandSource, CommandArgs commandArgs) throws ArgumentParseException {
         String arg = commandArgs.next();
-        if (arg.equalsIgnoreCase("world")) {
+        if (arg.equalsIgnoreCase("world") || arg.equalsIgnoreCase("personal")) {
             return arg;
         }
-        if (arg.equalsIgnoreCase("personal")) {
-            return arg;
-        }
+
         throw commandArgs.createError(Text.of(TextColors.RED, arg, " is not a valid argument!"));
     }
 
     @Override
-    public List<String> complete(CommandSource commandSource, CommandArgs commandArgs, CommandContext commandContext) {
-        List<String> list = new ArrayList();
+    public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
+        List<String> list = new ArrayList<>();
         list.add("world");
         list.add("personal");
         return list;
