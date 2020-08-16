@@ -1,8 +1,8 @@
 package net.kaikk.mc.bcl.datastore;
 
+import guru.franz.mc.bcl.exception.Exception;
+import guru.franz.mc.bcl.exception.NegativeValueException;
 import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.exceptions.MyException;
-import net.kaikk.mc.bcl.exceptions.NegativeValueException;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -21,7 +21,7 @@ public interface IDataStore {
 
     /** Loads data from the datastore.
      *  This is called while BCL is loading */
-    public abstract void load() throws MyException;
+    public abstract void load() throws Exception;
 
     /** Get chunk loaders */
     public abstract List<CChunkLoader> getChunkLoaders();

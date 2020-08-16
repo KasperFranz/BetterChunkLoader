@@ -1,6 +1,6 @@
-package net.kaikk.mc.bcl.exceptions;
+package guru.franz.mc.bcl.exception;
 
-public class NegativeValueException extends MyException {
+public class NegativeValueException extends Exception {
 
     public NegativeValueException()
     {

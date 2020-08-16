@@ -1,9 +1,9 @@
 package net.kaikk.mc.bcl.datastore;
 
+import guru.franz.mc.bcl.exception.NegativeValueException;
+import guru.franz.mc.bcl.exception.mysql.MySQLConnectionException;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
-import guru.franz.mc.bcl.exceptions.mysql.MySQLConnectionException;
-import net.kaikk.mc.bcl.exceptions.NegativeValueException;
 import net.kaikk.mc.bcl.config.Config;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.spongepowered.api.world.Location;

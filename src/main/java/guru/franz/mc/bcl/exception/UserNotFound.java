@@ -1,6 +1,6 @@
-package net.kaikk.mc.bcl.exceptions;
+package guru.franz.mc.bcl.exception;
 
-public class UserNotFound extends MyException {
+public class UserNotFound extends Exception {
 
     public UserNotFound()
     {

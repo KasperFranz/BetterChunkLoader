@@ -1,9 +1,9 @@
 package net.kaikk.mc.bcl.datastore;
 
+import guru.franz.mc.bcl.exception.NegativeValueException;
+import guru.franz.mc.bcl.exception.UserNotFound;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.exceptions.NegativeValueException;
-import net.kaikk.mc.bcl.exceptions.UserNotFound;
 import net.kaikk.mc.bcl.config.Config;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
