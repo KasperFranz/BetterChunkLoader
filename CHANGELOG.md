@@ -10,7 +10,8 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
  - Added a reload command to reload the configuration! (still not fully integrated)
  
 ### Changed
-- Moved to a new config setup, it should help make the code cleaner :)
+ - Moved to a new config setup, it should help make the code cleaner :)
+ - All amounts passed to /bcl chunks should now always be a positive integer.
 
 ### Fixed
  - Fixed a null pointer exception when using the purge command, and the world is empty (#27)

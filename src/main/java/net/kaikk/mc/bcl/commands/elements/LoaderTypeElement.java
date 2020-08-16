@@ -8,13 +8,11 @@ import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Rob5Underscores on 10/12/2016.
- */
+import javax.annotation.Nullable;
+
 public class LoaderTypeElement extends CommandElement {
 
     public LoaderTypeElement(Text key) {
@@ -31,7 +29,7 @@ public class LoaderTypeElement extends CommandElement {
         if (arg.equalsIgnoreCase("personal")) {
             return arg;
         }
-        throw commandArgs.createError(Text.of(new Object[]{TextColors.RED, arg, " is not a valid argument!"}));
+        throw commandArgs.createError(Text.of(TextColors.RED, arg, " is not a valid argument!"));
     }
 
     @Override

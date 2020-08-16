@@ -62,7 +62,7 @@ public class Messenger {
 
     public static void sendNegativeValue(CommandSource sender) {
         Text message = BetterChunkLoader.getPrefix();
-        message = message.concat(Text.builder("The new value can not be less than 0.").color(errorColor).build());
+        message = message.concat(Text.builder("The value needs to be higher than 0.").color(errorColor).build());
         sender.sendMessage(message);
     }
 

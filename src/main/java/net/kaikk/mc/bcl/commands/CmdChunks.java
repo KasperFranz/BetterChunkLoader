@@ -13,9 +13,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 
-/**
- * Created by ROB on 08/12/2016.
- */
 public class CmdChunks implements CommandExecutor {
 
     @Override
@@ -24,83 +21,95 @@ public class CmdChunks implements CommandExecutor {
 
         if (!sender.hasPermission(Permission.COMMAND_CHUNKS)) {
             Messenger.sendNoPermission(sender);
-            return null;
+            return CommandResult.empty();
+
         }
 
         String chunksChangeOperatorElement = commandContext.<String>getOne("change").get();
         String loaderTypeElement = commandContext.<String>getOne("type").get();
         User user = commandContext.<Player>getOne("user").get();
-        Integer changeValue = commandContext.<Integer>getOne("value").get();
+        int changeValue = commandContext.<Integer>getOne("value").get();
         PlayerData playerData = DataStoreManager.getDataStore().getPlayerData(user.getUniqueId());
 
-        if (chunksChangeOperatorElement.equalsIgnoreCase("add")) {
-            int newValue = changeValue;
-            int maxWorldChunks = Config.getInstance().getMaxChunksAmountWorld();
-            int maxOnlineOnlyChunks = Config.getInstance().getMaxChunksAmountPersonal();
-
-            if (loaderTypeElement.equalsIgnoreCase("world")) {
-                newValue += playerData.getAlwaysOnChunksAmount();
-                if (newValue > maxWorldChunks) {
-                    sender.sendMessage(Messenger.getMaxChunkInfo(changeValue, user.getName(), maxWorldChunks, "world chunks"));
-                    return CommandResult.empty();
-                }
-
-                DataStoreManager.getDataStore().addAlwaysOnChunksLimit(user.getUniqueId(), changeValue);
-                sender.sendMessage(Messenger.getAddedInfo(changeValue, user.getName(), playerData.getAlwaysOnChunksAmount(), "world chunks"));
-                return CommandResult.success();
-
-            }
-
-            if (loaderTypeElement.equalsIgnoreCase("personal")) {
-                newValue += playerData.getOnlineOnlyChunksAmount();
-                if (newValue > maxOnlineOnlyChunks) {
-                    sender.sendMessage(Messenger.getMaxChunkInfo(changeValue, user.getName(), maxOnlineOnlyChunks, "personal chunks"));
-                    return CommandResult.empty();
-                }
-
-                DataStoreManager.getDataStore().addOnlineOnlyChunksLimit(user.getUniqueId(), changeValue);
-                sender.sendMessage(Messenger.getAddedInfo(changeValue, user.getName(), playerData.getOnlineOnlyChunksAmount(), "personal chunks"));
-                return CommandResult.success();
-            }
-
-
-            Messenger.sendUsage(sender, "chunks");
+        if(changeValue < 0){
+            Messenger.sendNegativeValue(sender);
             return CommandResult.empty();
         }
 
-        if (chunksChangeOperatorElement.equalsIgnoreCase("set")) {
-            try {
-                if (changeValue < 0) {
+        switch (chunksChangeOperatorElement) {
 
-                    return CommandResult.empty();
-                }
+            case "add":
+                return this.commandPartAdd(sender, playerData, user, changeValue, loaderTypeElement);
 
-                if (loaderTypeElement.equalsIgnoreCase("world")) {
-                    DataStoreManager.getDataStore().setAlwaysOnChunksLimit(user.getUniqueId(), changeValue);
-                    sender.sendMessage(Messenger.getSetMessage(user.getName(), changeValue, "world chunks"));
-                    return CommandResult.success();
+            case "set":
+                return this.commandPartSet(sender, user, changeValue, loaderTypeElement);
 
-                } else if (loaderTypeElement.equalsIgnoreCase("personal")) {
-                    DataStoreManager.getDataStore().setOnlineOnlyChunksLimit(user.getUniqueId(), changeValue);
-                    sender.sendMessage(Messenger.getSetMessage(user.getName(), changeValue, "personal chunks"));
-                    return CommandResult.success();
-                }
+            case "remove":
+                return this.commandPartRemove(sender, playerData, user, changeValue, loaderTypeElement);
 
+            default:
                 Messenger.sendUsage(sender, "chunks");
-                return CommandResult.empty();
-            }catch(NegativeValueException e){
-                Messenger.sendNegativeValue(sender);
+                return CommandResult.success();
+        }
+    }
+
+    private CommandResult commandPartAdd(CommandSource sender, PlayerData playerData, User user, int changeValue, String loaderTypeElement) {
+        int newValue = changeValue;
+        int maxWorldChunks = Config.getInstance().getMaxChunksAmountWorld();
+        int maxOnlineOnlyChunks = Config.getInstance().getMaxChunksAmountPersonal();
+
+        if (loaderTypeElement.equalsIgnoreCase("world")) {
+            newValue += playerData.getAlwaysOnChunksAmount();
+            if (newValue > maxWorldChunks) {
+                sender.sendMessage(Messenger.getMaxChunkInfo(changeValue, user.getName(), maxWorldChunks, "world chunks"));
                 return CommandResult.empty();
             }
+
+            DataStoreManager.getDataStore().addAlwaysOnChunksLimit(user.getUniqueId(), changeValue);
+            sender.sendMessage(Messenger.getAddedInfo(changeValue, user.getName(), playerData.getAlwaysOnChunksAmount(), "world chunks"));
+            return CommandResult.success();
+
         }
 
-        if (chunksChangeOperatorElement.equalsIgnoreCase("remove")) {
-            return this.remove(sender,playerData, user, changeValue, loaderTypeElement);
+        if (loaderTypeElement.equalsIgnoreCase("personal")) {
+            newValue += playerData.getOnlineOnlyChunksAmount();
+            if (newValue > maxOnlineOnlyChunks) {
+                sender.sendMessage(Messenger.getMaxChunkInfo(changeValue, user.getName(), maxOnlineOnlyChunks, "personal chunks"));
+                return CommandResult.empty();
+            }
+
+            DataStoreManager.getDataStore().addOnlineOnlyChunksLimit(user.getUniqueId(), changeValue);
+            sender.sendMessage(Messenger.getAddedInfo(changeValue, user.getName(), playerData.getOnlineOnlyChunksAmount(), "personal chunks"));
+            return CommandResult.success();
         }
 
 
         Messenger.sendUsage(sender, "chunks");
-        return CommandResult.success();
+        return CommandResult.empty();
+
+    }
+
+    private CommandResult commandPartSet(CommandSource sender, User user, int changeValue, String loaderTypeElement) {
+
+        try {
+
+            if (loaderTypeElement.equalsIgnoreCase("world")) {
+                DataStoreManager.getDataStore().setAlwaysOnChunksLimit(user.getUniqueId(), changeValue);
+                sender.sendMessage(Messenger.getSetMessage(user.getName(), changeValue, "world chunks"));
+                return CommandResult.success();
+
+            } else if (loaderTypeElement.equalsIgnoreCase("personal")) {
+                DataStoreManager.getDataStore().setOnlineOnlyChunksLimit(user.getUniqueId(), changeValue);
+                sender.sendMessage(Messenger.getSetMessage(user.getName(), changeValue, "personal chunks"));
+                return CommandResult.success();
+            }
+
+            Messenger.sendUsage(sender, "chunks");
+            return CommandResult.empty();
+        } catch (NegativeValueException e) {
+            Messenger.sendNegativeValue(sender);
+            return CommandResult.empty();
+        }
     }
 
     /**
@@ -114,7 +123,7 @@ public class CmdChunks implements CommandExecutor {
      * @return If we have removed it or not
      */
     // Todo: we shouldn't need to pass in user!
-    private CommandResult remove(CommandSource sender,PlayerData playerData, User user, int remove, String type){
+    private CommandResult commandPartRemove(CommandSource sender, PlayerData playerData, User user, int remove, String type) {
         try {
             int newValue = 0;
             //todo we should be able to make it a bit prettier if we can get rid of the 2 blocks as the current setup is a code smell.
@@ -125,13 +134,12 @@ public class CmdChunks implements CommandExecutor {
                 return CommandResult.success();
 
             } else if (type.equalsIgnoreCase("personal")) {
-                System.out.println(newValue);
-                newValue = playerData.getOnlineOnlyChunksAmount() - remove ;
+                newValue = playerData.getOnlineOnlyChunksAmount() - remove;
                 DataStoreManager.getDataStore().setOnlineOnlyChunksLimit(playerData.getPlayerId(), newValue);
                 sender.sendMessage(Messenger.getRemoveMessage(user.getName(), remove, "personal chunks"));
                 return CommandResult.success();
             }
-        }catch(NegativeValueException e){
+        } catch (NegativeValueException e) {
             Messenger.sendNegativeValue(sender);
             return CommandResult.empty();
         }
