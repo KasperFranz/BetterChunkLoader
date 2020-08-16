@@ -30,7 +30,6 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,14 +41,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Plugin(id = "betterchunkloader",
+@Plugin(id = BetterChunkLoaderPluginInfo.ID,
         name = BetterChunkLoaderPluginInfo.NAME,
         description = BetterChunkLoaderPluginInfo.DESCRIPTION,
         version = BetterChunkLoaderPluginInfo.VERSION
 )
 public class BetterChunkLoader {
-    private static final int BSTATS_PLUGIN_ID = 7560;
-    private static final Text prefix = Text.builder("[BetterChunkLoader] ").color(TextColors.GOLD).build();
     private static BetterChunkLoader instance;
     private Metrics2 metrics;
     @Inject
@@ -62,7 +59,7 @@ public class BetterChunkLoader {
 
     @Inject
     public BetterChunkLoader(Metrics2.Factory metricsFactory){
-        metrics = metricsFactory.make(BSTATS_PLUGIN_ID);
+        metrics = metricsFactory.make(BetterChunkLoaderPluginInfo.BSTATS_PLUGIN_ID);
      }
 
     public static BetterChunkLoader instance() {
@@ -108,7 +105,7 @@ public class BetterChunkLoader {
     }
 
     public static Text getPrefix() {
-        return prefix;
+        return BetterChunkLoaderPluginInfo.prefix;
     }
 
     public void onLoad() {
