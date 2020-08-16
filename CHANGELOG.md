@@ -4,15 +4,16 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 ## [Unreleased][unreleased]
 ### Added
- - Added Bstats for visibility of how many are using the version.
+ - Added bStats for visibility of how many are using the version.
  - Added the option to use metadata for the amount of chunk loaders a player can have.
  - Added more exceptions around the MySQL database connection start.
  - Added a reload command to reload the configuration! (still not fully integrated)
  
 ### Changed
+- Moved to a new config setup, it should help make the code cleaner :)
 
 ### Fixed
- - Fixed an NPE when using purge and the world is empty (#27)
+ - Fixed a null pointer exception when using the purge command, and the world is empty (#27)
 
 ## 2018-10-07 3.7.0
 ### Changed
