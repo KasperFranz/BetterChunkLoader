@@ -1,8 +1,8 @@
 package net.kaikk.mc.bcl;
 
+import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
@@ -34,7 +34,7 @@ public class Events {
             boolean ChunkLoaderOnThisServer = chunkLoader != null;
 
             if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getType()
-                    .equals(Config.getConfig().getItemType())) {
+                    .equals(Config.getInstance().getItemType())) {
                 boolean adminLoader =
                         chunkLoader != null && chunkLoader.isAdminChunkLoader() && player.hasPermission(Permission.ABILITY_ADMINLOADER);
                 // if the chunkloader is not on this server or the player can edit chunkloader or if it is an admin chunkloader then we should show
@@ -60,7 +60,7 @@ public class Events {
                     player.sendMessage(chunkLoader.info());
                 } else {
                     player.sendMessage(Text.of(TextColors.GOLD,
-                            "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a ",Config.getConfig().getItemName(),"."));
+                            "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a ",Config.getInstance().getItemName(),"."));
                 }
             }
         }
@@ -104,7 +104,7 @@ public class Events {
         List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(event.getTargetEntity().getUniqueId());
 
         for (CChunkLoader chunkLoader : clList) {
-            if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())
+            if (chunkLoader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())
                 && !chunkLoader.isAlwaysOn() && chunkLoader.blockCheck()) {
                 BetterChunkLoader.instance().loadChunks(chunkLoader);
             }
@@ -118,7 +118,7 @@ public class Events {
         List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(event.getTargetEntity().getUniqueId());
 
         for (CChunkLoader chunkLoader : clList) {
-            if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString()) && !chunkLoader.isAlwaysOn()) {
+            if (chunkLoader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName()) && !chunkLoader.isAlwaysOn()) {
                 BetterChunkLoader.instance().unloadChunks(chunkLoader);
             }
         }

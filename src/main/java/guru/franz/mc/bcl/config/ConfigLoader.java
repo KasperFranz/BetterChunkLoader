@@ -1,6 +1,7 @@
-package net.kaikk.mc.bcl.config;
+package guru.franz.mc.bcl.config;
 
 import com.google.common.reflect.TypeToken;
+import guru.franz.mc.bcl.config.stub.MySQL;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -14,57 +15,72 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Created by Rob5Underscores on 10/12/2016.
- */
-public class Config implements Configurable {
+public class ConfigLoader {
 
-    private static Config config = new Config();
-    private Path configFile = Paths.get(BetterChunkLoader.instance().getConfigDir() + "/config.conf");
-    private ConfigurationLoader<CommentedConfigurationNode> configLoader = HoconConfigurationLoader.builder().setPath(configFile).build();
+    private static final ConfigLoader instance = new ConfigLoader();
+    private final Path configFile = Paths.get(BetterChunkLoader.instance().getConfigDir() + "/config.conf");
+    private final ConfigurationLoader<CommentedConfigurationNode> configLoader = HoconConfigurationLoader.builder().setPath(configFile).build();
     private CommentedConfigurationNode configNode;
 
-    private ItemType itemType;
-
-    public static Config getConfig() {
-        return config;
+    public static ConfigLoader getInstance(){
+        return instance;
     }
 
     public void setup() {
         if (!Files.exists(this.configFile)) {
             try {
                 Files.createFile(this.configFile);
-                load();
                 populate();
                 save();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            load();
         }
+
+        load();
     }
 
-    public void load() {
+    private void load() {
         try {
             this.configNode = (this.configLoader.load());
-
+            ItemType itemType;
+            String serverName, dataStore;
+            int maxHoursOffline, defaultChunksAmountWorld, defaultChunksAmountPersonal, maxChunksAmountWorld, maxChunksAmountPersonal;
             try {
-                itemType = get().getNode("item","type").getValue(TypeToken.of(ItemType.class));
-                if(itemType == null){
+                itemType = get().getNode("item", "type").getValue(TypeToken.of(ItemType.class));
+                if (itemType == null) {
                     itemType = ItemTypes.BLAZE_ROD;
                 }
             } catch (ObjectMappingException e) {
                 e.printStackTrace();
                 itemType = ItemTypes.BLAZE_ROD;
             }
+            serverName = get().getNode("ServerName").getString("aServer");
+            maxHoursOffline = get().getNode("MaxHoursOffline").getInt(72);
+            dataStore = get().getNode("DataStore").getString("MySQL");
+            defaultChunksAmountWorld = get().getNode("DefaultChunksAmount", "World").getInt(0);
+            defaultChunksAmountPersonal = get().getNode("DefaultChunksAmount", "Personal").getInt(0);
+            maxChunksAmountWorld = get().getNode("DefaultChunksAmount", "World").getInt(250);
+            maxChunksAmountPersonal = get().getNode("DefaultChunksAmount", "Personal").getInt(250);
+            BetterChunkLoader.instance().getLogger().info(serverName);
+
+            MySQL mySQL = new MySQL(
+            get().getNode("MySQL", "Hostname").getString("host"),
+            get().getNode("MySQL", "Username").getString("user"),
+            get().getNode("MySQL", "Password").getString("pass"),
+            get().getNode("MySQL", "Database").getString("db")
+            );
+
+            Config config = new Config(serverName, maxHoursOffline, dataStore, defaultChunksAmountWorld, defaultChunksAmountPersonal,
+                    maxChunksAmountWorld, maxChunksAmountPersonal, itemType,
+                    mySQL);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void save() {
+    private void save() {
         try {
             this.configLoader.save(this.configNode);
         } catch (IOException e) {
@@ -72,7 +88,7 @@ public class Config implements Configurable {
         }
     }
 
-    public void populate() {
+    private void populate() {
         get().getNode("ServerName").setValue("aServer").setComment("Unique name of server");
         get().getNode("MaxHoursOffline").setValue(72).setComment("Time in hours before player's chunkloaders become inactive.");
         get().getNode("DataStore").setValue("MySQL").setComment("The only DataStore available is MySQL atm!");
@@ -88,15 +104,7 @@ public class Config implements Configurable {
         get().getNode("MySQL", "Database").setValue("db");
     }
 
-    public CommentedConfigurationNode get() {
+    private CommentedConfigurationNode get() {
         return this.configNode;
-    }
-
-    public ItemType getItemType() {
-        return itemType;
-    }
-
-    public String getItemName() {
-        return itemType.getTranslation().get();
     }
 }

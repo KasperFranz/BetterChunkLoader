@@ -1,9 +1,9 @@
 package net.kaikk.mc.bcl.commands;
 
+import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.IDataStore;
 import org.spongepowered.api.command.CommandException;
@@ -33,7 +33,7 @@ public class CmdPurge implements CommandExecutor {
         IDataStore ds = DataStoreManager.getDataStore();
         List<CChunkLoader> chunkLoaders = new ArrayList<CChunkLoader>(DataStoreManager.getDataStore().getChunkLoaders());
         for (CChunkLoader cl : chunkLoaders) {
-            if (!cl.blockCheck() && Config.getConfig().get().getNode("ServerName").getString().equalsIgnoreCase(cl.getServerName())) {
+            if (!cl.blockCheck() && cl.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
                 ds.removeChunkLoader(cl);
             }
         }

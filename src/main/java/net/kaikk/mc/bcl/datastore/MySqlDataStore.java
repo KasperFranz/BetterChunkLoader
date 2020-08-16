@@ -1,11 +1,11 @@
 package net.kaikk.mc.bcl.datastore;
 
+import guru.franz.mc.bcl.config.Config;
+import guru.franz.mc.bcl.config.stub.MySQL;
 import guru.franz.mc.bcl.exception.NegativeValueException;
 import guru.franz.mc.bcl.exception.mysql.MySQLConnectionException;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.config.Config;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -75,7 +75,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         this.chunkLoaders = new HashMap<>();
         try {
             ResultSet rs = this.statement().executeQuery(
-                    "SELECT * FROM bcl_chunkloaders where serverName = '" + Config.getConfig().get().getNode("ServerName").getString() + "'");
+                    "SELECT * FROM bcl_chunkloaders where serverName = '" + Config.getInstance().getServerName() + "'");
             while (rs.next()) {
                 try {
                     CChunkLoader chunkLoader =
@@ -116,7 +116,7 @@ public class MySqlDataStore extends AHashMapDataStore {
     public CChunkLoader getChunkLoaderAt(Location<World> blockLocation) {
         for (Map.Entry<String, List<CChunkLoader>> entry : this.chunkLoaders.entrySet()) {
             for (CChunkLoader cChunkLoader : entry.getValue()) {
-                if (cChunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+                if (cChunkLoader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
                     if (cChunkLoader.getLoc().equals(blockLocation)) {
                         return cChunkLoader;
                     }
@@ -151,7 +151,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         try {
             String statement = "REPLACE INTO bcl_chunkloaders VALUES (\"" + chunkLoader.getLocationString() + "\", " + chunkLoader.getRange() + ", "
                     + UUIDtoHexString(chunkLoader.getOwner()) + ", " + chunkLoader.getCreationDate().getTime() + ", " + (chunkLoader.isAlwaysOn() ?
-                    1 : 0) + ", \"" + Config.getConfig().get().getNode("ServerName").getString() + "\")";
+                    1 : 0) + ", \"" + Config.getInstance().getServerName() + "\")";
             this.statement().executeUpdate(statement);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -194,8 +194,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         super.setAlwaysOnChunksLimit(playerId, amount);
         try {
             this.statement().executeUpdate(
-                    "INSERT INTO bcl_playersdata (pid,alwayson,onlineonly) VALUES (" + UUIDtoHexString(playerId) + ", " + amount + ", " + Config.getConfig().get()
-                            .getNode("DefaultChunksAmount").getNode("World").getInt() + ") ON DUPLICATE KEY UPDATE alwayson=" + amount);
+                    "INSERT INTO bcl_playersdata (pid,alwayson,onlineonly) VALUES (" + UUIDtoHexString(playerId) + ", " + amount + ", " + Config.getInstance().getDefaultChunksAmountWorld() + ") ON DUPLICATE KEY UPDATE alwayson=" + amount);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -205,8 +204,7 @@ public class MySqlDataStore extends AHashMapDataStore {
     public void setOnlineOnlyChunksLimit(UUID playerId, int amount)  throws NegativeValueException {
         super.setOnlineOnlyChunksLimit(playerId, amount);
         try {
-            this.statement().executeUpdate("INSERT INTO bcl_playersdata (pid,alwayson,onlineonly) VALUES (" + UUIDtoHexString(playerId) + ", " + Config.getConfig().get()
-                    .getNode("DefaultChunksAmount").getNode("Personal").getInt() + ", " + amount + ") ON DUPLICATE KEY UPDATE onlineonly=" + amount);
+            this.statement().executeUpdate("INSERT INTO bcl_playersdata (pid,alwayson,onlineonly) VALUES (" + UUIDtoHexString(playerId) + ", " + Config.getInstance().getDefaultChunksAmountPersonal() + ", " + amount + ") ON DUPLICATE KEY UPDATE onlineonly=" + amount);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -216,10 +214,8 @@ public class MySqlDataStore extends AHashMapDataStore {
     public void addAlwaysOnChunksLimit(UUID playerId, int amount) {
         super.addAlwaysOnChunksLimit(playerId, amount);
         try {
-            int world = Config.getConfig().get()
-                    .getNode("DefaultChunksAmount").getNode("World").getInt()+amount;
-            int personal = Config.getConfig().get()
-                    .getNode("DefaultChunksAmount").getNode("Personal").getInt();
+            int world = Config.getInstance().getDefaultChunksAmountWorld()+amount;
+            int personal = Config.getInstance().getDefaultChunksAmountPersonal();
             this.statement().executeUpdate(
                     "INSERT INTO bcl_playersdata (pid,alwayson,onlineonly)  VALUES (" + UUIDtoHexString(playerId) + ", " + world+","+personal  + ") ON DUPLICATE KEY "
                             + "UPDATE "
@@ -233,10 +229,8 @@ public class MySqlDataStore extends AHashMapDataStore {
     public void addOnlineOnlyChunksLimit(UUID playerId, int amount) {
         super.addOnlineOnlyChunksLimit(playerId, amount);
         try {
-            int world = Config.getConfig().get()
-                    .getNode("DefaultChunksAmount").getNode("World").getInt();
-            int personal = Config.getConfig().get()
-                    .getNode("DefaultChunksAmount").getNode("Personal").getInt()+amount;
+            int world = Config.getInstance().getDefaultChunksAmountWorld();
+            int personal = Config.getInstance().getDefaultChunksAmountPersonal()+amount;
             this.statement().executeUpdate("INSERT INTO bcl_playersdata (pid,alwayson,onlineonly)  VALUES (" + UUIDtoHexString(playerId) + ", " + world + ", " + personal +
                     ") "
                     + "ON DUPLICATE KEY UPDATE onlineonly=onlineonly+"+ amount);
@@ -254,16 +248,12 @@ public class MySqlDataStore extends AHashMapDataStore {
             //if the connection is not already closed and we can't close it, it should be safe to recreate!
         }
 
-        final Properties connectionProps = new Properties();
-        CommentedConfigurationNode mysql = Config.getConfig().get().getNode("MySQL");
+        MySQL mySQLConfig = Config.getInstance().getMySQL();
+        String user = mySQLConfig.getUsername();
+        String hostname = mySQLConfig.getHostname();
+        String database = mySQLConfig.getDatabase();
 
-        String user = mysql.getNode("Username").getString();
-        String password = mysql.getNode("Password").getString();
-        String hostname = mysql.getNode("Hostname").getString();
-        String database = mysql.getNode("Database").getString();
-
-        connectionProps.put("user", user);
-        connectionProps.put("password", password);
+        final Properties connectionProps = mySQLConfig.getConnectionProperties();
 
 
 

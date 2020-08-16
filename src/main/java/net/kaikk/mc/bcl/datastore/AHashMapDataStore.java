@@ -1,10 +1,10 @@
 package net.kaikk.mc.bcl.datastore;
 
+import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.exception.NegativeValueException;
 import guru.franz.mc.bcl.exception.UserNotFound;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.config.Config;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.world.Location;
@@ -84,7 +84,7 @@ public abstract class AHashMapDataStore implements IDataStore {
         }
 
         clList.add(chunkLoader);
-        if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+        if (chunkLoader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             chunkLoader.getPlayer().spawnParticles(ParticleEffect.builder().type(ParticleTypes.MOBSPAWNER_FLAMES).quantity(10).build(),
                     chunkLoader.getLoc().getPosition());
             if (chunkLoader.isLoadable()) {
@@ -102,7 +102,7 @@ public abstract class AHashMapDataStore implements IDataStore {
                         chunkLoader.getLoc().getPosition());
             }
             clList.remove(chunkLoader);
-            if (chunkLoader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+            if (chunkLoader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
                 BetterChunkLoader.instance().unloadChunks(chunkLoader);
             }
         }

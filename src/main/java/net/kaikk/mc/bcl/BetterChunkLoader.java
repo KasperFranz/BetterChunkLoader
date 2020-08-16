@@ -3,6 +3,8 @@ package net.kaikk.mc.bcl;
 import com.google.inject.Inject;
 import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
 import guru.franz.mc.bcl.command.Reload;
+import guru.franz.mc.bcl.config.Config;
+import guru.franz.mc.bcl.config.ConfigLoader;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.commands.CmdBCL;
@@ -14,11 +16,9 @@ import net.kaikk.mc.bcl.commands.CmdList;
 import net.kaikk.mc.bcl.commands.CmdPurge;
 import net.kaikk.mc.bcl.commands.elements.ChunksChangeOperatorElement;
 import net.kaikk.mc.bcl.commands.elements.LoaderTypeElement;
-import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.MySqlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -149,16 +149,13 @@ public class BetterChunkLoader {
                 e.printStackTrace();
             }
         }
-        Config.getConfig().setup();
-
+        ConfigLoader.getInstance().setup();
             // load config
             logger.info("Loading config...");
             onLoad();
             // instantiate data store, if needed
             if (DataStoreManager.getDataStore() == null) {
-                CommentedConfigurationNode configNode = Config.getConfig().get();
-                CommentedConfigurationNode configNode1 = configNode.getNode("DataStore");
-                String dataStore = configNode1.getString();
+                String dataStore = Config.getInstance().getDataStore();
                 DataStoreManager.setDataStoreInstance(dataStore);
             }
 
@@ -172,7 +169,7 @@ public class BetterChunkLoader {
             // load always on chunk loaders
             int count = 0;
             for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
-                if (cl.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString()) && cl.isLoadable()) {
+                if (cl.getServerName().equalsIgnoreCase(Config.getInstance().getServerName()) && cl.isLoadable()) {
                     this.loadChunks(cl);
                     count++;
                 }
@@ -290,7 +287,7 @@ public class BetterChunkLoader {
 
 
     public void loadChunks(CChunkLoader chunkloader){
-        if (chunkloader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+        if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().addChunkLoader(chunkloader);
             List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
             if (clList == null) {
@@ -303,7 +300,7 @@ public class BetterChunkLoader {
 
 
     public void unloadChunks(CChunkLoader chunkloader){
-        if (chunkloader.getServerName().equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+        if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().removeChunkLoader(chunkloader);
             List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
             if(clList == null){

@@ -1,11 +1,11 @@
 package net.kaikk.mc.bcl;
 
 
+import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.inventory.ChunkLoaderInvProp;
 import guru.franz.mc.bcl.inventory.InventoryCloseAfterADelayTask;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.ChunkLoader;
 import org.spongepowered.api.Sponge;
@@ -69,7 +69,7 @@ public class CChunkLoader extends ChunkLoader {
 
     public CChunkLoader(int chunkX, int chunkZ, String worldName, byte range, UUID owner, Location<World> loc, Date creationDate,
             boolean isAlwaysOn) {
-        this(chunkX, chunkZ, worldName, range, owner, loc, creationDate, isAlwaysOn, Config.getConfig().get().getNode("ServerName").getString());
+        this(chunkX, chunkZ, worldName, range, owner, loc, creationDate, isAlwaysOn, Config.getInstance().getServerName());
 
     }
 
@@ -86,7 +86,7 @@ public class CChunkLoader extends ChunkLoader {
         Iterable<Slot> slotIterable = inventory.slots();
         ItemStack itemStack = ItemStack.builder().itemType(icon).quantity(1).build();
         itemStack.offer(Keys.DISPLAY_NAME, Text.of(name));
-        Integer iter = 0;
+        int iter = 0;
         for (Slot slot : slotIterable) {
             if (iter == position) {
                 slot.set(itemStack);
@@ -217,7 +217,7 @@ public class CChunkLoader extends ChunkLoader {
     }
 
     public boolean isExpired() {
-        return System.currentTimeMillis() - this.getOwnerLastPlayed() > Config.getConfig().get().getNode("MaxHoursOffline").getInt() * 3600000L;
+        return System.currentTimeMillis() - this.getOwnerLastPlayed() > Config.getInstance().getMaxHoursOffline() * 3600000L;
     }
 
     public String getServer() {
@@ -329,7 +329,7 @@ public class CChunkLoader extends ChunkLoader {
     @XmlAttribute(name = "loc")
     public void setLocationString(String location) {
         try {
-            if (this.serverName.equalsIgnoreCase(Config.getConfig().get().getNode("ServerName").getString())) {
+            if (this.serverName.equalsIgnoreCase(Config.getInstance().getServerName())) {
                 String[] s = location.split(":");
                 String[] coords = s[1].split(",");
                 Integer x = Integer.valueOf(coords[0]);

@@ -1,7 +1,7 @@
 package net.kaikk.mc.bcl.datastore;
 
+import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.exception.UserNotFound;
-import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.utils.Utilities;
 import org.spongepowered.api.entity.living.player.User;
 
@@ -19,8 +19,8 @@ public class PlayerData {
     public PlayerData(UUID playerId) throws UserNotFound {
         this.playerId = playerId;
         User player = Utilities.getUserFromUUID(playerId);
-        this.alwaysOnChunksAmount = Utilities.getOptionOrDefault(player, "bcl.world", Config.getConfig().get().getNode("DefaultChunksAmount").getNode("World").getInt());
-        this.onlineOnlyChunksAmount = Utilities.getOptionOrDefault(player, "bcl.personal", Config.getConfig().get().getNode("DefaultChunksAmount").getNode("Personal").getInt());
+        this.alwaysOnChunksAmount = Utilities.getOptionOrDefault(player, "bcl.world", Config.getInstance().getDefaultChunksAmountWorld());
+        this.onlineOnlyChunksAmount = Utilities.getOptionOrDefault(player, "bcl.personal", Config.getInstance().getDefaultChunksAmountPersonal());
     }
 
     public PlayerData(UUID playerId, int alwaysOnChunksAmount, int onlineOnlyChunksAmount) {

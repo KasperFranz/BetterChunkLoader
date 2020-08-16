@@ -1,9 +1,9 @@
 package net.kaikk.mc.bcl.commands;
 
+import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.exception.NegativeValueException;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import net.kaikk.mc.bcl.config.Config;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.PlayerData;
 import org.spongepowered.api.command.CommandResult;
@@ -35,8 +35,8 @@ public class CmdChunks implements CommandExecutor {
 
         if (chunksChangeOperatorElement.equalsIgnoreCase("add")) {
             int newValue = changeValue;
-            int maxWorldChunks = Config.getConfig().get().getNode("MaxChunksAmount").getNode("World").getInt();
-            int maxOnlineOnlyChunks = Config.getConfig().get().getNode("MaxChunksAmount").getNode("Personal").getInt();
+            int maxWorldChunks = Config.getInstance().getMaxChunksAmountWorld();
+            int maxOnlineOnlyChunks = Config.getInstance().getMaxChunksAmountPersonal();
 
             if (loaderTypeElement.equalsIgnoreCase("world")) {
                 newValue += playerData.getAlwaysOnChunksAmount();
