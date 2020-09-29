@@ -15,7 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 ### Fixed
  - Fixed a null pointer exception when using the purge command, and the world is empty (#27)
-
+ - If the world is not loaded on startup we are now loading in the world when we get the sponge event!
 ## 2018-10-07 3.7.0
 ### Changed
  - added some more clean message to the error when there is a mysql error.
