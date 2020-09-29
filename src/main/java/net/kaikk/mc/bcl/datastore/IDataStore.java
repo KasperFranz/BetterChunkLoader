@@ -23,6 +23,10 @@ public interface IDataStore {
      *  This is called while BCL is loading */
     public abstract void load() throws Exception;
 
+    /** Loads data from the datastore.
+     *  This is called when a world is loaded */
+    public abstract void loadWorld(String world) throws RuntimeException;
+
     /** Get chunk loaders */
     public abstract List<CChunkLoader> getChunkLoaders();
 
