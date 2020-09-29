@@ -30,6 +30,7 @@ public class ConfigLoader {
         if (!Files.exists(this.configFile)) {
             try {
                 Files.createFile(this.configFile);
+                this.configNode = this.configLoader.load();
                 populate();
                 save();
             } catch (IOException e) {
