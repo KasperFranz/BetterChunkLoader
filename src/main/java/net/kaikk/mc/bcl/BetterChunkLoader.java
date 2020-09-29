@@ -147,11 +147,12 @@ public class BetterChunkLoader {
                 Files.createDirectories(configDir);
             } catch (IOException e) {
                 e.printStackTrace();
+                //TODO better message.
             }
         }
         ConfigLoader.getInstance().setup();
             // load config
-            logger.info("Loading config...");
+            logger.debug("Loading configuration");
             onLoad();
             // instantiate data store, if needed
             if (DataStoreManager.getDataStore() == null) {
@@ -160,7 +161,7 @@ public class BetterChunkLoader {
             }
 
             // load datastore
-            logger.info("Loading " + DataStoreManager.getDataStore().getName() + " Data Store...");
+            logger.debug("Loading " + DataStoreManager.getDataStore().getName() + " Data Store...");
             DataStoreManager.getDataStore().load();
 
             logger.info("Loaded " + DataStoreManager.getDataStore().getChunkLoaders().size() + " chunk loaders data.");
@@ -177,10 +178,10 @@ public class BetterChunkLoader {
 
             logger.info("Loaded " + count + " always-on chunk loaders.");
 
-            logger.info("Loading Listeners...");
+            logger.debug("Loading Listeners...");
             initializeListeners();
 
-            logger.info("Load complete.");
+            logger.debug("Load complete.");
             enabled = true;
     }
 

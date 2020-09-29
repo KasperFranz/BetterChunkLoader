@@ -141,13 +141,5 @@ public class Messenger {
         Logger logger = BetterChunkLoader.instance().getLogger();
         StackTraceElement error = e.getStackTrace()[0];
         logger.error("Load failed: " + e.getMessage() + " (" + error.getClassName() + ":" + error.getLineNumber() + ")");
-
-
-        logger.error("DEBUG!");
-        logger.error(e.getLocalizedMessage());
-        for(StackTraceElement er :e.getStackTrace()){
-            logger.error(er.getClassName() + ":" + er.getLineNumber());
-
-        }
     }
 }
