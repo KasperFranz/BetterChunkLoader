@@ -127,10 +127,17 @@ public class Events {
 
     @Listener
     public void onWorldLoad(LoadWorldEvent event) {
-        for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders(event.getTargetWorld().getName())) {
-            if (cl.isLoadable()) {
-                BetterChunkLoader.instance().loadChunks(cl);
+        try {
+            BetterChunkLoader.instance().getLogger().info("Loading world " + event.getTargetWorld().getName());
+            DataStoreManager.getDataStore().loadWorld(event.getTargetWorld().getName());
+            for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders(event.getTargetWorld().getName())) {
+
+                if (cl.isLoadable()) {
+                    BetterChunkLoader.instance().loadChunks(cl);
+                }
             }
+        }catch(RuntimeException e){
+            Messenger.logException(e);
         }
     }
 

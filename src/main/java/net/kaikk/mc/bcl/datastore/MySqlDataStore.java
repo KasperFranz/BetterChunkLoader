@@ -73,6 +73,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         }
         // load data
         this.chunkLoaders = new HashMap<>();
+        //TODO we should move this into a single function to gather it world by world (loaded worlds) and use loadWorld function!
         try {
             ResultSet rs = this.statement().executeQuery(
                     "SELECT * FROM bcl_chunkloaders where serverName = '" + Config.getInstance().getServerName() + "'");
@@ -108,6 +109,41 @@ public class MySqlDataStore extends AHashMapDataStore {
             }
         } catch (SQLException e) {
             BetterChunkLoader.instance().getLogger().info("Couldn't read players data from MySQL server.");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Load the chunk loaders based on a specific world.
+     * @param world The world we want to load
+     */
+    public void loadWorld(String world) {
+        try {
+            ResultSet rs = this.statement().executeQuery(
+                    "SELECT * FROM bcl_chunkloaders where serverName = '" + Config.getInstance().getServerName() + "' and loc like '"+world+":%'");
+            while (rs.next()) {
+                try {
+
+                    CChunkLoader chunkLoader =
+                            new CChunkLoader(
+                                    rs.getString(1),
+                                    rs.getByte(2),
+                                    toUUID(rs.getString(3)),
+                                    new Date(rs.getLong(4)),
+                                    rs.getBoolean(5),
+                                    rs.getString(6)
+                            );
+                    List<CChunkLoader> clList = this.chunkLoaders.get(chunkLoader.getWorldName());
+                    if (clList == null) {
+                        clList = new ArrayList<>();
+                        chunkLoaders.put(chunkLoader.getWorldName(), clList);
+                    }
+                    clList.add(chunkLoader);
+                } catch (Exception ignored) {
+                }
+            }
+        } catch (SQLException e) {
+            BetterChunkLoader.instance().getLogger().info("Couldn't load the chunk loaders data from MySQL server. for "+ world);
             throw new RuntimeException(e);
         }
     }

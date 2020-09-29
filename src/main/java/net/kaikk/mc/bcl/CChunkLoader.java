@@ -331,16 +331,19 @@ public class CChunkLoader extends ChunkLoader {
         try {
             if (this.serverName.equalsIgnoreCase(Config.getInstance().getServerName())) {
                 String[] s = location.split(":");
-                String[] coords = s[1].split(",");
-                Integer x = Integer.valueOf(coords[0]);
-                Integer y = Integer.valueOf(coords[1]);
-                Integer z = Integer.valueOf(coords[2]);
+                String[] coordinates = s[1].split(",");
+                int x = Integer.parseInt(coordinates[0]);
+                int y = Integer.parseInt(coordinates[1]);
+                int z = Integer.parseInt(coordinates[2]);
                 super.worldName = s[0];
-                this.loc = new Location<World>(Sponge.getServer().getWorld(s[0]).get(), x, y, z);
+
+                World world = Sponge.getServer().getWorld(s[0]).get(); //TODO we should throw an exception here so we cna do a proper message
+
+                this.loc = new Location<>(world, x, y, z);
                 super.chunkX = this.loc.getChunkPosition().getX();
                 super.chunkZ = this.loc.getChunkPosition().getZ();
             } else {
-                super.worldName = "Another server...";
+                throw new Exception("Not for this server");
             }
         } catch (Exception e) {
             throw new RuntimeException("Wrong chunk loader location: " + location);
