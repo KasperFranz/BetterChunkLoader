@@ -33,17 +33,17 @@ public class CmdInfo implements CommandExecutor {
         for (CChunkLoader chunkLoader : chunkLoaders) {
             if (chunkLoader.isAlwaysOn()) {
                 alwaysOnLoaders++;
-                alwaysOnChunks += chunkLoader.size();
+                alwaysOnChunks += chunkLoader.getSize();
             } else {
                 onlineOnlyLoaders++;
-                onlineOnlyChunks += chunkLoader.size();
+                onlineOnlyChunks += chunkLoader.getSize();
             }
 
             Integer count = loadedChunksForPlayer.get(chunkLoader.getOwner());
             if (count == null) {
                 count = 0;
             }
-            count += chunkLoader.size();
+            count += chunkLoader.getSize();
             loadedChunksForPlayer.put(chunkLoader.getOwner(), count);
         }
 

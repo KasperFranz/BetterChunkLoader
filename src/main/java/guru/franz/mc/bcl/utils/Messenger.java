@@ -129,7 +129,7 @@ public class Messenger {
 
 
         return builder
-                .append(Text.builder(chunkLoader.sizeX(chunkLoader.getRange())).color(baseColor).build())
+                .append(Text.builder(ChunkLoaderHelper.getRadiusFromRange(chunkLoader.getRange())).color(baseColor).build())
                 .append(Text.of(" - "))
                 .append(Text.builder(chunkLoader.getPrettyLocationString() + " ").color(baseColor).build())
                 .toText();

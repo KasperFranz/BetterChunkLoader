@@ -15,7 +15,7 @@ public class ChunkLoaderHelper {
      * @param range the range
      * @return the amount of blocks per side
      */
-    public static int side(int range) {
+    public static int calculateSide(int range) {
         return 1 + (range * 2);
     }
 
@@ -28,7 +28,16 @@ public class ChunkLoaderHelper {
      * @return a string of the radius
      */
     public static String getRadiusFromRange(int range) {
-        return side(range) + "x" + side(range);
+        return calculateSide(range) + "x" + calculateSide(range);
+    }
+
+    /**
+     * Calculate the amount of chunks based on the range
+     * @param range the range
+     * @return the amount of chunks based on the range
+     */
+    public static int calculateChunksFromRange(int range){
+        return calculateSide(range)*calculateSide(range);
     }
 
     /**

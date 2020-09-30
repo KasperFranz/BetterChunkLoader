@@ -180,7 +180,7 @@ public class CChunkLoader extends ChunkLoader {
                         pos = chunkLoader.radiusFromSide(pos);
                         // if higher range, check if the player has enough free chunks
                         if (!chunkLoader.isAdminChunkLoader() && !player.hasPermission(Permission.ABILITY_UNLIMITED) &&  pos > chunkLoader.getRange()) {
-                            int needed = ((1 + (pos * 2)) * (1 + (pos * 2))) - chunkLoader.size();
+                            int needed = ((1 + (pos * 2)) * (1 + (pos * 2))) - chunkLoader.getSize();
                             int available;
                             if (chunkLoader.isAlwaysOn()) {
                                 available = DataStoreManager.getDataStore().getAlwaysOnFreeChunksAmount(chunkLoader.getOwner());
@@ -235,10 +235,6 @@ public class CChunkLoader extends ChunkLoader {
         return System.currentTimeMillis() - this.getOwnerLastPlayed() > Config.getInstance().getMaxHoursOffline() * 3600000L;
     }
 
-    public String getServer() {
-        return this.serverName;
-    }
-
     public User getOfflinePlayer() {
         Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
         Optional<User> optUser = userStorage.get().get(this.owner);
@@ -264,17 +260,14 @@ public class CChunkLoader extends ChunkLoader {
         return this.getOfflinePlayer().getName();
     }
 
-    public int side() {
-        return 1 + (super.getRange() * 2);
+    /**
+     * Get the size of the chunkloader
+     * @return the number of chunks loaded by this chunkloader.
+     */
+    public int getSize() {
+        return ChunkLoaderHelper.calculateChunksFromRange(range);
     }
 
-    public int size() {
-        return this.side() * this.side();
-    }
-
-    public String sizeX() {
-        return this.side() + "x" + this.side();
-    }
 
     public Text info() {
         TextColor baseColor = TextColors.YELLOW;
@@ -283,7 +276,7 @@ public class CChunkLoader extends ChunkLoader {
                 .concat(Text.of(highlightColor, "Owner: ")).concat(Text.of(baseColor, this.getOwnerName())).concat(Text.NEW_LINE)
                 .concat(Text.of(highlightColor, "Position: ")).concat(Text.of(baseColor, this.getLocationString())).concat(Text.NEW_LINE)
                 // .concat(Text.builder("Chunk: "+this.worldName+":"+this.chunkX+","+this.chunkZ).build()).concat(Text.NEW_LINE)
-                .concat(Text.of(highlightColor, "Size: ")).concat(Text.of(baseColor, this.sizeX()));
+                .concat(Text.of(highlightColor, "Size: ")).concat(Text.of(baseColor, ChunkLoaderHelper.getRadiusFromRange(range)));
     }
 
     public boolean isLoadable() {
@@ -308,7 +301,7 @@ public class CChunkLoader extends ChunkLoader {
 
     @Override
     public String toString() {
-        return (this.isAlwaysOn ? "y" : "n") + " - " + this.sizeX() + " - " + this.loc.toString() + " - " + this.serverName;
+        return (this.isAlwaysOn ? "y" : "n") + " - " + ChunkLoaderHelper.getRadiusFromRange(range) + " - " + this.loc.toString() + " - " + this.serverName;
     }
 
     public Text toText(boolean showUser, CommandSource source) {
@@ -390,7 +383,7 @@ public class CChunkLoader extends ChunkLoader {
 
         int pos = 2;
         for (byte i = 0; i < 5; ) {
-            addInventoryOption(inventory, pos, ItemTypes.MAP, "Size " + this.sizeX(i) + (this.getRange() == i ? " [selected]" : ""));
+            addInventoryOption(inventory, pos, ItemTypes.MAP, "Size " + ChunkLoaderHelper.getRadiusFromRange(i) + (this.getRange() == i ? " [selected]" : ""));
             pos++;
             i++;
         }
@@ -402,13 +395,6 @@ public class CChunkLoader extends ChunkLoader {
         return (side - 1) / 2;
     }
 
-    public int side(byte i) {
-        return 1 + (i * 2);
-    }
-
-    public String sizeX(byte i) {
-        return this.side(i) + "x" + this.side(i);
-    }
 
     @Override
     public byte getRange() {

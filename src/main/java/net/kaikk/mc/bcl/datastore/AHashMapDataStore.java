@@ -117,7 +117,7 @@ public abstract class AHashMapDataStore implements IDataStore {
         int clAmount = this.getPlayerData(playerId).getAlwaysOnChunksAmount();
         for (CChunkLoader cl : this.getChunkLoaders(playerId)) {
             if (cl.isAlwaysOn()) {
-                clAmount -= cl.size();
+                clAmount -= cl.getSize();
             }
         }
 
@@ -129,7 +129,7 @@ public abstract class AHashMapDataStore implements IDataStore {
         int clAmount = this.getPlayerData(playerId).getOnlineOnlyChunksAmount();
         for (CChunkLoader cl : this.getChunkLoaders(playerId)) {
             if (!cl.isAlwaysOn()) {
-                clAmount -= cl.size();
+                clAmount -= cl.getSize();
             }
         }
 
