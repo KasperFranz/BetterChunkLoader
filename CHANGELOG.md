@@ -4,10 +4,18 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 ## [Unreleased][unreleased]
 ### Added
+ 
+### Changed
+
+### Fixed
+
+
+## 2020-09-30 3.8.0
+### Added
  - Added bStats for visibility of how many are using the version.
  - Added the option to use metadata for the amount of chunk loaders a player can have.
  - Added more exceptions around the MySQL database connection start.
- - Added a reload command to reload the configuration! (still not fully integrated)
+ - Added an reload command to reload the configuration!
  
 ### Changed
  - Moved to a new config setup, it should help make the code cleaner :)
@@ -15,7 +23,8 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 ### Fixed
  - Fixed a null pointer exception when using the purge command, and the world is empty (#27)
- - If the world is not loaded on startup we are now loading in the world when we get the sponge event!
+ - If the world is not loaded on startup we are now loading in the world when we get the sponge event! (Fixes #35)
+ 
 ## 2018-10-07 3.7.0
 ### Changed
  - added some more clean message to the error when there is a mysql error.
@@ -51,8 +60,6 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Fixed
  - fixed an issue where the insert was done to the wrong part (world add as personal and personal as world, if using the add while nothing was in the DB)
 -fixed a permission issue (you was able to see everyone's balance without the right permission and updated the readme with the subcommands
-
-
 
 
 ## 2017-04-21 3.3.0
