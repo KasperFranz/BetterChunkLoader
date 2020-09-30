@@ -2,6 +2,8 @@ package net.kaikk.mc.bcl;
 
 
 import guru.franz.mc.bcl.config.Config;
+import guru.franz.mc.bcl.exception.NoWorldException;
+import guru.franz.mc.bcl.exception.WrongServerException;
 import guru.franz.mc.bcl.inventory.ChunkLoaderInvProp;
 import guru.franz.mc.bcl.inventory.InventoryCloseAfterADelayTask;
 import guru.franz.mc.bcl.utils.Messenger;
@@ -73,7 +75,7 @@ public class CChunkLoader extends ChunkLoader {
 
     }
 
-    public CChunkLoader(String location, byte range, UUID owner, Date creationDate, boolean isAlwaysOn, String serverName) {
+    public CChunkLoader(String location, byte range, UUID owner, Date creationDate, boolean isAlwaysOn, String serverName) throws NoWorldException, WrongServerException {
         super(0, 0, "", range);
         this.serverName = serverName;
         this.setLocationString(location);
@@ -120,7 +122,7 @@ public class CChunkLoader extends ChunkLoader {
                     return;
                 }
                 String firstChar = String.valueOf(event.getTransactions().get(0).getOriginal().get(Keys.DISPLAY_NAME).get().toPlain().charAt(5));
-                Integer pos;
+                int pos;
 
                 try {
                     pos = Integer.parseInt(firstChar);
@@ -151,7 +153,7 @@ public class CChunkLoader extends ChunkLoader {
                         }
                     }
 
-                    chunkLoader.setRange(Byte.valueOf("" + pos));
+                    chunkLoader.setRange(Byte.parseByte("" + pos));
                     chunkLoader.setCreationDate(new Date());
                     String type = chunkLoader.isAdminChunkLoader() ? "admin loader " : "chunk loader";
                     BetterChunkLoader.instance().getLogger()
@@ -201,7 +203,7 @@ public class CChunkLoader extends ChunkLoader {
                         BetterChunkLoader.instance().getLogger()
                                 .info(player.getName() + " edited " + chunkLoader.getOwnerName() + "'s chunk loader at " + chunkLoader
                                         .getLocationString() + " range from " + chunkLoader.getRange() + " to " + pos);
-                        DataStoreManager.getDataStore().changeChunkLoaderRange(chunkLoader, Byte.valueOf("" + pos));
+                        DataStoreManager.getDataStore().changeChunkLoaderRange(chunkLoader, Byte.parseByte("" + pos));
                         player.sendMessage(Text.of(TextColors.GOLD, "Chunk Loader updated."));
                         closeInventory(player);
                     }
@@ -227,19 +229,12 @@ public class CChunkLoader extends ChunkLoader {
     public User getOfflinePlayer() {
         Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
         Optional<User> optUser = userStorage.get().get(this.owner);
-        if (optUser.isPresent()) {
-            User user = optUser.get();
-            return user;
-        }
-        return null;
+        return optUser.orElse(null);
     }
 
     public Player getPlayer() {
         Optional<Player> onlinePlayer = Sponge.getServer().getPlayer(this.owner);
-        if (onlinePlayer.isPresent()) {
-            return onlinePlayer.get();
-        }
-        return null;
+        return onlinePlayer.orElse(null);
     }
 
     public long getOwnerLastPlayed() {
@@ -327,8 +322,7 @@ public class CChunkLoader extends ChunkLoader {
     }
 
     @XmlAttribute(name = "loc")
-    public void setLocationString(String location) {
-        try {
+    public void setLocationString(String location) throws NoWorldException, WrongServerException {
             if (this.serverName.equalsIgnoreCase(Config.getInstance().getServerName())) {
                 String[] s = location.split(":");
                 String[] coordinates = s[1].split(",");
@@ -337,17 +331,14 @@ public class CChunkLoader extends ChunkLoader {
                 int z = Integer.parseInt(coordinates[2]);
                 super.worldName = s[0];
 
-                World world = Sponge.getServer().getWorld(s[0]).get(); //TODO we should throw an exception here so we cna do a proper message
+                World world = Sponge.getServer().getWorld(s[0]).orElseThrow(NoWorldException::new);
 
                 this.loc = new Location<>(world, x, y, z);
                 super.chunkX = this.loc.getChunkPosition().getX();
                 super.chunkZ = this.loc.getChunkPosition().getZ();
             } else {
-                throw new Exception("Not for this server");
+                throw new WrongServerException();
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Wrong chunk loader location: " + location);
-        }
     }
 
     public String getPrettyLocationString() {
@@ -371,12 +362,6 @@ public class CChunkLoader extends ChunkLoader {
     public boolean isAlwaysOn() {
         return isAlwaysOn;
     }
-
-    @XmlAttribute(name = "aon")
-    void setAlwaysOn(boolean isAlwaysOn) {
-        this.isAlwaysOn = isAlwaysOn;
-    }
-
 
     /** Shows the chunk loader's user interface to the specified player */
     void showUI(Player player) {
