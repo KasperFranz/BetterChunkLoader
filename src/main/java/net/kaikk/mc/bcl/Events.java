@@ -1,6 +1,7 @@
 package net.kaikk.mc.bcl;
 
 import guru.franz.mc.bcl.config.Config;
+import guru.franz.mc.bcl.utils.ChunkLoaderHelper;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
@@ -69,8 +70,11 @@ public class Events {
     @Listener
     public void onBlockBreak(ChangeBlockEvent.Break event) {
         BlockSnapshot block = event.getTransactions().get(0).getOriginal();
-        if (block == null || (!block.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) && !block.getState().getType()
-                .equals(BlockTypes.IRON_BLOCK))) {
+        if (
+            block == null //TODO: in what cases could this block be empty?
+            || (!block.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) && !block.getState().getType().equals(BlockTypes.IRON_BLOCK))
+            || !block.getLocation().isPresent()
+        ) {
             return;
         }
 
@@ -79,21 +83,7 @@ public class Events {
             return;
         }
 
-        DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
-
-        Optional<Player> player = event.getCause().last(Player.class);
-        String breaker = player.map(User::getName).orElse("unknown");
-        Player owner = chunkLoader.getPlayer();
-        if (owner != null && !owner.getName().equals(breaker)) {
-            owner.sendMessage(
-                    Text.of(TextColors.RED, "Your chunk loader at " + chunkLoader.getLocationString() + " has been removed by " + breaker + "."));
-            player.get().sendMessage(Text.of(TextColors.RED, "You removed " + (owner != null ? owner.getName() : "unknown") + "'s chunk loader."));
-        } else {
-            player.get().sendMessage(Text.of(TextColors.RED, "You removed your chunk loader at " + chunkLoader.getLocationString() + "."));
-        }
-
-        BetterChunkLoader.instance().getLogger()
-                .info(breaker + " broke " + chunkLoader.getOwnerName() + "'s chunk loader at " + chunkLoader.getLocationString());
+        ChunkLoaderHelper.removeChunkLoader(chunkLoader,event.getCause().last(Player.class).orElse(null));
     }
 
     @Listener

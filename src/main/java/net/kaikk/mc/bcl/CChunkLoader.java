@@ -6,6 +6,8 @@ import guru.franz.mc.bcl.exception.NoWorldException;
 import guru.franz.mc.bcl.exception.WrongServerException;
 import guru.franz.mc.bcl.inventory.ChunkLoaderInvProp;
 import guru.franz.mc.bcl.inventory.InventoryCloseAfterADelayTask;
+import guru.franz.mc.bcl.utils.ChunkLoaderHelper;
+import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
@@ -19,11 +21,7 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.InventoryArchetype;
-import org.spongepowered.api.item.inventory.InventoryArchetypes;
-import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.user.UserStorageService;
@@ -33,16 +31,15 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 
 
 @XmlRootElement
@@ -155,25 +152,30 @@ public class CChunkLoader extends ChunkLoader {
 
                     chunkLoader.setRange(Byte.parseByte("" + pos));
                     chunkLoader.setCreationDate(new Date());
-                    String type = chunkLoader.isAdminChunkLoader() ? "admin loader " : "chunk loader";
-                    BetterChunkLoader.instance().getLogger()
-                            .info(player.getName() + " created a new " + type + " at " + chunkLoader.getLocationString() + " with range " + pos);
+                    String type = chunkLoader.isAdminChunkLoader() ? "admin loader" : "chunk loader";
+
+
+                    String logMessage = String.format(
+                            Messages.CREATE_CHUNKLOADER_LOG,
+                            player.getName(),
+                            type,
+                            chunkLoader.getLocationString(),
+                            chunkLoader.getRadius()
+                    );
+                    String userMessage = String.format(
+                            Messages.CREATE_CHUNKLOADER_USER,
+                            ChunkLoaderHelper.getRadiusFromRange(pos)
+                    );
+
+                    BetterChunkLoader.instance().getLogger().info(logMessage);
                     DataStoreManager.getDataStore().addChunkLoader(chunkLoader);
+                    player.sendMessage(Text.of(TextColors.GOLD, userMessage));
                     closeInventory(player);
-                    player.sendMessage(Text.of(TextColors.GOLD, "Chunk Loader created."));
                     return;
                 }
                 if (chunkLoader.getRange() != -1) {
                     if (pos == 0) {
-                        // remove the chunk loader
-                        DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
-                        if (chunkLoader.getOwner().equals(player.getUniqueId())) {
-                            player.sendMessage(Text.of(TextColors.RED, "You disabled your chunk loader at " + chunkLoader.getLocationString() + "."));
-                        } else {
-                            player.sendMessage(Text.of(TextColors.RED,
-                                    player.getName() + " disabled your chunk loader at " + chunkLoader.getLocationString() + "."));
-                        }
-                        closeInventory(player);
+                        ChunkLoaderHelper.removeChunkLoader(chunkLoader, player);
                     } else {
                         pos = chunkLoader.radiusFromSide(pos);
                         // if higher range, check if the player has enough free chunks
@@ -200,13 +202,24 @@ public class CChunkLoader extends ChunkLoader {
                             }
                         }
 
-                        BetterChunkLoader.instance().getLogger()
-                                .info(player.getName() + " edited " + chunkLoader.getOwnerName() + "'s chunk loader at " + chunkLoader
-                                        .getLocationString() + " range from " + chunkLoader.getRange() + " to " + pos);
+                        String logMessage = String.format(
+                                Messages.EDIT_CHUNKLOADER_LOG,
+                                player.getName(),
+                                chunkLoader.getOwner(),
+                                chunkLoader.getLocationString(),
+                                chunkLoader.getRadius(),
+                                ChunkLoaderHelper.getRadiusFromRange(pos)
+                        );
+                        String userMessage = String.format(
+                                Messages.EDIT_CHUNKLOADER_USER,
+                                ChunkLoaderHelper.getRadiusFromRange(pos)
+                        );
+
+                        BetterChunkLoader.instance().getLogger().info(logMessage);
                         DataStoreManager.getDataStore().changeChunkLoaderRange(chunkLoader, Byte.parseByte("" + pos));
-                        player.sendMessage(Text.of(TextColors.GOLD, "Chunk Loader updated."));
-                        closeInventory(player);
+                        player.sendMessage(Text.of(TextColors.GOLD, userMessage));
                     }
+                    closeInventory(player);
                 }
             }
         };
@@ -298,19 +311,12 @@ public class CChunkLoader extends ChunkLoader {
         return (this.isAlwaysOn ? "y" : "n") + " - " + this.sizeX() + " - " + this.loc.toString() + " - " + this.serverName;
     }
 
-
     public Text toText(boolean showUser, CommandSource source) {
         return Messenger.getChunkText(source,this,showUser);
     }
 
-
     public UUID getOwner() {
         return owner;
-    }
-
-    @XmlAttribute(name = "own")
-    void setOwner(UUID owner) {
-        this.owner = owner;
     }
 
     public Location<World> getLoc() {
@@ -321,7 +327,6 @@ public class CChunkLoader extends ChunkLoader {
         return loc.getExtent().getName() + ":" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
     }
 
-    @XmlAttribute(name = "loc")
     public void setLocationString(String location) throws NoWorldException, WrongServerException {
             if (this.serverName.equalsIgnoreCase(Config.getInstance().getServerName())) {
                 String[] s = location.split(":");
@@ -408,6 +413,10 @@ public class CChunkLoader extends ChunkLoader {
     @Override
     public byte getRange() {
         return super.range;
+    }
+
+    public String getRadius(){
+        return ChunkLoaderHelper.getRadiusFromRange(this.range);
     }
 
     @XmlAttribute(name = "r")
