@@ -63,7 +63,7 @@ public class ConfigLoader {
             defaultChunksAmountPersonal = get().getNode("DefaultChunksAmount", "Personal").getInt(0);
             maxChunksAmountWorld = get().getNode("DefaultChunksAmount", "World").getInt(250);
             maxChunksAmountPersonal = get().getNode("DefaultChunksAmount", "Personal").getInt(250);
-            BetterChunkLoader.instance().getLogger().info(serverName);
+            BetterChunkLoader.instance().getLogger().info("Loading information for " + serverName);
 
             MySQL mySQL = new MySQL(
             get().getNode("MySQL", "Hostname").getString("host"),

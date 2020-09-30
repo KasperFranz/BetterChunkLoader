@@ -157,7 +157,7 @@ public class CChunkLoader extends ChunkLoader {
                     chunkLoader.setCreationDate(new Date());
                     String type = chunkLoader.isAdminChunkLoader() ? "admin loader " : "chunk loader";
                     BetterChunkLoader.instance().getLogger()
-                            .info(player.getName() + " made a new " + type + " at " + chunkLoader.getLocationString() + " with range " + pos);
+                            .info(player.getName() + " created a new " + type + " at " + chunkLoader.getLocationString() + " with range " + pos);
                     DataStoreManager.getDataStore().addChunkLoader(chunkLoader);
                     closeInventory(player);
                     player.sendMessage(Text.of(TextColors.GOLD, "Chunk Loader created."));
