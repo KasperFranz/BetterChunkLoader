@@ -10,15 +10,13 @@ import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
-/** An implementation of IDataStore that stores data into HashMaps
+/**
+ * An implementation of IDataStore that stores data into HashMaps
  * It's abstract because it doesn't write any data on disk: all data will be lost at server shutdown
- * Classes that extend this class should store the data somewhere. */
+ * Classes that extend this class should store the data somewhere.
+ */
 public abstract class AHashMapDataStore implements IDataStore {
 
     protected Map<String, List<CChunkLoader>> chunkLoaders;
@@ -40,17 +38,6 @@ public abstract class AHashMapDataStore implements IDataStore {
             return Collections.emptyList();
         }
         return list;
-    }
-
-    @Override
-    public List<CChunkLoader> getChunkLoadersAt(String worldName, int chunkX, int chunkZ) {
-        List<CChunkLoader> chunkLoaders = new ArrayList<>();
-        for (CChunkLoader cl : this.getChunkLoaders(worldName)) {
-            if (cl.getChunkX() == chunkX && cl.getChunkZ() == chunkZ) {
-                chunkLoaders.add(cl);
-            }
-        }
-        return chunkLoaders;
     }
 
     @Override
@@ -77,11 +64,7 @@ public abstract class AHashMapDataStore implements IDataStore {
 
     @Override
     public void addChunkLoader(CChunkLoader chunkLoader) {
-        List<CChunkLoader> clList = this.chunkLoaders.get(chunkLoader.getWorldName());
-        if (clList == null) {
-            clList = new ArrayList<>();
-            this.chunkLoaders.put(chunkLoader.getWorldName(), clList);
-        }
+        List<CChunkLoader> clList = this.chunkLoaders.computeIfAbsent(chunkLoader.getWorldName(), k -> new ArrayList<>());
 
         clList.add(chunkLoader);
         if (chunkLoader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
@@ -154,8 +137,8 @@ public abstract class AHashMapDataStore implements IDataStore {
     }
 
     @Override
-    public void setAlwaysOnChunksLimit(UUID playerId, int amount)  throws NegativeValueException {
-        if(amount < 0){
+    public void setAlwaysOnChunksLimit(UUID playerId, int amount) throws NegativeValueException {
+        if (amount < 0) {
             throw new NegativeValueException();
         }
         PlayerData playerData = this.getPlayerData(playerId);
@@ -163,8 +146,8 @@ public abstract class AHashMapDataStore implements IDataStore {
     }
 
     @Override
-    public void setOnlineOnlyChunksLimit(UUID playerId, int amount)  throws NegativeValueException {
-        if(amount < 0){
+    public void setOnlineOnlyChunksLimit(UUID playerId, int amount) throws NegativeValueException {
+        if (amount < 0) {
             throw new NegativeValueException();
         }
         PlayerData playerData = this.getPlayerData(playerId);
@@ -182,6 +165,7 @@ public abstract class AHashMapDataStore implements IDataStore {
         PlayerData playerData = this.getPlayerData(playerId);
         playerData.setOnlineOnlyChunksAmount(playerData.getOnlineOnlyChunksAmount() + amount);
     }
+
     @Override
     public PlayerData getPlayerData(UUID playerId) {
         PlayerData playerData = this.playersData.get(playerId);

@@ -9,75 +9,113 @@ import org.spongepowered.api.world.World;
 import java.util.List;
 import java.util.UUID;
 
-/** Interface for BetterChunkLoader's data store<br>
+/**
+ * Interface for BetterChunkLoader's data store<br>
  * How to create custom data store:<br>
  * - Make a class that implements this interface<br>
  * - Call DataStoreManager.registerDataStore(name, class) during your plugin's onLoad()
- *  */
+ */
 public interface IDataStore {
 
-    /** Returns the data store name */
-    public abstract String getName();
+    /**
+     * Returns the data store name
+     */
+    String getName();
 
-    /** Loads data from the datastore.
-     *  This is called while BCL is loading */
-    public abstract void load() throws Exception;
+    /**
+     * Loads data from the datastore.
+     * This is called while BCL is loading
+     */
+    void load() throws Exception;
 
-    /** Loads data from the datastore.
-     *  This is called when a world is loaded */
-    public abstract void loadWorld(String world) throws RuntimeException;
+    /**
+     * Loads data from the datastore.
+     * This is called when a world is loaded
+     */
+    void loadWorld(String world) throws RuntimeException;
 
-    /** Get chunk loaders */
-    public abstract List<CChunkLoader> getChunkLoaders();
+    /**
+     * Get chunk loaders
+     */
+    List<CChunkLoader> getChunkLoaders();
 
-    /** Get chunk loaders for dimension id */
-    public abstract List<CChunkLoader> getChunkLoaders(String worldName);
+    /**
+     * Get chunk loaders for dimension id
+     */
+    List<CChunkLoader> getChunkLoaders(String worldName);
 
-    /** Get chunk loaders at specified chunk */
-    public abstract List<CChunkLoader> getChunkLoadersAt(String worldName, int chunkX, int chunkZ);
+    /**
+     * Get chunk loaders owned by someone with the specified UUID
+     */
+    List<CChunkLoader> getChunkLoaders(UUID ownerId);
 
-    /** Get chunk loaders owned by someone with the specified UUID */
-    public abstract List<CChunkLoader> getChunkLoaders(UUID ownerId);
+    /**
+     * Get chunk loader at specified location
+     */
+    CChunkLoader getChunkLoaderAt(Location<World> blockLocation);
 
-    /** Get chunk loader at specified location */
-    public abstract CChunkLoader getChunkLoaderAt(Location<World> blockLocation);
+    /**
+     * Add a new chunk loader
+     */
+    void addChunkLoader(CChunkLoader chunkLoader);
 
-    /** Add a new chunk loader */
-    public abstract void addChunkLoader(CChunkLoader chunkLoader);
+    /**
+     * refresh balance on login
+     */
+    void refreshPlayer(UUID uuid);
 
-    /** refresh balance on login */
-    public abstract void refreshPlayer(UUID uuid);
+    /**
+     * Remove chunk loader
+     */
+    void removeChunkLoader(CChunkLoader chunkLoader);
 
-    /** Remove chunk loader */
-    public abstract void removeChunkLoader(CChunkLoader chunkLoader);
+    /**
+     * Remove chunk loaders owned by someone with the specified UUID
+     */
+    void removeChunkLoaders(UUID ownerId);
 
-    /** Remove chunk loaders owned by someone with the specified UUID */
-    public abstract void removeChunkLoaders(UUID ownerId);
+    /**
+     * Change chunk loader range
+     */
+    void changeChunkLoaderRange(CChunkLoader chunkLoader, byte range);
 
-    /** Change chunk loader range */
-    public abstract void changeChunkLoaderRange(CChunkLoader chunkLoader, byte range);
+    /**
+     * Get the amount of free always on chunks that this player can still load until he reaches his chunks limit
+     */
+    int getAlwaysOnFreeChunksAmount(UUID playerId);
 
-    /** Get the amount of free always on chunks that this player can still load until he reaches his chunks limit */
-    public abstract int getAlwaysOnFreeChunksAmount(UUID playerId);
+    /**
+     * Get the amount of free online only chunks that this player can still load until he reaches his chunks limit
+     */
+    int getOnlineOnlyFreeChunksAmount(UUID playerId);
 
-    /** Get the amount of free online only chunks that this player can still load until he reaches his chunks limit */
-    public abstract int getOnlineOnlyFreeChunksAmount(UUID playerId);
+    /**
+     * Set the max amount of always on chunks that this player can load
+     */
+    void setAlwaysOnChunksLimit(UUID playerId, int amount) throws NegativeValueException;
 
-    /** Set the max amount of always on chunks that this player can load */
-    public abstract void setAlwaysOnChunksLimit(UUID playerId, int amount) throws NegativeValueException;
+    /**
+     * Set the max amount of online only chunks that this player can load
+     */
+    void setOnlineOnlyChunksLimit(UUID playerId, int amount) throws NegativeValueException;
 
-    /** Set the max amount of online only chunks that this player can load */
-    public abstract void setOnlineOnlyChunksLimit(UUID playerId, int amount) throws NegativeValueException;
+    /**
+     * Add an amount of chunks to the max amount of always on chunks that this player can load
+     */
+    void addAlwaysOnChunksLimit(UUID playerId, int amount);
 
-    /** Add an amount of chunks to the max amount of always on chunks that this player can load */
-    public abstract void addAlwaysOnChunksLimit(UUID playerId, int amount);
+    /**
+     * Add an amount of chunks to the max amount of online only chunks that this player can load
+     */
+    void addOnlineOnlyChunksLimit(UUID playerId, int amount);
 
-    /** Add an amount of chunks to the max amount of online only chunks that this player can load */
-    public abstract void addOnlineOnlyChunksLimit(UUID playerId, int amount);
+    /**
+     * Get the player data
+     */
+    PlayerData getPlayerData(UUID playerId);
 
-    /** Get the player data */
-    public abstract PlayerData getPlayerData(UUID playerId);
-
-    /** Get players data*/
-    public abstract List<PlayerData> getPlayersData();
+    /**
+     * Get players data
+     */
+    List<PlayerData> getPlayersData();
 }

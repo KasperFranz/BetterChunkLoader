@@ -9,18 +9,9 @@ import net.kaikk.mc.bcl.CChunkLoader;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.sql.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 public class MySqlDataStore extends AHashMapDataStore {
 
@@ -48,7 +39,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         try {
             // init connection
             this.refreshConnection();
-        }catch (final MySQLConnectionException e) {
+        } catch (final MySQLConnectionException e) {
             BetterChunkLoader.instance().getLogger().error("Unable to connect to database. Check your config file settings.");
             throw new MySQLConnectionException(e.getMessage());
         }
@@ -102,8 +93,8 @@ public class MySqlDataStore extends AHashMapDataStore {
                 try {
                     PlayerData pd = new PlayerData(toUUID(rs.getString(1)), rs.getInt(2), rs.getInt(3));
                     this.playersData.put(pd.getPlayerId(), pd);
-                }catch(IllegalArgumentException e){
-                    BetterChunkLoader.instance().getLogger().info("We had a problem while loading the player: "+rs.getString(1));
+                } catch (IllegalArgumentException e) {
+                    BetterChunkLoader.instance().getLogger().info("We had a problem while loading the player: " + rs.getString(1));
 
                 }
             }
@@ -115,12 +106,13 @@ public class MySqlDataStore extends AHashMapDataStore {
 
     /**
      * Load the chunk loaders based on a specific world.
+     *
      * @param world The world we want to load
      */
     public void loadWorld(String world) {
         try {
             ResultSet rs = this.statement().executeQuery(
-                    "SELECT * FROM bcl_chunkloaders where serverName = '" + Config.getInstance().getServerName() + "' and loc like '"+world+":%'");
+                    "SELECT * FROM bcl_chunkloaders where serverName = '" + Config.getInstance().getServerName() + "' and loc like '" + world + ":%'");
             while (rs.next()) {
                 try {
 
@@ -143,7 +135,7 @@ public class MySqlDataStore extends AHashMapDataStore {
                 }
             }
         } catch (SQLException e) {
-            BetterChunkLoader.instance().getLogger().info("Couldn't load the chunk loaders data from MySQL server. for "+ world);
+            BetterChunkLoader.instance().getLogger().info("Couldn't load the chunk loaders data from MySQL server. for " + world);
             throw new RuntimeException(e);
         }
     }
@@ -226,7 +218,7 @@ public class MySqlDataStore extends AHashMapDataStore {
     }
 
     @Override
-    public void setAlwaysOnChunksLimit(UUID playerId, int amount)  throws NegativeValueException{
+    public void setAlwaysOnChunksLimit(UUID playerId, int amount) throws NegativeValueException {
         super.setAlwaysOnChunksLimit(playerId, amount);
         try {
             this.statement().executeUpdate(
@@ -237,7 +229,7 @@ public class MySqlDataStore extends AHashMapDataStore {
     }
 
     @Override
-    public void setOnlineOnlyChunksLimit(UUID playerId, int amount)  throws NegativeValueException {
+    public void setOnlineOnlyChunksLimit(UUID playerId, int amount) throws NegativeValueException {
         super.setOnlineOnlyChunksLimit(playerId, amount);
         try {
             this.statement().executeUpdate("INSERT INTO bcl_playersdata (pid,alwayson,onlineonly) VALUES (" + UUIDtoHexString(playerId) + ", " + Config.getInstance().getDefaultChunksAmountPersonal() + ", " + amount + ") ON DUPLICATE KEY UPDATE onlineonly=" + amount);
@@ -250,10 +242,10 @@ public class MySqlDataStore extends AHashMapDataStore {
     public void addAlwaysOnChunksLimit(UUID playerId, int amount) {
         super.addAlwaysOnChunksLimit(playerId, amount);
         try {
-            int world = Config.getInstance().getDefaultChunksAmountWorld()+amount;
+            int world = Config.getInstance().getDefaultChunksAmountWorld() + amount;
             int personal = Config.getInstance().getDefaultChunksAmountPersonal();
             this.statement().executeUpdate(
-                    "INSERT INTO bcl_playersdata (pid,alwayson,onlineonly)  VALUES (" + UUIDtoHexString(playerId) + ", " + world+","+personal  + ") ON DUPLICATE KEY "
+                    "INSERT INTO bcl_playersdata (pid,alwayson,onlineonly)  VALUES (" + UUIDtoHexString(playerId) + ", " + world + "," + personal + ") ON DUPLICATE KEY "
                             + "UPDATE "
                             + "alwayson=alwayson+" + amount);
         } catch (SQLException e) {
@@ -266,10 +258,10 @@ public class MySqlDataStore extends AHashMapDataStore {
         super.addOnlineOnlyChunksLimit(playerId, amount);
         try {
             int world = Config.getInstance().getDefaultChunksAmountWorld();
-            int personal = Config.getInstance().getDefaultChunksAmountPersonal()+amount;
+            int personal = Config.getInstance().getDefaultChunksAmountPersonal() + amount;
             this.statement().executeUpdate("INSERT INTO bcl_playersdata (pid,alwayson,onlineonly)  VALUES (" + UUIDtoHexString(playerId) + ", " + world + ", " + personal +
                     ") "
-                    + "ON DUPLICATE KEY UPDATE onlineonly=onlineonly+"+ amount);
+                    + "ON DUPLICATE KEY UPDATE onlineonly=onlineonly+" + amount);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -280,7 +272,7 @@ public class MySqlDataStore extends AHashMapDataStore {
             if (this.dbConnection != null && !this.dbConnection.isClosed()) {
                 this.dbConnection.close();
             }
-        }catch(SQLException ignored){
+        } catch (SQLException ignored) {
             //if the connection is not already closed and we can't close it, it should be safe to recreate!
         }
 
@@ -292,16 +284,15 @@ public class MySqlDataStore extends AHashMapDataStore {
         final Properties connectionProps = mySQLConfig.getConnectionProperties();
 
 
-
-        if(user == null || user.isEmpty()){
+        if (user == null || user.isEmpty()) {
             throw new MySQLConnectionException("No user provided");
         }
 
-        if(database == null || database.isEmpty()){
+        if (database == null || database.isEmpty()) {
             throw new MySQLConnectionException("No database selected");
         }
 
-        if(hostname == null || hostname.isEmpty()){
+        if (hostname == null || hostname.isEmpty()) {
             throw new MySQLConnectionException("No hostname provided");
         }
 
@@ -315,9 +306,9 @@ public class MySqlDataStore extends AHashMapDataStore {
     }
 
     private Statement statement() throws SQLException {
-        try{
+        try {
             this.refreshConnection();
-        }catch(MySQLConnectionException exception){
+        } catch (MySQLConnectionException exception) {
             throw new SQLException(exception.getMessage());
         }
         return this.dbConnection.createStatement();
