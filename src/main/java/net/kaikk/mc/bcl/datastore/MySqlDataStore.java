@@ -19,7 +19,6 @@ import java.util.*;
 public class MySqlDataStore extends AHashMapDataStore {
 
     private Connection dbConnection;
-    private DataSource dbSource;
 
     private static UUID toUUID(String string) {
         return UUID.fromString(string);
