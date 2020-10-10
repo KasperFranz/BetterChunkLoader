@@ -1,8 +1,11 @@
 package net.kaikk.mc.bcl.utils;
 
 
+import guru.franz.mc.bcl.utils.ChunkLoaderHelper;
+import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
+import net.kaikk.mc.bcl.CChunkLoader;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
@@ -60,6 +63,26 @@ public class CommandHelper {
 
             player.setLocation(location);
         };
+    }
+
+    /**
+     * Create a consumer for the Delete chunk loader
+     * @param player The person deleting the chunk loader
+     * @param chunkLoader The chunkloader to create the delete consumer for.
+     * @return a Command Consumer to delete the chunk loader
+     */
+    public static Consumer<CommandSource> createDeleteChunkConsumer(Player player, CChunkLoader chunkLoader) {
+        return callback -> CommandHelper.deleteChunk(player, chunkLoader);
+    }
+
+
+    public static void deleteChunk(Player player, CChunkLoader chunkLoader){
+        if (!Permission.canDeleteChunkLoader(player,chunkLoader)) {
+            player.sendMessage(Text.of(Messenger.errorColor, Messages.LIST_PERMISSION_ERROR));
+            return;
+        }
+
+        ChunkLoaderHelper.removeChunkLoader(chunkLoader,player);
     }
 
 }

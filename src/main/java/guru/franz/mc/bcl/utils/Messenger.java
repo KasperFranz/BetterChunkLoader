@@ -101,12 +101,6 @@ public class Messenger {
         return Text.builder("Removed " + newValue + " " + type + " from " + user).color(baseColor).build();
     }
 
-
-    public static Text getNoChunkLoaders(String name) {
-        return Text.builder(name + " has no chunkloaders").color(baseColor).build();
-    }
-
-
     public static Text getChunkText(CommandSource source, CChunkLoader chunkLoader, boolean showUser){
         TextColor color = chunkLoader.isAlwaysOn() ? TextColors.AQUA : TextColors.GREEN;
         String text = chunkLoader.isAlwaysOn() ? "World" : "Personal";
@@ -114,27 +108,38 @@ public class Messenger {
         Text.Builder builder = Text.builder()
                 .append(Text.builder("[" + text + "] ").color(color).build());
 
-        if(source.hasPermission(Permission.ABILITY_TELEPORT) && source instanceof Player){
-            Location<World> location = chunkLoader.getLoc().add(0,1,0);
-            Text tp = Text.builder("[TP] ").color(TextColors.DARK_BLUE)
-                    .onClick(TextActions.executeCallback(CommandHelper.createTeleportConsumer(source, location )))
-                    .onHover(TextActions.showText(Text.of("Click to teleport on top of the chunkloader")))
-                    .build();
-            builder.append(tp);
-        }
 
         if (showUser) {
             builder.append(Text.of(chunkLoader.getOwnerName() + " "));
         }
 
-
-        return builder
+        builder
                 .append(Text.builder(ChunkLoaderHelper.getRadiusFromRange(chunkLoader.getRange())).color(baseColor).build())
                 .append(Text.of(" - "))
-                .append(Text.builder(chunkLoader.getPrettyLocationString() + " ").color(baseColor).build())
+                .append(Text.builder(chunkLoader.getPrettyLocationString() + " ").color(baseColor).build());
+
+        //TELEPORT ACTION
+        if(source.hasPermission(Permission.ABILITY_TELEPORT) && source instanceof Player){
+            Location<World> location = chunkLoader.getLoc().add(0,1,0);
+            Text tp = Text.builder(Messages.LIST_ACTION_TELEPORT +" ").color(TextColors.DARK_BLUE)
+                    .onClick(TextActions.executeCallback(CommandHelper.createTeleportConsumer(source, location)))
+                    .onHover(TextActions.showText(Text.of(Messages.LIST_ACTION_TELEPORT_HOVER)))
+                    .build();
+            builder.append(tp);
+        }
+
+        //DELETE ACTION
+        if(source instanceof Player && Permission.canDeleteChunkLoader((Player) source, chunkLoader)){
+            Text tp = Text.builder(Messages.LIST_ACTION_DELETE + " ").color(TextColors.RED)
+                    .onClick(TextActions.executeCallback(CommandHelper.createDeleteChunkConsumer((Player) source, chunkLoader)))
+                    .onHover(TextActions.showText(Text.of(Messages.LIST_ACTION_DELETE_HOVER)))
+                    .build();
+            builder.append(tp);
+        }
+
+
+        return builder
                 .toText();
-
-
     }
 
     public static void logException(Throwable e){

@@ -1,6 +1,7 @@
 package net.kaikk.mc.bcl.commands;
 
 import com.google.common.collect.Lists;
+import guru.franz.mc.bcl.utils.Messages;
 import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.utils.Messenger;
@@ -58,11 +59,17 @@ public class CmdList implements CommandExecutor {
         });
 
         if (texts.isEmpty()) {
-            texts.add(Messenger.getNoChunkLoaders(name));
+            texts.add(Text.of(
+                    TextColors.GOLD,
+                    String.format(Messages.LIST_NO_CHUNKLOADERS,name)
+            ));
         }
 
         PaginationList.builder()
-                .title(Text.of(TextColors.GOLD,name + " Chunkloaders"))
+                .title(Text.of(
+                        TextColors.GOLD,
+                        String.format(Messages.LIST_CHUNKLOADERS_TITLE,name)
+                ))
                 .contents(texts)
                 .padding(Text.of("-"))
                 .sendTo(commandSource);
