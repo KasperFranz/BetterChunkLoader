@@ -15,11 +15,14 @@ import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.function.Consumer;
+
 
 public class Messenger {
 
-    public static TextColor errorColor = TextColors.RED;
+    public static TextColor ERROR_COLOR = TextColors.RED;
     public static TextColor baseColor = TextColors.GOLD;
+
 
     public static void sendInfoMessage(CommandSource sender, Integer personalLoaders, Integer worldLoaders, Integer personalChunks,
             Integer worldChunks, Integer playersLoading) {
@@ -33,7 +36,7 @@ public class Messenger {
     }
 
     public static void sendNoInfoMessage(CommandSource sender) {
-        sender.sendMessage(BetterChunkLoader.getPrefix().concat(Text.builder("No statistics available!").color(errorColor).build()));
+        sender.sendMessage(BetterChunkLoader.getPrefix().concat(Text.builder("No statistics available!").color(ERROR_COLOR).build()));
     }
 
     public static void sendNoPermission(CommandSource sender) {
@@ -45,7 +48,7 @@ public class Messenger {
         Text message = BetterChunkLoader.getPrefix();
         switch (command) {
             case "delete":
-                message = message.concat(Text.builder("Usage: /bcl delete (PlayerName)").color(errorColor).build());
+                message = message.concat(Text.builder("Usage: /bcl delete (PlayerName)").color(ERROR_COLOR).build());
                 break;
             case "chunks":
                 message = message.concat(Text.builder("Usage:").color(baseColor).build());
@@ -53,7 +56,7 @@ public class Messenger {
                         .concat(Text.builder("/bcl chunks <add|set|remove> <PlayerName> <world|personal> <amount>").build());
                 break;
             default:
-                message = message.concat(Text.builder("Unkown usage").color(errorColor).build());
+                message = message.concat(Text.builder("Unkown usage").color(ERROR_COLOR).build());
                 break;
 
         }
@@ -62,7 +65,7 @@ public class Messenger {
 
     public static void sendNegativeValue(CommandSource sender) {
         Text message = BetterChunkLoader.getPrefix();
-        message = message.concat(Text.builder("The value needs to be higher than 0.").color(errorColor).build());
+        message = message.concat(Text.builder("The value needs to be higher than 0.").color(ERROR_COLOR).build());
         sender.sendMessage(message);
     }
 
@@ -85,7 +88,7 @@ public class Messenger {
     public static Text getMaxChunkInfo(int added, String user, int limit, String type) {
         return Text.builder(
                 "Couldn't add " + added + " " + type + " to " + user + "'s balance because it would exceed the " + type + " limit of " + limit)
-                .color(errorColor).build();
+                .color(ERROR_COLOR).build();
     }
 
     public static Text getAddedInfo(int added, String user, int newValue, String type) {
@@ -141,5 +144,30 @@ public class Messenger {
         Logger logger = BetterChunkLoader.instance().getLogger();
         StackTraceElement error = e.getStackTrace()[0];
         logger.error("Load failed: " + e.getMessage() + " (" + error.getClassName() + ":" + error.getLineNumber() + ")");
+    }
+
+    /**
+     * Create an error message with correct color.
+     * @param message the message to format.
+     * @return the Text element.
+     */
+    public static Text createErrorMessage(String message) {
+        return Text.builder(message).color(Messenger.ERROR_COLOR).build();
+    }
+
+    public static Text getConfirmBox(String message, Consumer<CommandSource> action){
+
+
+        Text.Builder builder = Text.builder().append(Text.of(Messenger.baseColor, message))
+                .append(Text.NEW_LINE)
+                .append(
+                        Text.builder("[Yes]").color(TextColors.GREEN)
+                                .onClick(TextActions.executeCallback(action))
+                                .build()
+                );
+
+
+        return builder.build();
+
     }
 }

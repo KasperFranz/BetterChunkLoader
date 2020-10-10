@@ -197,13 +197,14 @@ public class MySqlDataStore extends AHashMapDataStore {
     }
 
     @Override
-    public void removeChunkLoaders(UUID ownerId) {
+    public int removeChunkLoaders(UUID ownerId) {
         super.removeChunkLoaders(ownerId);
         try {
-            this.statement().executeUpdate("DELETE FROM bcl_chunkloaders WHERE owner = " + UUIDtoHexString(ownerId));
+            return this.statement().executeUpdate("DELETE FROM bcl_chunkloaders WHERE owner = " + UUIDtoHexString(ownerId));
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return 0;
     }
 
     @Override

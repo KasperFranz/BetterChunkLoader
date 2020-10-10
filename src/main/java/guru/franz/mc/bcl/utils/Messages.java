@@ -11,4 +11,13 @@ public class Messages {
     public static String DELETE_CHUNKLOADER_USER_OTHER = "You just removed %s's chunk loader at %s.";
     public static String DELETE_CHUNKLOADER_USER_INFORM = "%s just removed your chunk loader at %s.";
     public static String DELETE_CHUNKLOADER_USER_SELF = "You just removed your chunk loader at %s.";
+    public static final String CMD_DELETE_OTHER_NO_CHUNKLOADERS = "%s does not have any chunk loaders.";
+    public static final String CMD_DELETE_OTHER_SUCCESS = "All %d chunk loaders placed by %s have been removed!";
+    public static final String CMD_DELETE_OTHER_SUCCESS_LOG = "%s deleted all %s's chunk loaders.";
+    public static final String CMD_DELETE_OTHER_PERMISSION = "You do not have permission to delete others chunk loaders.";
+    public static final String CMD_DELETE_OWN_NO_CHUNKLOADERS = "You do not have any chunk loaders to delete.";
+    public static final String CMD_DELETE_OWN_SUCCESS = "All %d of your chunk loaders have been removed!";
+    public static final String CMD_DELETE_OWN_SUCCESS_LOG = "%s deleted all their chunk loaders.";
+    public static final String CMD_DELETE_OWN_PERMISSION = "You do not have permission to delete your own chunk loaders.";
+    public static final String CMD_DELETE_OWN_CONFIRM = "Are you sure you want to delete all of your chunk loaders";
 }

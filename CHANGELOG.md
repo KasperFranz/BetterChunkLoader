@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ## [Unreleased][unreleased]
 ### Added
  - Sending a message to the user if another player is deleting their chunkloader
+ - Allowing players to delete all of their own chunkloaders (using /bcl delete) #36
  
 ### Changed
  - Cleaned up the messages sent to the user and logged when we are deleting/changing/creating chunk loaders.

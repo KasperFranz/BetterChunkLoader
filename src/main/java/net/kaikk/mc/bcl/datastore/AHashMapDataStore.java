@@ -92,11 +92,12 @@ public abstract class AHashMapDataStore implements IDataStore {
     }
 
     @Override
-    public void removeChunkLoaders(UUID ownerId) {
+    public int removeChunkLoaders(UUID ownerId) {
         List<CChunkLoader> clList = this.getChunkLoaders(ownerId);
         for (CChunkLoader cl : clList) {
             this.getChunkLoaders(cl.getWorldName()).remove(cl);
         }
+        return clList.size();
     }
 
     @Override
