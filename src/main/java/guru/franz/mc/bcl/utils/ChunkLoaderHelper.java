@@ -55,23 +55,30 @@ public class ChunkLoaderHelper {
         }
 
         String logMessage = String.format(
-                Messages.DELETE_CHUNKLOADER_LOG,
+                Messages.DELETE_CHUNKLOADER_LOG_SELF,
                 executor,
-                chunkLoader.getOwnerName(),
-                chunkLoader.getLocationString()
+                chunkLoader.getOwnerName()
         );
-        BetterChunkLoader.instance().getLogger().info(logMessage);
+
+
         String userMessage = String.format(
                 Messages.DELETE_CHUNKLOADER_USER_SELF,
                 chunkLoader.getLocationString()
         );
 
         if (!chunkLoader.getOwnerName().equals(executor)) {
+            logMessage = String.format(
+                    Messages.DELETE_CHUNKLOADER_LOG_OTHER,
+                    executor,
+                    chunkLoader.getOwnerName(),
+                    chunkLoader.getLocationString()
+            );
             userMessage = String.format(
                     Messages.DELETE_CHUNKLOADER_USER_OTHER,
                     chunkLoader.getOwnerName(),
                     chunkLoader.getLocationString()
             );
+
 
             //send message to the owner
             if(chunkLoader.getPlayer() != null) {
@@ -83,6 +90,9 @@ public class ChunkLoaderHelper {
                         )));
             }
         }
+
+        BetterChunkLoader.instance().getLogger().info(logMessage);
+
         if(player != null) {
             player.sendMessage(Text.of(TextColors.RED, userMessage));
         }

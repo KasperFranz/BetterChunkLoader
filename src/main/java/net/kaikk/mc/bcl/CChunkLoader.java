@@ -203,13 +203,24 @@ public class CChunkLoader extends ChunkLoader {
                         }
 
                         String logMessage = String.format(
-                                Messages.EDIT_CHUNKLOADER_LOG,
+                                Messages.EDIT_CHUNKLOADER_LOG_SELF,
                                 player.getName(),
-                                chunkLoader.getOwner(),
                                 chunkLoader.getLocationString(),
                                 chunkLoader.getRadius(),
                                 ChunkLoaderHelper.getRadiusFromRange(pos)
                         );
+
+                        if(!player.getUniqueId().equals(chunkLoader.getOwner())){
+                            logMessage = String.format(
+                                    Messages.EDIT_CHUNKLOADER_LOG_OTHER,
+                                    player.getName(),
+                                    chunkLoader.getOwnerName(),
+                                    chunkLoader.getLocationString(),
+                                    chunkLoader.getRadius(),
+                                    ChunkLoaderHelper.getRadiusFromRange(pos)
+                            );
+                        }
+
                         String userMessage = String.format(
                                 Messages.EDIT_CHUNKLOADER_USER,
                                 ChunkLoaderHelper.getRadiusFromRange(pos)
