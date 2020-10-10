@@ -33,14 +33,14 @@ public class CommandHelper {
         Player player = (Player) src;
 
         if (!player.hasPermission(Permission.ABILITY_TELEPORT)) {
-            player.sendMessage(Text.of(Messenger.errorColor, "You do not have permission to use the teleport feature."));
+            player.sendMessage(Text.of(Messenger.ERROR_COLOR, "You do not have permission to use the teleport feature."));
             return;
         }
 
         Location<World> safeLocation = Sponge.getGame().getTeleportHelper().getSafeLocation(location, 9, 9).orElse(null);
         if (safeLocation == null) {
             player.sendMessage(
-                    Text.builder().append(Text.of(Messenger.errorColor, "Location is not safe. "),
+                    Text.builder().append(Text.of(Messenger.ERROR_COLOR, "Location is not safe. "),
                     Text.builder().append(Text.of(TextColors.GREEN, "Are you sure you want to teleport here anyway?")).onClick(TextActions.executeCallback(createForceTeleportConsumer(player, location)))
                             .style(TextStyles.UNDERLINE).build()).build());
         } else {
@@ -57,7 +57,7 @@ public class CommandHelper {
             }
             Player player = (Player) src;
             if (!player.hasPermission(Permission.ABILITY_TELEPORT)) {
-                player.sendMessage(Text.of(Messenger.errorColor, "You do not have permission to use the teleport feature."));
+                player.sendMessage(Text.of(Messenger.ERROR_COLOR, "You do not have permission to use the teleport feature."));
                 return;
             }
 

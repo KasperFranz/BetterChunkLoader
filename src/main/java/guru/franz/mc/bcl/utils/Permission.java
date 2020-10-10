@@ -8,7 +8,8 @@ public class Permission {
     public static final String COMMAND_BALANCE = "betterchunkloader.balance.own";
     public static final String COMMAND_BALANCE_OTHERS = "betterchunkloader.balance.others";
     public static final String COMMAND_CHUNKS = "betterchunkloader.chunks";
-    public static final String COMMAND_DELETE = "betterchunkloader.delete";
+    public static final String COMMAND_DELETE_OWN = "betterchunkloader.delete.own";
+    public static final String COMMAND_DELETE_OTHERS = "betterchunkloader.delete.others";
     public static final String COMMAND_INFO = "betterchunkloader.info";
     public static final String COMMAND_LIST_OTHERS = "betterchunkloader.list.others";
     public static final String COMMAND_LIST_SELF = "betterchunkloader.list.own";

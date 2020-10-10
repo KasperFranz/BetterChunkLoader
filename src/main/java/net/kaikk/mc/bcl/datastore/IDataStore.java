@@ -71,8 +71,9 @@ public interface IDataStore {
 
     /**
      * Remove chunk loaders owned by someone with the specified UUID
+     * @return
      */
-    void removeChunkLoaders(UUID ownerId);
+    int removeChunkLoaders(UUID ownerId);
 
     /**
      * Change chunk loader range
