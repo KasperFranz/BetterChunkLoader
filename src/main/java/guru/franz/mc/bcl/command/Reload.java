@@ -18,7 +18,7 @@ public class Reload  implements CommandExecutor {
             src.sendMessage(message.build());
             return CommandResult.success();
         } catch (Exception e) {
-            message.append(Text.builder("An exception happened while trying to reload the plugin, please see the console for more information.").color(Messenger.errorColor).build());
+            message.append(Text.builder("An exception happened while trying to reload the plugin, please see the console for more information.").color(Messenger.ERROR_COLOR).build());
             src.sendMessage(message.build());
             Messenger.logException(e);
         }
