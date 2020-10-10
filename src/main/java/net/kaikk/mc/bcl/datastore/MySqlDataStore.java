@@ -6,9 +6,12 @@ import guru.franz.mc.bcl.exception.NegativeValueException;
 import guru.franz.mc.bcl.exception.mysql.MySQLConnectionException;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.service.sql.SqlService;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Date;
 import java.util.*;
@@ -16,6 +19,7 @@ import java.util.*;
 public class MySqlDataStore extends AHashMapDataStore {
 
     private Connection dbConnection;
+    private DataSource dbSource;
 
     private static UUID toUUID(String string) {
         return UUID.fromString(string);
@@ -277,30 +281,12 @@ public class MySqlDataStore extends AHashMapDataStore {
             //if the connection is not already closed and we can't close it, it should be safe to recreate!
         }
 
-        MySQL mySQLConfig = Config.getInstance().getMySQL();
-        String user = mySQLConfig.getUsername();
-        String hostname = mySQLConfig.getHostname();
-        String database = mySQLConfig.getDatabase();
-
-        final Properties connectionProps = mySQLConfig.getConnectionProperties();
-
-
-        if (user == null || user.isEmpty()) {
-            throw new MySQLConnectionException("No user provided");
-        }
-
-        if (database == null || database.isEmpty()) {
-            throw new MySQLConnectionException("No database selected");
-        }
-
-        if (hostname == null || hostname.isEmpty()) {
-            throw new MySQLConnectionException("No hostname provided");
-        }
-
         // establish connection
         try {
-            this.dbConnection = DriverManager.getConnection(
-                    "jdbc:mysql://" + hostname + "/" + database + "?autoReconnect=true", connectionProps);
+            this.dbConnection = Sponge.getServiceManager().provide(SqlService.class).orElseThrow(SQLException::new)
+                    .getDataSource(Config.getInstance().getMySQL().getConnectionString())
+                    .getConnection();
+
         } catch (SQLException exception) {
             throw new MySQLConnectionException(exception.getMessage());
         }
