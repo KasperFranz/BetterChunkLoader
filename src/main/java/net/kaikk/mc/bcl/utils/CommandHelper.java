@@ -78,7 +78,7 @@ public class CommandHelper {
 
     public static void deleteChunk(Player player, CChunkLoader chunkLoader){
         if (!Permission.canDeleteChunkLoader(player,chunkLoader)) {
-            player.sendMessage(Text.of(Messenger.errorColor, Messages.LIST_PERMISSION_ERROR));
+            player.sendMessage(Text.of(Messenger.ERROR_COLOR, Messages.LIST_PERMISSION_ERROR));
             return;
         }
 
