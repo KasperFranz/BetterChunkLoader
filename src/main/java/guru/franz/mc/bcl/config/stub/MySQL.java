@@ -1,6 +1,6 @@
 package guru.franz.mc.bcl.config.stub;
 
-import java.util.Properties;
+import guru.franz.mc.bcl.exception.mysql.MySQLConnectionException;
 
 public class MySQL {
     private final String hostname, username, password, database;
@@ -12,22 +12,33 @@ public class MySQL {
         this.database = database;
     }
 
-    public String getHostname() {
-        return hostname;
-    }
+    /**
+     * Get a JDBC connection string.
+     * @return the JDBC connection string
+     * @throws MySQLConnectionException if there is any data issues
+     */
+    public String getConnectionString() throws MySQLConnectionException {
 
-    public String getDatabase() {
-        return database;
-    }
-    public String getUsername(){
-        return username;
-    }
 
-    public Properties getConnectionProperties(){
-        final Properties connectionProps = new Properties();
+        if (username == null || username.isEmpty()) {
+            throw new MySQLConnectionException("No user provided");
+        }
 
-        connectionProps.put("user", username);
-        connectionProps.put("password", password);
-        return connectionProps;
+        if (database == null || database.isEmpty()) {
+            throw new MySQLConnectionException("No database selected");
+        }
+
+        if (hostname == null || hostname.isEmpty()) {
+            throw new MySQLConnectionException("No hostname provided");
+        }
+
+        return "jdbc:mysql://"
+                + username
+                + ":"
+                + password
+                + "@"
+                + hostname
+                + "/"
+                + database;
     }
 }
