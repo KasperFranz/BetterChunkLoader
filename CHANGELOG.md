@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
  
 ### Changed
  - Cleaned up the messages sent to the user and logged when we are deleting/changing/creating chunk loaders.
+ - Using the DB Connection provided through Sponge #33 (moves DB connection to another thread)
  
 ### Fixed
  - Fixed the log messages around edit/delete chunkloaders #37
