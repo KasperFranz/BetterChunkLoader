@@ -15,6 +15,8 @@ import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.function.Consumer;
+
 
 public class Messenger {
 
@@ -142,5 +144,30 @@ public class Messenger {
         Logger logger = BetterChunkLoader.instance().getLogger();
         StackTraceElement error = e.getStackTrace()[0];
         logger.error("Load failed: " + e.getMessage() + " (" + error.getClassName() + ":" + error.getLineNumber() + ")");
+    }
+
+    /**
+     * Create an error message with correct color.
+     * @param message the message to format.
+     * @return the Text element.
+     */
+    public static Text createErrorMessage(String message) {
+        return Text.builder(message).color(Messenger.ERROR_COLOR).build();
+    }
+
+    public static Text getConfirmBox(String message, Consumer<CommandSource> action){
+
+
+        Text.Builder builder = Text.builder().append(Text.of(Messenger.baseColor, message))
+                .append(Text.NEW_LINE)
+                .append(
+                        Text.builder("[Yes]").color(TextColors.GREEN)
+                                .onClick(TextActions.executeCallback(action))
+                                .build()
+                );
+
+
+        return builder.build();
+
     }
 }

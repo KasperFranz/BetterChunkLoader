@@ -37,9 +37,15 @@ public class CmdBCL implements CommandExecutor {
             message.append(Text.NEW_LINE)
                     .append(Text.builder("/bcl chunks <add|set|remove> <player> <type> <amount>").color(TextColors.BLUE).build());
         }
-        if (commandSource.hasPermission(Permission.COMMAND_DELETE)) {
-            message.append(Text.NEW_LINE).append(Text.builder("/bcl delete <player>").color(TextColors.BLUE).build());
+
+        if (commandSource.hasPermission(Permission.COMMAND_DELETE_OWN)) {
+            if(commandSource.hasPermission(Permission.COMMAND_DELETE_OTHERS)){
+                message.append(Text.NEW_LINE).append(Text.builder("/bcl delete [player]").color(TextColors.BLUE).build());
+            }else {
+                message.append(Text.NEW_LINE).append(Text.builder("/bcl delete").color(TextColors.BLUE).build());
+            }
         }
+
         if (commandSource.hasPermission(Permission.COMMAND_PURGE)) {
             message.append(Text.NEW_LINE).append(Text.builder("/bcl purge").color(TextColors.BLUE).build());
         }

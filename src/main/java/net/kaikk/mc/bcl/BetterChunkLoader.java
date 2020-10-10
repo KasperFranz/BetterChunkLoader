@@ -2,6 +2,7 @@ package net.kaikk.mc.bcl;
 
 import com.google.inject.Inject;
 import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
+import guru.franz.mc.bcl.command.Delete;
 import guru.franz.mc.bcl.command.Reload;
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.config.ConfigLoader;
@@ -10,7 +11,6 @@ import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.commands.CmdBCL;
 import net.kaikk.mc.bcl.commands.CmdBalance;
 import net.kaikk.mc.bcl.commands.CmdChunks;
-import net.kaikk.mc.bcl.commands.CmdDelete;
 import net.kaikk.mc.bcl.commands.CmdInfo;
 import net.kaikk.mc.bcl.commands.CmdList;
 import net.kaikk.mc.bcl.commands.CmdPurge;
@@ -244,10 +244,13 @@ public class BetterChunkLoader {
                 .description(Text.of("add, set remove a players type of chunkloaders."))
                 .build();
 
-        CommandSpec cmdDelete = CommandSpec.builder()
-                .arguments(GenericArguments.onlyOne(GenericArguments.user(Text.of("user"))))
-                .executor(new CmdDelete())
-                .permission(Permission.COMMAND_DELETE)
+        CommandSpec delete = CommandSpec.builder()
+                .arguments(
+                        GenericArguments.optional(
+                                GenericArguments.requiringPermission(GenericArguments.user(Text.of("user")), Permission.COMMAND_DELETE_OTHERS))
+                )
+                .executor(new Delete())
+                .permission(Permission.COMMAND_DELETE_OWN)
                 .description(Text.of("Delete the specified players chunkloaders"))
                 .build();
 
@@ -268,7 +271,7 @@ public class BetterChunkLoader {
                 .child(cmdInfo, "info")
                 .child(cmdList, "list", "ls")
                 .child(cmdChunks, "chunks")
-                .child(cmdDelete, "delete", "del")
+                .child(delete, "delete", "del")
                 .child(cmdPurge, "purge")
                 .child(cmdReload, "reload")
                 .executor(new CmdBCL())
