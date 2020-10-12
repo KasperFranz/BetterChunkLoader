@@ -12,7 +12,7 @@ If you need help, please visit our Docs or Discord.
 
 * Discord: https://discord.gg/MD6qGAd
 
-Please follow this template, this makes sure the correct information is provided.
+Please follow this template; this makes sure the correct information is provided.
 
 -->
 
@@ -20,25 +20,18 @@ Please follow this template, this makes sure the correct information is provided
 A clear and concise description of what the bug is.
 
 
-**Sponge Version:**
+- **Sponge Version:**
+- **BetterChunkLoader Version:**
+- **BCLForgeLib Version:**
 
-**BetterChunkLoader Version:**
-
-**BCLForgeLib Version:**
-
-
-It is important to have all versions 
-
+It is vital to supply all version numbers.
 
 **To Reproduce**
-Steps to reproduce the behavior:
+Steps to reproduce the behaviour:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
-4. See error
+4. See an error
 
-**Expected behavior**
+**Expected behaviour**
 What did you expect to happen?
-
-**Logs**
-Please upload your logs to a paste service. 
