@@ -1,6 +1,6 @@
 package guru.franz.mc.bcl.config.stub;
 
-import guru.franz.mc.bcl.exception.mysql.MySQLConnectionException;
+import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 
 public class MySQL {
     private final String hostname, username, password, database;

@@ -2,6 +2,7 @@ package net.kaikk.mc.bcl.datastore;
 
 import guru.franz.mc.bcl.exception.Exception;
 import guru.franz.mc.bcl.exception.NegativeValueException;
+import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 import net.kaikk.mc.bcl.CChunkLoader;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -26,7 +27,7 @@ public interface IDataStore {
      * Loads data from the datastore.
      * This is called while BCL is loading
      */
-    void load() throws Exception;
+    void load() throws Exception, MySQLConnectionException;
 
     /**
      * Loads data from the datastore.
