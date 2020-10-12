@@ -4,13 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 ## [Unreleased][unreleased]
 ### Added
- - Sending a message to the user if another player is deleting their chunkloader
- - Allowing the user to Delete their own/others Chunk Loaders through the list command (permission betterchunkloader.list.delete.others/ betterchunkloader.list.delete.own) #6
+ - Sending a message to the player if another player is deleting their chunkloader
+ - Allowing the player to Delete their own/others Chunk Loaders through the list command (permission betterchunkloader.list.delete.others/ betterchunkloader.list.delete.own) #6
  - Allowing players to delete all of their own chunkloaders (using /bcl delete) #36
  
 ### Changed
- - Cleaned up the messages sent to the user and logged when we are deleting/changing/creating chunk loaders.
+ - Cleaned up the messages sent to the player and logged when we are deleting/changing/creating chunk loaders.
  - Using the DB Connection provided through Sponge #33 (moves DB connection to another thread)
+ - Added security by using SQL Prepared statements.
  
 ### Fixed
  - Fixed the log messages around edit/delete chunkloaders #37
