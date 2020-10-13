@@ -11,7 +11,7 @@ project.ext.authors = 'KaiNoMood, Rob5Underscores, KasperFranz'
 
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:7.1.0-SNAPSHOT'
+    compile 'org.spongepowered:spongeapi:8.0.0-SNAPSHOT'
     compile 'com.github.KasperFranz:BCLForgeLib:master'
     compile 'org.bstats:bstats-sponge:1.7'
 }
