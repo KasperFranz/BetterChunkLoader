@@ -59,7 +59,12 @@ public class BetterChunkLoader {
 
     @Inject
     public BetterChunkLoader(Metrics2.Factory metricsFactory){
+        if (instance != null){
+            throw new IllegalStateException("Plugin cannot be instantiated twice");
+        }
+
         metrics = metricsFactory.make(BetterChunkLoaderPluginInfo.BSTATS_PLUGIN_ID);
+        instance = this;
      }
 
     public static BetterChunkLoader instance() {
@@ -130,7 +135,6 @@ public class BetterChunkLoader {
             throw new RuntimeException("BCLForgeLib is needed to run this plugin!");
         }
 
-        instance = this;
         try{
             setupPlugin();
         } catch (Exception e){
