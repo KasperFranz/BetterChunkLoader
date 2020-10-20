@@ -7,5 +7,4 @@ updates:
   open-pull-requests-limit: 10
   ignore:
     - dependency-name: "spongeapi"
-      # For Express, ignore all updates for version 4 and 5
       versions: ["8.x"]
