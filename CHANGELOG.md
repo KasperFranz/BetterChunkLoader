@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
  
 ### Fixed
  - Fixed the log messages around edit/delete chunkloaders #37
+ - Fixed a crash with bstats #44
 
 
 ## 2020-09-30 3.8.0
