@@ -1,6 +1,6 @@
 plugins {
     id 'org.spongepowered.plugin' version '0.9.0'
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'ninja.miserable.blossom' version '1.0.1'
 }
 
@@ -9,11 +9,9 @@ version = '3.8.1-S7.1.0-dev'
 description = 'Better Chunkloading.'
 project.ext.authors = 'KaiNoMood, Rob5Underscores, KasperFranz'
 
-
 dependencies {
     compile 'org.spongepowered:spongeapi:7.1.0-SNAPSHOT'
     compile 'com.github.KasperFranz:BCLForgeLib:master'
-    compile 'org.bstats:bstats-sponge:1.7'
 }
 
 blossom {
@@ -39,13 +37,6 @@ repositories {
     }
     maven { url 'https://jitpack.io' }
     maven { url 'https://repo.codemc.org/repository/maven-public/'}
-}
-
-shadowJar {
-    dependencies {
-        include(dependency("org.bstats:bstats-sponge:1.7"))
-    }
-    classifier = ''
 }
 
 artifacts {
