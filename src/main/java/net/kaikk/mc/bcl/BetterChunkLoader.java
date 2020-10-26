@@ -19,7 +19,6 @@ import net.kaikk.mc.bcl.commands.elements.LoaderTypeElement;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.MySqlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
-import shadow.org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
@@ -48,7 +47,6 @@ import java.util.UUID;
 )
 public class BetterChunkLoader {
     private static BetterChunkLoader instance;
-    private Metrics2 metrics;
     @Inject
     private Logger logger;
     @Inject
@@ -58,12 +56,11 @@ public class BetterChunkLoader {
     public boolean enabled = false;
 
     @Inject
-    public BetterChunkLoader(Metrics2.Factory metricsFactory){
+    public BetterChunkLoader(){
         if (instance != null){
             throw new IllegalStateException("Plugin cannot be instantiated twice");
         }
 
-        metrics = metricsFactory.make(BetterChunkLoaderPluginInfo.BSTATS_PLUGIN_ID);
         instance = this;
      }
 
