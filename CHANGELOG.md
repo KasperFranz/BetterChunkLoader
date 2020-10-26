@@ -4,6 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 ## [Unreleased][unreleased]
 ### Added
+ 
+### Changed
+ 
+### Fixed
+
+
+## 2020-10-26 3.8.1
+### Added
  - Sending a message to the player if another player is deleting their chunkloader
  - Allowing the player to Delete their own/others Chunk Loaders through the list command (permission betterchunkloader.list.delete.others/ betterchunkloader.list.delete.own) #6
  - Allowing players to delete all of their own chunkloaders (using /bcl delete) #36
