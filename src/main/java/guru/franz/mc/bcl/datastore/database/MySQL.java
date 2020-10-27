@@ -121,7 +121,7 @@ public class MySQL implements DatabaseInterface {
     public void insertOrUpdatePlayerData(UUID playerId, int worldLoaders, int personalLoaders) throws SQLException, MySQLConnectionException {
         try (Connection conn = getDataStore().getConnection()) {
             String query = "INSERT INTO bcl_playersdata (pid, alwayson, onlineonly) VALUES" +
-                    "(?, ?, ?) ON DUPLICATE KEY UPDATE, " +
+                    "(?, ?, ?) ON DUPLICATE KEY UPDATE " +
                     "alwayson = ?, onlineonly= ?";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, playerId.toString());
@@ -167,19 +167,20 @@ public class MySQL implements DatabaseInterface {
      */
     public void insertOrUpdateChunkLoader(CChunkLoader chunkLoader) throws SQLException, MySQLConnectionException {
         try (Connection conn = getDataStore().getConnection()) {
-            String query = "INSERT INTO bcl_chunkloaders (loc, owner, date, aon, serverName) VALUES " +
-                    "(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE, " +
+            String query = "INSERT INTO bcl_chunkloaders (loc, r, owner, date, aon, serverName) VALUES " +
+                    "(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE " +
                     "owner = ?, date= ?, aon = ?, serverName = ?";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, chunkLoader.getLocationString());
             statement.setInt(2, chunkLoader.getRange());
             statement.setString(3, chunkLoader.getOwner().toString());
             statement.setLong(4, chunkLoader.getCreationDate().getTime());
-            statement.setString(5, Config.getInstance().getServerName());
-            statement.setInt(6, chunkLoader.getRange());
+            statement.setInt(5, chunkLoader.isAlwaysOn() ? 1 : 0);
+            statement.setString(6, Config.getInstance().getServerName());
             statement.setString(7, chunkLoader.getOwner().toString());
             statement.setLong(8, chunkLoader.getCreationDate().getTime());
-            statement.setString(9, Config.getInstance().getServerName());
+            statement.setInt(9, chunkLoader.isAlwaysOn() ? 1 : 0);
+            statement.setString(10, Config.getInstance().getServerName());
             statement.executeUpdate();
         }
     }
