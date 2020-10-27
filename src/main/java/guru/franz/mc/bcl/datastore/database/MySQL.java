@@ -195,7 +195,7 @@ public class MySQL implements DatabaseInterface {
     public void deleteChunkLoader(CChunkLoader chunkLoader) throws SQLException, MySQLConnectionException {
         try (Connection conn = getDataStore().getConnection()) {
             String query = "DELETE FROM bcl_chunkloaders WHERE loc = ? LIMIT 1";
-
+            //TODO should use servername as well.
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, chunkLoader.getLocationString());
             statement.executeUpdate();
@@ -213,7 +213,7 @@ public class MySQL implements DatabaseInterface {
     public int deleteChunkLoadersByOwner(UUID ownerId) throws SQLException, MySQLConnectionException {
         try (Connection conn = getDataStore().getConnection()) {
             String query = "DELETE FROM bcl_chunkloaders WHERE owner = ? LIMIT 1";
-
+            //TODO should be with servername as well
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, ownerId.toString());
             return statement.executeUpdate();

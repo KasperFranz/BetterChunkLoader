@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Changed
  
 ### Fixed
-
+ - Issue with creating chunk loaders
 
 ## 2020-10-26 3.8.1
 ### Added
