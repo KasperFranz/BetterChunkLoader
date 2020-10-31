@@ -1,6 +1,9 @@
 package guru.franz.mc.bcl.config.stub;
 
 import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
+import net.kaikk.mc.bcl.BetterChunkLoader;
+
+import java.net.URLEncoder;
 
 public class MySQL {
     private final String hostname, username, password, database;
@@ -32,13 +35,22 @@ public class MySQL {
             throw new MySQLConnectionException("No hostname provided");
         }
 
+        String safePassword = "";
+        try {
+            safePassword = URLEncoder.encode(password, "UTF-8");
+        } catch (Exception e) {
+            safePassword = password;
+            BetterChunkLoader.instance().getLogger().error("We had a problem while encoding the database password, falling back to unsafe, this may end badly");
+        }
+
         return "jdbc:mysql://"
                 + username
                 + ":"
-                + password
+                + safePassword
                 + "@"
                 + hostname
                 + "/"
                 + database;
     }
+
 }
