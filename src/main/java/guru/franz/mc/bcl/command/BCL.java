@@ -4,7 +4,7 @@ import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
 import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import net.kaikk.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.BetterChunkLoader;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;

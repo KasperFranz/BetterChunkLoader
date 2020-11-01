@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.datastore;
+package guru.franz.mc.bcl.datastore;
 
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.datastore.database.MySQL;
@@ -6,7 +6,7 @@ import guru.franz.mc.bcl.exception.NegativeValueException;
 import guru.franz.mc.bcl.exception.UserNotFound;
 import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 import guru.franz.mc.bcl.model.PlayerData;
-import net.kaikk.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.Location;

@@ -1,8 +1,8 @@
 package guru.franz.mc.bcl.utils;
 
-import net.kaikk.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.model.CChunkLoader;
-import net.kaikk.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;

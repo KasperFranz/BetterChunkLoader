@@ -5,7 +5,7 @@ import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.exception.NegativeValueException;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import net.kaikk.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.model.PlayerData;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;

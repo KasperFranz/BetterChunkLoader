@@ -2,8 +2,8 @@ package guru.franz.mc.bcl.command;
 
 import guru.franz.mc.bcl.command.types.EnabledCommand;
 import guru.franz.mc.bcl.utils.Messenger;
-import net.kaikk.mc.bcl.datastore.DataStoreManager;
-import net.kaikk.mc.bcl.datastore.IDataStore;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.datastore.IDataStore;
 import guru.franz.mc.bcl.model.PlayerData;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;

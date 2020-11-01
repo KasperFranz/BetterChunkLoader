@@ -2,7 +2,7 @@ package guru.franz.mc.bcl.command;
 
 import guru.franz.mc.bcl.command.types.EnabledCommand;
 import guru.franz.mc.bcl.utils.Messages;
-import net.kaikk.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messenger;
 import org.spongepowered.api.command.CommandResult;

@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.datastore;
+package guru.franz.mc.bcl.datastore;
 
 import guru.franz.mc.bcl.exception.Exception;
 import guru.franz.mc.bcl.exception.NegativeValueException;

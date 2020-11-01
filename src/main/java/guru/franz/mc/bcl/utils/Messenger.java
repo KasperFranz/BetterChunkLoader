@@ -3,7 +3,7 @@ package guru.franz.mc.bcl.utils;
 
 import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
 import guru.franz.mc.bcl.exception.ConfigLoadException;
-import net.kaikk.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.command.CommandSource;

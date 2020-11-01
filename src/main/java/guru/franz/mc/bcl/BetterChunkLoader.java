@@ -1,7 +1,6 @@
-package net.kaikk.mc.bcl;
+package guru.franz.mc.bcl;
 
 import com.google.inject.Inject;
-import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
 import guru.franz.mc.bcl.command.Delete;
 import guru.franz.mc.bcl.command.Reload;
 import guru.franz.mc.bcl.config.Config;
@@ -17,8 +16,8 @@ import guru.franz.mc.bcl.command.ListCommand;
 import guru.franz.mc.bcl.command.Purge;
 import guru.franz.mc.bcl.command.elements.ChunksChangeOperatorElement;
 import guru.franz.mc.bcl.command.elements.LoaderTypeElement;
-import net.kaikk.mc.bcl.datastore.DataStoreManager;
-import net.kaikk.mc.bcl.datastore.MySqlDataStore;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.datastore.MySqlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;

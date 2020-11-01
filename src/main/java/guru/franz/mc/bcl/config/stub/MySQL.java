@@ -1,7 +1,7 @@
 package guru.franz.mc.bcl.config.stub;
 
 import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
-import net.kaikk.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.BetterChunkLoader;
 
 import java.net.URLEncoder;
 

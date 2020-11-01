@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.datastore;
+package guru.franz.mc.bcl.datastore;
 
 import java.util.HashMap;
 import java.util.Map;

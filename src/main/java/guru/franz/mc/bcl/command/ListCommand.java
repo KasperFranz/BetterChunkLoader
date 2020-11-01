@@ -2,9 +2,9 @@ package guru.franz.mc.bcl.command;
 
 import com.google.common.collect.Lists;
 import guru.franz.mc.bcl.utils.Messages;
-import net.kaikk.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.model.CChunkLoader;
-import net.kaikk.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.utils.Messenger;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;

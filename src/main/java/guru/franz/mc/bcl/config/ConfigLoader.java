@@ -3,7 +3,7 @@ package guru.franz.mc.bcl.config;
 import com.google.common.reflect.TypeToken;
 import guru.franz.mc.bcl.config.stub.MySQL;
 import guru.franz.mc.bcl.exception.ConfigLoadException;
-import net.kaikk.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.BetterChunkLoader;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;

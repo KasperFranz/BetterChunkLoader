@@ -1,11 +1,11 @@
-package net.kaikk.mc.bcl;
+package guru.franz.mc.bcl;
 
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.ChunkLoaderHelper;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import net.kaikk.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.type.HandTypes;
