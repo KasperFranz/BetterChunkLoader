@@ -49,8 +49,7 @@ public class Events {
                         boolean alwaysOn = clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK);
                         chunkLoader = new CChunkLoader(x, y, worldName, (byte) -1, uid, clickedBlock.getLocation().get(), null, alwaysOn);
                     }
-
-                    chunkLoader.showUI(player);
+                    ChunkLoaderInventory.ShowUI(player, chunkLoader);
                 } else {
                     player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
                 }
