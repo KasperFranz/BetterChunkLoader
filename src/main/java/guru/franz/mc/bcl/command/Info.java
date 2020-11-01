@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.commands;
+package guru.franz.mc.bcl.command;
 
 import guru.franz.mc.bcl.utils.Messages;
 import net.kaikk.mc.bcl.BetterChunkLoader;
@@ -15,10 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by ROB on 08/12/2016.
- */
-public class CmdInfo implements CommandExecutor {
+public class Info implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {

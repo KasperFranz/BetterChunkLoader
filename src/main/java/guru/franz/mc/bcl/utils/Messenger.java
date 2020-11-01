@@ -74,7 +74,15 @@ public class Messenger {
         return  BetterChunkLoader.getPrefix().concat(Text.builder("This command can only be executed by a player!").build());
     }
 
-
+    /**
+     *
+     * @param targetName The player
+     * @param freePersonal The amount of free personal chunk loaders
+     * @param freeWorld The amount of free world loaders
+     * @param totalPersonal The total amount of personal chunk loaders
+     * @param totalWorld The total amount of world chunk loaders
+     * @return
+     */
     public static Text sendChunkBalance(String targetName, Integer freePersonal, Integer freeWorld, Integer totalPersonal,
             Integer totalWorld) {
         Text message = Text.builder(targetName + "'s Chunk Loader Balance").color(TextColors.BLUE).build();

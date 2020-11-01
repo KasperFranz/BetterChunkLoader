@@ -28,4 +28,5 @@ public final class Messages {
     public static final String CMD_DELETE_OWN_PERMISSION = "You do not have permission to delete your own chunk loaders.";
     public static final String CMD_DELETE_OWN_CONFIRM = "Are you sure you want to delete all of your chunk loaders";
     public static final String PLUGIN_DISABLED_DATASTORE = "The plugin is disabled as we could not connect to the datastore - please verify the password and check database information. once correct you can run /bcl reload.";
+    public static final String ARGUMENT_INVALID = "%s is not a valid argument, valid arguments: %s";
 }

@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.commands;
+package guru.franz.mc.bcl.command;
 
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.exception.NegativeValueException;
@@ -16,7 +16,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
 
-public class CmdChunks implements CommandExecutor {
+public class Chunks implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource sender, CommandContext commandContext) {

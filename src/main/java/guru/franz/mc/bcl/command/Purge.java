@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.commands;
+package guru.franz.mc.bcl.command;
 
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.utils.Messages;
@@ -19,10 +19,7 @@ import org.spongepowered.api.text.format.TextColors;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ROB on 08/12/2016.
- */
-public class CmdPurge implements CommandExecutor {
+public class Purge implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {

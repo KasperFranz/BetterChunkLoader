@@ -8,14 +8,14 @@ import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.config.ConfigLoader;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import net.kaikk.mc.bcl.commands.CmdBCL;
-import net.kaikk.mc.bcl.commands.CmdBalance;
-import net.kaikk.mc.bcl.commands.CmdChunks;
-import net.kaikk.mc.bcl.commands.CmdInfo;
-import net.kaikk.mc.bcl.commands.CmdList;
-import net.kaikk.mc.bcl.commands.CmdPurge;
-import net.kaikk.mc.bcl.commands.elements.ChunksChangeOperatorElement;
-import net.kaikk.mc.bcl.commands.elements.LoaderTypeElement;
+import guru.franz.mc.bcl.command.BCL;
+import guru.franz.mc.bcl.command.Balance;
+import guru.franz.mc.bcl.command.Chunks;
+import guru.franz.mc.bcl.command.Info;
+import guru.franz.mc.bcl.command.ListCommand;
+import guru.franz.mc.bcl.command.Purge;
+import guru.franz.mc.bcl.command.elements.ChunksChangeOperatorElement;
+import guru.franz.mc.bcl.command.elements.LoaderTypeElement;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.MySqlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
@@ -36,7 +36,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -52,7 +51,7 @@ public class BetterChunkLoader {
     @Inject
     @ConfigDir(sharedRoot = false)
     private Path configDir;
-    private Map<String, List<CChunkLoader>> activeChunkLoaders;
+    private Map<String, java.util.List> activeChunkLoaders;
     public boolean enabled = false;
 
     @Inject
@@ -208,7 +207,7 @@ public class BetterChunkLoader {
                 .arguments(GenericArguments.optional(GenericArguments.requiringPermission(
                         GenericArguments.user(Text.of("user")), Permission.COMMAND_BALANCE_OTHERS)))
                 .permission(Permission.COMMAND_BALANCE)
-                .executor(new CmdBalance())
+                .executor(new Balance())
                 .description(Text.of("Get the balance of your different types of chunk loaders."))
                 .build();
 
@@ -216,7 +215,7 @@ public class BetterChunkLoader {
                 .arguments(GenericArguments.none())
                 .permission(Permission.COMMAND_INFO)
                 .description(Text.of("Get general information about the usage on the server."))
-                .executor(new CmdInfo())
+                .executor(new Info())
                 .build();
 
 
@@ -231,7 +230,7 @@ public class BetterChunkLoader {
                                 GenericArguments.requiringPermission(GenericArguments.user(Text.of("user")), Permission.COMMAND_LIST_OTHERS))
                 )
                 .permission(Permission.COMMAND_LIST_SELF)
-                .executor(new CmdList())
+                .executor(new ListCommand())
                 .description(Text.of("Get the list of your chunk loaders."))
                 .build();
 
@@ -242,7 +241,7 @@ public class BetterChunkLoader {
                         new LoaderTypeElement(Text.of("type")),
                         GenericArguments.integer(Text.of("value"))
                 ))
-                .executor(new CmdChunks())
+                .executor(new Chunks())
                 .permission(Permission.COMMAND_CHUNKS)
                 .description(Text.of("add, set remove a players type of chunkloaders."))
                 .build();
@@ -258,7 +257,7 @@ public class BetterChunkLoader {
                 .build();
 
         CommandSpec cmdPurge = CommandSpec.builder()
-                .executor(new CmdPurge())
+                .executor(new Purge())
                 .permission(Permission.COMMAND_PURGE)
                 .description(Text.of("remove all chunks there is in not existing dimensions."))
                 .build();
@@ -277,7 +276,7 @@ public class BetterChunkLoader {
                 .child(delete, "delete", "del")
                 .child(cmdPurge, "purge")
                 .child(cmdReload, "reload")
-                .executor(new CmdBCL())
+                .executor(new BCL())
                 .build();
 
         Sponge.getCommandManager().register(this, bclCmdSpec, "betterchunkloader", "bcl");
@@ -296,7 +295,7 @@ public class BetterChunkLoader {
     public void loadChunks(CChunkLoader chunkloader){
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().addChunkLoader(chunkloader);
-            List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
+            java.util.List clList = activeChunkLoaders.get(chunkloader.getWorldName());
             if (clList == null) {
                 clList = new ArrayList<>();
                 activeChunkLoaders.put(chunkloader.getWorldName(), clList);
@@ -309,7 +308,7 @@ public class BetterChunkLoader {
     public void unloadChunks(CChunkLoader chunkloader){
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().removeChunkLoader(chunkloader);
-            List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
+            java.util.List clList = activeChunkLoaders.get(chunkloader.getWorldName());
             if(clList == null){
                 return;
             }
@@ -317,9 +316,9 @@ public class BetterChunkLoader {
         }
     }
 
-    public List<CChunkLoader> getActiveChunkloaders() {
-        List<CChunkLoader> chunkLoaders = new ArrayList<>();
-        for (List<CChunkLoader> clList : activeChunkLoaders.values()) {
+    public java.util.List getActiveChunkloaders() {
+        java.util.List chunkLoaders = new ArrayList<>();
+        for (java.util.List clList : activeChunkLoaders.values()) {
             chunkLoaders.addAll(clList);
         }
         return chunkLoaders;

@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.commands;
+package guru.franz.mc.bcl.command;
 
 import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
@@ -12,10 +12,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-/**
- * Created by ROB on 08/12/2016.
- */
-public class CmdBCL implements CommandExecutor {
+public class BCL implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
@@ -25,6 +22,7 @@ public class CmdBCL implements CommandExecutor {
             return CommandResult.empty();
         }
 
+        //TODO we should really find a better way to handle this!
         Text.Builder message = Text.builder().append(BetterChunkLoader.getPrefix()).append(Text.builder("Commands").color(TextColors.LIGHT_PURPLE)
                 .build());
 

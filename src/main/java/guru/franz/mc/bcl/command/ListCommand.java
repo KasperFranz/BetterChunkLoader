@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl.commands;
+package guru.franz.mc.bcl.command;
 
 import com.google.common.collect.Lists;
 import guru.franz.mc.bcl.utils.Messages;
@@ -21,10 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Created by ROB on 08/12/2016.
- */
-public class CmdList implements CommandExecutor {
+public class ListCommand implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
@@ -49,7 +46,7 @@ public class CmdList implements CommandExecutor {
             commandSource.sendMessage(Messenger.senderNotPlayerError());
             return CommandResult.empty();
         }
-        List<CChunkLoader> clList;
+        java.util.List<CChunkLoader> clList;
         boolean showUser = false;
         if (commandContext.getOne("all").isPresent()) {
             clList = DataStoreManager.getDataStore().getChunkLoaders();
@@ -59,7 +56,7 @@ public class CmdList implements CommandExecutor {
             clList = DataStoreManager.getDataStore().getChunkLoaders(user);
         }
 
-        List<Text> texts = Lists.newArrayList();
+        java.util.List<Text> texts = Lists.newArrayList();
         boolean finalShowUser = showUser;
         clList.forEach(chunkLoader -> {
             texts.add(chunkLoader.toText(finalShowUser,commandSource));
