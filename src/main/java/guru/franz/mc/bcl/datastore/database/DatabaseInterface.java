@@ -1,8 +1,8 @@
 package guru.franz.mc.bcl.datastore.database;
 
 import guru.franz.mc.bcl.exception.UserNotFound;
-import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.datastore.PlayerData;
+import guru.franz.mc.bcl.model.CChunkLoader;
+import guru.franz.mc.bcl.model.PlayerData;
 
 import java.sql.SQLException;
 import java.util.List;

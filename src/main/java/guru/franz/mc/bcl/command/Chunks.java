@@ -1,30 +1,21 @@
 package guru.franz.mc.bcl.command;
 
+import guru.franz.mc.bcl.command.types.EnabledCommand;
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.exception.NegativeValueException;
-import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
-import net.kaikk.mc.bcl.datastore.PlayerData;
+import guru.franz.mc.bcl.model.PlayerData;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.text.Text;
 
-public class Chunks implements CommandExecutor {
+public class Chunks extends EnabledCommand {
 
-    @Override
-    public CommandResult execute(CommandSource sender, CommandContext commandContext) {
-
-        if(!BetterChunkLoader.instance().enabled){
-            sender.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
-            return CommandResult.empty();
-        }
+    protected CommandResult executeCommand(CommandSource sender, CommandContext commandContext) {
 
         if (!sender.hasPermission(Permission.COMMAND_CHUNKS)) {
             Messenger.sendNoPermission(sender);
@@ -132,7 +123,7 @@ public class Chunks implements CommandExecutor {
     // Todo: we shouldn't need to pass in user!
     private CommandResult commandPartRemove(CommandSource sender, PlayerData playerData, User user, int remove, String type) {
         try {
-            int newValue = 0;
+            int newValue;
             //todo we should be able to make it a bit prettier if we can get rid of the 2 blocks as the current setup is a code smell.
             if (type.equalsIgnoreCase("world")) {
                 newValue = playerData.getAlwaysOnChunksAmount() - remove;

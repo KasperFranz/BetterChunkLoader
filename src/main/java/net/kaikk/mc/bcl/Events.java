@@ -1,6 +1,7 @@
 package net.kaikk.mc.bcl;
 
 import guru.franz.mc.bcl.config.Config;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.ChunkLoaderHelper;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
@@ -9,7 +10,6 @@ import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
@@ -22,7 +22,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class Events {

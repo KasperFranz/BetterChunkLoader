@@ -1,10 +1,10 @@
 package guru.franz.mc.bcl.command;
 
+import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
 import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.BetterChunkLoader;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -15,7 +15,7 @@ import org.spongepowered.api.text.format.TextColors;
 public class BCL implements CommandExecutor {
 
     @Override
-    public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
+    public CommandResult execute(CommandSource commandSource, CommandContext commandContext) {
 
         if(!BetterChunkLoader.instance().enabled){
             commandSource.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
@@ -23,7 +23,7 @@ public class BCL implements CommandExecutor {
         }
 
         //TODO we should really find a better way to handle this!
-        Text.Builder message = Text.builder().append(BetterChunkLoader.getPrefix()).append(Text.builder("Commands").color(TextColors.LIGHT_PURPLE)
+        Text.Builder message = Text.builder().append(BetterChunkLoaderPluginInfo.prefix).append(Text.builder("Commands").color(TextColors.LIGHT_PURPLE)
                 .build());
 
         if (commandSource.hasPermission(Permission.COMMAND_BALANCE)) {

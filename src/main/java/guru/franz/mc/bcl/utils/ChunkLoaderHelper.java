@@ -1,7 +1,7 @@
 package guru.franz.mc.bcl.utils;
 
 import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.CChunkLoader;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;

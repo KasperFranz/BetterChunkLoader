@@ -8,7 +8,6 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import org.slf4j.Logger;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -74,7 +73,7 @@ public class ConfigLoader {
             get().getNode("MySQL", "Database").getString("db")
             );
 
-            Config config = new Config(serverName, maxHoursOffline, dataStore, defaultChunksAmountWorld, defaultChunksAmountPersonal,
+            new Config(serverName, maxHoursOffline, dataStore, defaultChunksAmountWorld, defaultChunksAmountPersonal,
                     maxChunksAmountWorld, maxChunksAmountPersonal, itemType,
                     mySQL);
 

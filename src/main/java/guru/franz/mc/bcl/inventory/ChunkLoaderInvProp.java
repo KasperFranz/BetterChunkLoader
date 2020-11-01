@@ -1,6 +1,6 @@
 package guru.franz.mc.bcl.inventory;
 
-import net.kaikk.mc.bcl.CChunkLoader;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import org.spongepowered.api.data.Property;
 import org.spongepowered.api.item.inventory.property.AbstractInventoryProperty;
 

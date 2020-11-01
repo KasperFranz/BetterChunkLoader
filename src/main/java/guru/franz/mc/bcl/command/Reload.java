@@ -1,5 +1,6 @@
 package guru.franz.mc.bcl.command;
 
+import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
 import guru.franz.mc.bcl.utils.Messenger;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import org.spongepowered.api.command.CommandResult;
@@ -11,7 +12,7 @@ import org.spongepowered.api.text.Text;
 public class Reload  implements CommandExecutor {
 
     @Override public CommandResult execute(CommandSource src, CommandContext args) {
-        Text.Builder message = Text.builder().append(BetterChunkLoader.getPrefix());
+        Text.Builder message = Text.builder().append(BetterChunkLoaderPluginInfo.prefix);
         try {
             BetterChunkLoader.instance().setupPlugin();
             message.append(Text.builder("Reload success").color(Messenger.baseColor).build());

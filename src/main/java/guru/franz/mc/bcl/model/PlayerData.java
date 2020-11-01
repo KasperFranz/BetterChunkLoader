@@ -1,8 +1,8 @@
-package net.kaikk.mc.bcl.datastore;
+package guru.franz.mc.bcl.model;
 
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.exception.UserNotFound;
-import net.kaikk.mc.bcl.utils.Utilities;
+import guru.franz.mc.bcl.utils.Utilities;
 import org.spongepowered.api.entity.living.player.User;
 
 import java.util.UUID;

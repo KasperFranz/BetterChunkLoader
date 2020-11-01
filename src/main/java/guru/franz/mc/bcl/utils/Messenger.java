@@ -1,10 +1,10 @@
 package guru.franz.mc.bcl.utils;
 
 
+import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
 import guru.franz.mc.bcl.exception.ConfigLoadException;
 import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.CChunkLoader;
-import net.kaikk.mc.bcl.utils.CommandHelper;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
@@ -21,13 +21,13 @@ import java.util.function.Consumer;
 
 public class Messenger {
 
-    public static TextColor ERROR_COLOR = TextColors.RED;
-    public static TextColor baseColor = TextColors.GOLD;
+    public static final TextColor ERROR_COLOR = TextColors.RED;
+    public static final TextColor baseColor = TextColors.GOLD;
 
 
     public static void sendInfoMessage(CommandSource sender, Integer personalLoaders, Integer worldLoaders, Integer personalChunks,
             Integer worldChunks, Integer playersLoading) {
-        Text message = BetterChunkLoader.getPrefix().concat(Text.builder("Chunkloading Statistics").color(TextColors.LIGHT_PURPLE).build());
+        Text message = BetterChunkLoaderPluginInfo.prefix.concat(Text.builder("Chunkloading Statistics").color(TextColors.LIGHT_PURPLE).build());
         message = message.concat(Text.NEW_LINE)
                 .concat(Text.builder("Personal: " + personalLoaders + " loaders loading " + personalChunks + " chunks!").build());
         message =
@@ -37,16 +37,16 @@ public class Messenger {
     }
 
     public static void sendNoInfoMessage(CommandSource sender) {
-        sender.sendMessage(BetterChunkLoader.getPrefix().concat(Text.builder("No statistics available!").color(ERROR_COLOR).build()));
+        sender.sendMessage(BetterChunkLoaderPluginInfo.prefix.concat(Text.builder("No statistics available!").color(ERROR_COLOR).build()));
     }
 
     public static void sendNoPermission(CommandSource sender) {
         sender.sendMessage(
-                BetterChunkLoader.getPrefix().concat(Text.builder("You do not have permission to execute this command!").color(TextColors.DARK_RED).build()));
+                BetterChunkLoaderPluginInfo.prefix.concat(Text.builder("You do not have permission to execute this command!").color(TextColors.DARK_RED).build()));
     }
 
     public static void sendUsage(CommandSource sender, String command) {
-        Text message = BetterChunkLoader.getPrefix();
+        Text message = BetterChunkLoaderPluginInfo.prefix;
         switch (command) {
             case "delete":
                 message = message.concat(Text.builder("Usage: /bcl delete (PlayerName)").color(ERROR_COLOR).build());
@@ -65,13 +65,13 @@ public class Messenger {
     }
 
     public static void sendNegativeValue(CommandSource sender) {
-        Text message = BetterChunkLoader.getPrefix();
+        Text message = BetterChunkLoaderPluginInfo.prefix;
         message = message.concat(Text.builder("The value needs to be higher than 0.").color(ERROR_COLOR).build());
         sender.sendMessage(message);
     }
 
     public static Text senderNotPlayerError() {
-        return  BetterChunkLoader.getPrefix().concat(Text.builder("This command can only be executed by a player!").build());
+        return  BetterChunkLoaderPluginInfo.prefix.concat(Text.builder("This command can only be executed by a player!").build());
     }
 
     /**
@@ -81,7 +81,7 @@ public class Messenger {
      * @param freeWorld The amount of free world loaders
      * @param totalPersonal The total amount of personal chunk loaders
      * @param totalWorld The total amount of world chunk loaders
-     * @return
+     * @return The chunk balance text
      */
     public static Text sendChunkBalance(String targetName, Integer freePersonal, Integer freeWorld, Integer totalPersonal,
             Integer totalWorld) {

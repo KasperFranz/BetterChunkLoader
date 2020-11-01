@@ -1,11 +1,7 @@
-package net.kaikk.mc.bcl.utils;
+package guru.franz.mc.bcl.utils;
 
 
-import guru.franz.mc.bcl.utils.ChunkLoaderHelper;
-import guru.franz.mc.bcl.utils.Messages;
-import guru.franz.mc.bcl.utils.Messenger;
-import guru.franz.mc.bcl.utils.Permission;
-import net.kaikk.mc.bcl.CChunkLoader;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;

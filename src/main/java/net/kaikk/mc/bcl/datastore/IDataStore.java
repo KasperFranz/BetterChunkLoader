@@ -3,7 +3,8 @@ package net.kaikk.mc.bcl.datastore;
 import guru.franz.mc.bcl.exception.Exception;
 import guru.franz.mc.bcl.exception.NegativeValueException;
 import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
-import net.kaikk.mc.bcl.CChunkLoader;
+import guru.franz.mc.bcl.model.PlayerData;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -72,7 +73,6 @@ public interface IDataStore {
 
     /**
      * Remove chunk loaders owned by someone with the specified UUID
-     * @return
      */
     int removeChunkLoaders(UUID ownerId);
 

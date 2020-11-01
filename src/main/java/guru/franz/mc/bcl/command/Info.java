@@ -1,24 +1,22 @@
 package guru.franz.mc.bcl.command;
 
+import guru.franz.mc.bcl.command.types.EnabledCommand;
 import guru.franz.mc.bcl.utils.Messages;
 import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.CChunkLoader;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messenger;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class Info implements CommandExecutor {
+public class Info extends EnabledCommand {
 
-    @Override
-    public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
+    protected CommandResult executeCommand(CommandSource commandSource, CommandContext commandContext) {
 
 
         if(!BetterChunkLoader.instance().enabled){
@@ -32,7 +30,7 @@ public class Info implements CommandExecutor {
             return CommandResult.success();
         }
 
-        int alwaysOnLoaders = 0, onlineOnlyLoaders = 0, alwaysOnChunks = 0, onlineOnlyChunks = 0, maxChunksCount = 0, players = 0;
+        int alwaysOnLoaders = 0, onlineOnlyLoaders = 0, alwaysOnChunks = 0, onlineOnlyChunks = 0, players;
         HashMap<UUID, Integer> loadedChunksForPlayer = new HashMap<>();
 
         for (CChunkLoader chunkLoader : chunkLoaders) {

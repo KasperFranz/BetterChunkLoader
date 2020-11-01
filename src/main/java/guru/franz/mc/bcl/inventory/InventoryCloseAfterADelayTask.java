@@ -5,9 +5,6 @@ import org.spongepowered.api.scheduler.Task;
 
 import java.util.function.Consumer;
 
-/**
- * Created by KasperFranz on 19-02-2017.
- */
 public class InventoryCloseAfterADelayTask implements Consumer<Task> {
 
     private final Player player;

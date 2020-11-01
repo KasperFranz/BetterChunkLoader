@@ -3,10 +3,9 @@ package guru.franz.mc.bcl.command;
 import com.google.common.collect.Lists;
 import guru.franz.mc.bcl.utils.Messages;
 import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.CChunkLoader;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.utils.Messenger;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -17,14 +16,13 @@ import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class ListCommand implements CommandExecutor {
 
     @Override
-    public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
+    public CommandResult execute(CommandSource commandSource, CommandContext commandContext) {
 
         if(!BetterChunkLoader.instance().enabled){
             commandSource.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
@@ -58,9 +56,7 @@ public class ListCommand implements CommandExecutor {
 
         java.util.List<Text> texts = Lists.newArrayList();
         boolean finalShowUser = showUser;
-        clList.forEach(chunkLoader -> {
-            texts.add(chunkLoader.toText(finalShowUser,commandSource));
-        });
+        clList.forEach(chunkLoader -> texts.add(chunkLoader.toText(finalShowUser,commandSource)));
 
         if (texts.isEmpty()) {
             texts.add(Text.of(

@@ -1,4 +1,4 @@
-package net.kaikk.mc.bcl;
+package guru.franz.mc.bcl.model;
 
 
 import guru.franz.mc.bcl.config.Config;
@@ -10,6 +10,7 @@ import guru.franz.mc.bcl.utils.ChunkLoaderHelper;
 import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
+import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.ChunkLoader;
 import org.spongepowered.api.Sponge;
@@ -46,15 +47,12 @@ import java.util.function.Consumer;
 @XmlAccessorType(value = XmlAccessType.NONE)
 public class CChunkLoader extends ChunkLoader {
 
-    final public static UUID adminUUID = new UUID(0, 1);
-    private UUID owner;
+    public final static UUID adminUUID = new UUID(0, 1);
+    private final UUID owner;
     private Location<World> loc;
     private Date creationDate;
-    private boolean isAlwaysOn;
-    private String serverName;
-
-    public CChunkLoader() {
-    }
+    private final boolean isAlwaysOn;
+    private final String serverName;
 
     public CChunkLoader(int chunkX, int chunkZ, String worldName, byte range, UUID owner, Location<World> loc, Date creationDate, boolean isAlwaysOn,
             String serverName) {
@@ -248,8 +246,7 @@ public class CChunkLoader extends ChunkLoader {
 
     public User getOfflinePlayer() {
         Optional<UserStorageService> userStorage = Sponge.getServiceManager().provide(UserStorageService.class);
-        Optional<User> optUser = userStorage.get().get(this.owner);
-        return optUser.orElse(null);
+        return userStorage.get().get(this.owner).orElse(null);
     }
 
     public Player getPlayer() {
@@ -373,7 +370,7 @@ public class CChunkLoader extends ChunkLoader {
     }
 
     /** Shows the chunk loader's user interface to the specified player */
-    void showUI(Player player) {
+    public void showUI(Player player) {
         String title = (this.range != -1 ? "BCL:" + this.getOwnerName() + "@" + getLocationString() :
                 "New " + (this.isAdminChunkLoader() ? "Admin " : "") + "BetterChunkLoader");
         if (title.length() > 32) {

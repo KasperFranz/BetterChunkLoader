@@ -35,7 +35,7 @@ public class MySQL {
             throw new MySQLConnectionException("No hostname provided");
         }
 
-        String safePassword = "";
+        String safePassword;
         try {
             safePassword = URLEncoder.encode(password, "UTF-8");
         } catch (Exception e) {

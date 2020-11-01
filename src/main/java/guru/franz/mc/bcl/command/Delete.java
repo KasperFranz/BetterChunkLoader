@@ -1,15 +1,15 @@
 package guru.franz.mc.bcl.command;
 
+import guru.franz.mc.bcl.command.types.EnabledCommand;
 import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.CChunkLoader;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
@@ -18,16 +18,9 @@ import org.spongepowered.api.text.format.TextColors;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Delete implements CommandExecutor {
+public class Delete extends EnabledCommand {
 
-    @Override
-    public CommandResult execute(CommandSource sender, CommandContext commandContext) {
-
-        if(!BetterChunkLoader.instance().enabled){
-            sender.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
-            return CommandResult.empty();
-        }
-
+    protected CommandResult executeCommand(CommandSource sender, CommandContext commandContext) {
         User user = (User) commandContext.getOne("user").orElse(null);
         if (sender.hasPermission(Permission.COMMAND_DELETE_OTHERS) && user != null) {
             return deleteOther(sender, user);

@@ -1,28 +1,26 @@
 package guru.franz.mc.bcl.command;
 
+import guru.franz.mc.bcl.command.types.EnabledCommand;
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.BetterChunkLoader;
-import net.kaikk.mc.bcl.CChunkLoader;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.IDataStore;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Purge implements CommandExecutor {
+public class Purge extends EnabledCommand {
 
-    @Override
-    public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
+    protected CommandResult executeCommand(CommandSource commandSource, CommandContext commandContext) {
 
         if(!BetterChunkLoader.instance().enabled){
             commandSource.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
@@ -35,7 +33,7 @@ public class Purge implements CommandExecutor {
         }
 
         IDataStore ds = DataStoreManager.getDataStore();
-        List<CChunkLoader> chunkLoaders = new ArrayList<CChunkLoader>(DataStoreManager.getDataStore().getChunkLoaders());
+        List<CChunkLoader> chunkLoaders = new ArrayList<>(DataStoreManager.getDataStore().getChunkLoaders());
         for (CChunkLoader cl : chunkLoaders) {
             if (!cl.blockCheck() && cl.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
                 ds.removeChunkLoader(cl);

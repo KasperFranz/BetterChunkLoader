@@ -1,6 +1,6 @@
 package guru.franz.mc.bcl.utils;
 
-import net.kaikk.mc.bcl.CChunkLoader;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import org.spongepowered.api.entity.living.player.Player;
 
 public class Permission {

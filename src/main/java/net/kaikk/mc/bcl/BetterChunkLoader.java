@@ -6,6 +6,7 @@ import guru.franz.mc.bcl.command.Delete;
 import guru.franz.mc.bcl.command.Reload;
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.config.ConfigLoader;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import guru.franz.mc.bcl.command.BCL;
@@ -100,10 +101,6 @@ public class BetterChunkLoader {
             return playerData.lastModified();
         }
         return 0;
-    }
-
-    public static Text getPrefix() {
-        return BetterChunkLoaderPluginInfo.prefix;
     }
 
     public void onLoad() {
@@ -292,11 +289,7 @@ public class BetterChunkLoader {
     public void loadChunks(CChunkLoader chunkloader){
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().addChunkLoader(chunkloader);
-            List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
-            if (clList == null) {
-                clList = new ArrayList<>();
-                activeChunkLoaders.put(chunkloader.getWorldName(), clList);
-            }
+            List<CChunkLoader> clList = activeChunkLoaders.computeIfAbsent(chunkloader.getWorldName(), k -> new ArrayList<>());
             clList.add(chunkloader);
         }
     }
