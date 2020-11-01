@@ -1,11 +1,12 @@
 package guru.franz.mc.bcl;
 
 import guru.franz.mc.bcl.config.Config;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.inventory.ChunkLoaderInventory;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.ChunkLoaderHelper;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import guru.franz.mc.bcl.datastore.DataStoreManager;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.type.HandTypes;
@@ -28,19 +29,17 @@ public class Events {
 
     @Listener
     public void onPlayerInteractBlockSecondary(InteractBlockEvent.Secondary.MainHand event, @First Player player,
-            @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
+                                               @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
         if (clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) || clickedBlock.getState().getType().equals(BlockTypes.IRON_BLOCK)) {
             CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(clickedBlock.getLocation().get());
             boolean ChunkLoaderOnThisServer = chunkLoader != null;
 
             if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getType()
                     .equals(Config.getInstance().getItemType())) {
-                boolean adminLoader =
-                        chunkLoader != null && chunkLoader.isAdminChunkLoader() && player.hasPermission(Permission.ABILITY_ADMINLOADER);
-                // if the chunkloader is not on this server or the player can edit chunkloader or if it is an admin chunkloader then we should show
+                // if the chunkloader is not on this server or the player can edit chunkloader then we should show
                 // the UI
                 if (!ChunkLoaderOnThisServer || (player.getUniqueId().equals(chunkLoader.getOwner()) || player
-                        .hasPermission(Permission.ABILITY_EDIT_OTHERS) || adminLoader)) {
+                        .hasPermission(Permission.ABILITY_EDIT_OTHERS))) {
                     // if the chunkloader is not present lets make one!
                     if (chunkLoader == null) {
                         UUID uid = player.getUniqueId();
@@ -60,7 +59,7 @@ public class Events {
                     player.sendMessage(chunkLoader.info());
                 } else {
                     player.sendMessage(Text.of(TextColors.GOLD,
-                            "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a ",Config.getInstance().getItemName(),"."));
+                            "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a ", Config.getInstance().getItemName(), "."));
                 }
             }
         }
@@ -70,9 +69,9 @@ public class Events {
     public void onBlockBreak(ChangeBlockEvent.Break event) {
         BlockSnapshot block = event.getTransactions().get(0).getOriginal();
         if (
-            block == null //TODO: in what cases could this block be empty?
-            || (!block.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) && !block.getState().getType().equals(BlockTypes.IRON_BLOCK))
-            || !block.getLocation().isPresent()
+                block == null //TODO: in what cases could this block be empty?
+                        || (!block.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) && !block.getState().getType().equals(BlockTypes.IRON_BLOCK))
+                        || !block.getLocation().isPresent()
         ) {
             return;
         }
@@ -82,7 +81,7 @@ public class Events {
             return;
         }
 
-        ChunkLoaderHelper.removeChunkLoader(chunkLoader,event.getCause().last(Player.class).orElse(null));
+        ChunkLoaderHelper.removeChunkLoader(chunkLoader, event.getCause().last(Player.class).orElse(null));
     }
 
     @Listener
@@ -94,7 +93,7 @@ public class Events {
 
         for (CChunkLoader chunkLoader : clList) {
             if (chunkLoader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())
-                && !chunkLoader.isAlwaysOn() && chunkLoader.blockCheck()) {
+                    && !chunkLoader.isAlwaysOn() && chunkLoader.blockCheck()) {
                 BetterChunkLoader.instance().loadChunks(chunkLoader);
             }
 
@@ -125,13 +124,13 @@ public class Events {
                     BetterChunkLoader.instance().loadChunks(cl);
                 }
             }
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             Messenger.logException(e);
         }
     }
 
     @Listener
-    public void onReload(GameReloadEvent event){
+    public void onReload(GameReloadEvent event) {
 
         try {
             BetterChunkLoader.instance().setupPlugin();

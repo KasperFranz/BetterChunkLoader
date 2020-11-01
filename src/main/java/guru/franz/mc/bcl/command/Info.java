@@ -50,7 +50,6 @@ public class Info extends EnabledCommand {
             loadedChunksForPlayer.put(chunkLoader.getOwner(), count);
         }
 
-        loadedChunksForPlayer.remove(CChunkLoader.adminUUID);
         players = loadedChunksForPlayer.size();
 /*
         for (Map.Entry<UUID, Integer> entry : loadedChunksForPlayer.entrySet()) {

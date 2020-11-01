@@ -10,7 +10,6 @@ public final class BetterChunkLoaderPluginInfo {
 
     public static final String DESCRIPTION = "@description@";
 
-    public static final int BSTATS_PLUGIN_ID = 7560;
     public static final Text prefix = Text.builder("[BetterChunkLoader] ").color(TextColors.GOLD).build();
 
 }

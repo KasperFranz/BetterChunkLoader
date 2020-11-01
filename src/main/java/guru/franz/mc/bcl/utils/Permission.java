@@ -19,7 +19,6 @@ public class Permission {
     public static final String COMMAND_PURGE = "betterchunkloader.purge";
     public static final String COMMAND_RELOAD = "betterchunkloader.reload";
 
-    public static final String ABILITY_ADMINLOADER = "betterchunkloader.adminloader";
     public static final String ABILITY_EDIT_OTHERS = "betterchunkloader.edit.others";
     public static final String ABILITY_UNLIMITED = "betterchunkloader.unlimitedchunks";
     public static final String ABILITY_TELEPORT = "betterchunkloader.teleport";

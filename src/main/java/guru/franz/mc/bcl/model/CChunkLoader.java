@@ -47,7 +47,6 @@ import java.util.function.Consumer;
 @XmlAccessorType(value = XmlAccessType.NONE)
 public class CChunkLoader extends ChunkLoader {
 
-    public final static UUID adminUUID = new UUID(0, 1);
     private final UUID owner;
     private Location<World> loc;
     private Date creationDate;
@@ -255,16 +254,10 @@ public class CChunkLoader extends ChunkLoader {
     }
 
     public long getOwnerLastPlayed() {
-        if (this.isAdminChunkLoader()) {
-            return System.currentTimeMillis();
-        }
         return BetterChunkLoader.getPlayerLastPlayed(owner);
     }
 
     public String getOwnerName() {
-        if (this.isAdminChunkLoader()) {
-            return "Admin";
-        }
         return this.getOfflinePlayer().getName();
     }
 
@@ -416,10 +409,6 @@ public class CChunkLoader extends ChunkLoader {
     @XmlAttribute(name = "r")
     public void setRange(byte range) {
         super.range = range;
-    }
-
-    public boolean isAdminChunkLoader() {
-        return adminUUID.equals(this.owner);
     }
 
 }
