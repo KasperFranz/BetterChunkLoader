@@ -1,6 +1,7 @@
 package guru.franz.mc.bcl.utils;
 
 
+import guru.franz.mc.bcl.exception.ConfigLoadException;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.utils.CommandHelper;
@@ -148,7 +149,21 @@ public class Messenger {
     public static void logException(Throwable e){
         Logger logger = BetterChunkLoader.instance().getLogger();
         StackTraceElement error = e.getStackTrace()[0];
-        logger.error("Load failed: " + e.getMessage() + " (" + error.getClassName() + ":" + error.getLineNumber() + ")");
+
+        String type = "";
+        if(e instanceof ConfigLoadException){
+            type = "Configuration issue";
+        }
+
+        logger.error("===================================================================");
+
+        if(!type.isEmpty()){
+            logger.error(type);
+        }
+
+        logger.error(e.getMessage());
+        logger.error( "Happened at " + error.getClassName() + ":" + error.getLineNumber() + "");
+        logger.error("===================================================================");
     }
 
     /**

@@ -152,9 +152,9 @@ public class BetterChunkLoader {
             }
         }
 
-        ConfigLoader.getInstance().setup();
         // load config
         logger.debug("Loading configuration");
+        ConfigLoader.getInstance().setup();
         onLoad();
         // instantiate data store, if needed
         if (DataStoreManager.getDataStore() == null) {

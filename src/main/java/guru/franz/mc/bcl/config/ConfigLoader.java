@@ -2,11 +2,13 @@ package guru.franz.mc.bcl.config;
 
 import com.google.common.reflect.TypeToken;
 import guru.franz.mc.bcl.config.stub.MySQL;
+import guru.franz.mc.bcl.exception.ConfigLoadException;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import org.slf4j.Logger;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
@@ -26,7 +28,7 @@ public class ConfigLoader {
         return instance;
     }
 
-    public void setup() {
+    public void setup() throws ConfigLoadException {
         if (!Files.exists(this.configFile)) {
             try {
                 Files.createFile(this.configFile);
@@ -41,7 +43,7 @@ public class ConfigLoader {
         load();
     }
 
-    private void load() {
+    private void load() throws ConfigLoadException {
         try {
             this.configNode = (this.configLoader.load());
             ItemType itemType;
@@ -77,7 +79,7 @@ public class ConfigLoader {
                     mySQL);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ConfigLoadException(e.getMessage());
         }
     }
 
