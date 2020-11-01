@@ -151,39 +151,40 @@ public class BetterChunkLoader {
                 //TODO better message.
             }
         }
+
         ConfigLoader.getInstance().setup();
-            // load config
-            logger.debug("Loading configuration");
-            onLoad();
-            // instantiate data store, if needed
-            if (DataStoreManager.getDataStore() == null) {
-                String dataStore = Config.getInstance().getDataStore();
-                DataStoreManager.setDataStoreInstance(dataStore);
+        // load config
+        logger.debug("Loading configuration");
+        onLoad();
+        // instantiate data store, if needed
+        if (DataStoreManager.getDataStore() == null) {
+            String dataStore = Config.getInstance().getDataStore();
+            DataStoreManager.setDataStoreInstance(dataStore);
+        }
+
+        // load datastore
+        logger.debug("Loading " + DataStoreManager.getDataStore().getName() + " Data Store...");
+        DataStoreManager.getDataStore().load();
+
+        logger.info("Loaded " + DataStoreManager.getDataStore().getChunkLoaders().size() + " chunk loaders data.");
+        logger.info("Loaded " + DataStoreManager.getDataStore().getPlayersData().size() + " players data.");
+
+        // load always on chunk loaders
+        int count = 0;
+        for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
+            if (cl.getServerName().equalsIgnoreCase(Config.getInstance().getServerName()) && cl.isLoadable()) {
+                this.loadChunks(cl);
+                count++;
             }
+        }
 
-            // load datastore
-            logger.debug("Loading " + DataStoreManager.getDataStore().getName() + " Data Store...");
-            DataStoreManager.getDataStore().load();
+        logger.info("Loaded " + count + " always-on chunk loaders.");
 
-            logger.info("Loaded " + DataStoreManager.getDataStore().getChunkLoaders().size() + " chunk loaders data.");
-            logger.info("Loaded " + DataStoreManager.getDataStore().getPlayersData().size() + " players data.");
+        logger.debug("Loading Listeners...");
+        initializeListeners();
 
-            // load always on chunk loaders
-            int count = 0;
-            for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
-                if (cl.getServerName().equalsIgnoreCase(Config.getInstance().getServerName()) && cl.isLoadable()) {
-                    this.loadChunks(cl);
-                    count++;
-                }
-            }
-
-            logger.info("Loaded " + count + " always-on chunk loaders.");
-
-            logger.debug("Loading Listeners...");
-            initializeListeners();
-
-            logger.debug("Load complete.");
-            enabled = true;
+        logger.debug("Load complete.");
+        enabled = true;
     }
 
     @Listener
