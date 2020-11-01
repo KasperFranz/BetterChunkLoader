@@ -1,8 +1,10 @@
 package net.kaikk.mc.bcl.commands;
 
 import guru.franz.mc.bcl.config.Config;
+import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
+import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.IDataStore;
@@ -24,6 +26,11 @@ public class CmdPurge implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
+
+        if(!BetterChunkLoader.instance().enabled){
+            commandSource.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
+            return CommandResult.empty();
+        }
 
         if (!commandSource.hasPermission(Permission.COMMAND_PURGE)) {
             Messenger.sendNoPermission(commandSource);

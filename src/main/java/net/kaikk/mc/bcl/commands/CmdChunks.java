@@ -2,8 +2,10 @@ package net.kaikk.mc.bcl.commands;
 
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.exception.NegativeValueException;
+import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
+import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.PlayerData;
 import org.spongepowered.api.command.CommandResult;
@@ -12,12 +14,17 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.text.Text;
 
 public class CmdChunks implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource sender, CommandContext commandContext) {
 
+        if(!BetterChunkLoader.instance().enabled){
+            sender.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
+            return CommandResult.empty();
+        }
 
         if (!sender.hasPermission(Permission.COMMAND_CHUNKS)) {
             Messenger.sendNoPermission(sender);

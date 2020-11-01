@@ -23,6 +23,11 @@ public class Delete implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource sender, CommandContext commandContext) {
 
+        if(!BetterChunkLoader.instance().enabled){
+            sender.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
+            return CommandResult.empty();
+        }
+
         User user = (User) commandContext.getOne("user").orElse(null);
         if (sender.hasPermission(Permission.COMMAND_DELETE_OTHERS) && user != null) {
             return deleteOther(sender, user);

@@ -1,5 +1,6 @@
 package net.kaikk.mc.bcl.commands;
 
+import guru.franz.mc.bcl.utils.Messages;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messenger;
@@ -8,6 +9,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.text.Text;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,12 @@ public class CmdInfo implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
+
+
+        if(!BetterChunkLoader.instance().enabled){
+            commandSource.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
+            return CommandResult.empty();
+        }
 
         List<CChunkLoader> chunkLoaders = BetterChunkLoader.instance().getActiveChunkloaders();
         if (chunkLoaders.isEmpty()) {

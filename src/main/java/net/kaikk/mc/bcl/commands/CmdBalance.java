@@ -1,5 +1,7 @@
 package net.kaikk.mc.bcl.commands;
 
+import guru.franz.mc.bcl.utils.Messages;
+import net.kaikk.mc.bcl.BetterChunkLoader;
 import net.kaikk.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.datastore.IDataStore;
 import net.kaikk.mc.bcl.datastore.PlayerData;
@@ -22,6 +24,12 @@ public class CmdBalance implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
+
+        if(!BetterChunkLoader.instance().enabled){
+            commandSource.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
+            return CommandResult.empty();
+        }
+
         Optional<User> optionalUser = commandContext.getOne("user");
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();

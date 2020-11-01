@@ -1,5 +1,7 @@
 package net.kaikk.mc.bcl.commands;
 
+import guru.franz.mc.bcl.utils.Messages;
+import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.BetterChunkLoader;
 import org.spongepowered.api.command.CommandException;
@@ -17,6 +19,12 @@ public class CmdBCL implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
+
+        if(!BetterChunkLoader.instance().enabled){
+            commandSource.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
+            return CommandResult.empty();
+        }
+
         Text.Builder message = Text.builder().append(BetterChunkLoader.getPrefix()).append(Text.builder("Commands").color(TextColors.LIGHT_PURPLE)
                 .build());
 
