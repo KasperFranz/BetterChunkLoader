@@ -34,10 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Plugin(id = BetterChunkLoaderPluginInfo.ID,
         name = BetterChunkLoaderPluginInfo.NAME,
@@ -51,7 +48,7 @@ public class BetterChunkLoader {
     @Inject
     @ConfigDir(sharedRoot = false)
     private Path configDir;
-    private Map<String, java.util.List> activeChunkLoaders;
+    private Map<String, List<CChunkLoader>> activeChunkLoaders;
     public boolean enabled = false;
 
     @Inject
@@ -295,7 +292,7 @@ public class BetterChunkLoader {
     public void loadChunks(CChunkLoader chunkloader){
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().addChunkLoader(chunkloader);
-            java.util.List clList = activeChunkLoaders.get(chunkloader.getWorldName());
+            List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
             if (clList == null) {
                 clList = new ArrayList<>();
                 activeChunkLoaders.put(chunkloader.getWorldName(), clList);
@@ -308,7 +305,7 @@ public class BetterChunkLoader {
     public void unloadChunks(CChunkLoader chunkloader){
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().removeChunkLoader(chunkloader);
-            java.util.List clList = activeChunkLoaders.get(chunkloader.getWorldName());
+            List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
             if(clList == null){
                 return;
             }
@@ -316,9 +313,9 @@ public class BetterChunkLoader {
         }
     }
 
-    public java.util.List getActiveChunkloaders() {
-        java.util.List chunkLoaders = new ArrayList<>();
-        for (java.util.List clList : activeChunkLoaders.values()) {
+    public List<CChunkLoader> getActiveChunkloaders() {
+        List<CChunkLoader> chunkLoaders = new ArrayList<>();
+        for (List<CChunkLoader> clList : activeChunkLoaders.values()) {
             chunkLoaders.addAll(clList);
         }
         return chunkLoaders;
