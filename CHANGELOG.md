@@ -9,7 +9,9 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
  
 ### Fixed
  - Issue with creating chunk loaders
-
+ - URLencode database password (Thank you @clienthax)
+ 
+ 
 ## 2020-10-26 3.8.1
 ### Added
  - Sending a message to the player if another player is deleting their chunkloader
