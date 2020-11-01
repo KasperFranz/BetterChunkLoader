@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
  
 ### Changed
  - We throw more readable errors when there is a config exception.
+ - Cleanup of internals in the plugin (namespaces)
+ - Removed internal references of admin loader (it has nt been implemented in a long time - so safe to be removed.
  
 ### Fixed
  - Issue with creating chunk loaders
