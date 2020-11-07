@@ -1,7 +1,7 @@
 package guru.franz.mc.bcl.datastore;
 
 import guru.franz.mc.bcl.config.Config;
-import guru.franz.mc.bcl.datastore.database.MySQL;
+import guru.franz.mc.bcl.datastore.database.DatabaseInterface;
 import guru.franz.mc.bcl.exception.NegativeValueException;
 import guru.franz.mc.bcl.exception.UserNotFound;
 import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
@@ -18,42 +18,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class MySqlDataStore extends AHashMapDataStore {
-    private MySQL mysql;
-
-    @Override
-    public String getName() {
-        return "MySQL";
-    }
-
-    @Override
+public abstract class DatabaseDataStore extends AHashMapDataStore {
+    protected DatabaseInterface database;
 
     public void load() throws MySQLConnectionException {
-        mysql = new MySQL();
         String serverName = Config.getInstance().getServerName();
         try {
-            mysql.setupTable();
+            database.setupTable();
         } catch (SQLException e) {
-            BetterChunkLoader.instance().getLogger().info("Unable to connect to database. Check your config file settings.");
+            BetterChunkLoader.instance().getLogger().info("Unable to connect to the database. Please verify the connection information.");
             throw new RuntimeException(e);
         }
 
         try {
             chunkLoaders = new HashMap<>();
             for (World world : Sponge.getServer().getWorlds()) {
-                chunkLoaders.put(world.getName(), mysql.getChunkloadersByServerAndWorld(serverName, world.getName()));
+                chunkLoaders.put(world.getName(), database.getChunkloadersByServerAndWorld(serverName, world.getName()));
             }
 
         } catch (SQLException e) {
-            BetterChunkLoader.instance().getLogger().info("unable to read chunk loaders data from the MySQL server.");
+            BetterChunkLoader.instance().getLogger().info("unable to read chunk loaders data from the database.");
             throw new RuntimeException(e);
         }
 
         try {
-            this.playersData = mysql.getPlayers();
+            this.playersData = database.getPlayers();
         } catch (SQLException e) {
             this.playersData = new HashMap<>();
-            BetterChunkLoader.instance().getLogger().error("unable to read player data from the MySQL server.");
+            BetterChunkLoader.instance().getLogger().error("unable to read player data from the database.");
             throw new MySQLConnectionException(e.getMessage());
         }
     }
@@ -65,7 +57,7 @@ public class MySqlDataStore extends AHashMapDataStore {
      */
     public void loadWorld(String world) {
         try {
-            List<CChunkLoader> clList = mysql.getChunkloadersByServerAndWorld(Config.getInstance().getServerName(), world);
+            List<CChunkLoader> clList = database.getChunkloadersByServerAndWorld(Config.getInstance().getServerName(), world);
             chunkLoaders.remove(world);
             chunkLoaders.put(world, clList);
         } catch (SQLException e) {
@@ -92,7 +84,7 @@ public class MySqlDataStore extends AHashMapDataStore {
     @Override
     public void refreshPlayer(UUID uuid) {
         try {
-            PlayerData playerData = mysql.getPlayerDataByUUID(uuid);
+            PlayerData playerData = database.getPlayerDataByUUID(uuid);
             this.playersData.replace(uuid, playerData);
         } catch (SQLException | UserNotFound e) {
             e.printStackTrace();
@@ -102,7 +94,7 @@ public class MySqlDataStore extends AHashMapDataStore {
     @Override
     public void addChunkLoader(CChunkLoader chunkLoader) {
         try {
-            mysql.insertOrUpdateChunkLoader(chunkLoader);
+            database.insertOrUpdateChunkLoader(chunkLoader);
             super.addChunkLoader(chunkLoader);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -112,7 +104,7 @@ public class MySqlDataStore extends AHashMapDataStore {
     @Override
     public void removeChunkLoader(CChunkLoader chunkLoader) {
         try {
-            mysql.deleteChunkLoader(chunkLoader);
+            database.deleteChunkLoader(chunkLoader);
             super.removeChunkLoader(chunkLoader);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -123,7 +115,7 @@ public class MySqlDataStore extends AHashMapDataStore {
     public int removeChunkLoaders(UUID ownerId) {
         super.removeChunkLoaders(ownerId);
         try {
-            return mysql.deleteChunkLoadersByOwner(ownerId);
+            return database.deleteChunkLoadersByOwner(ownerId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -135,7 +127,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         super.changeChunkLoaderRange(chunkLoader, range);
         try {
             chunkLoader.setRange(range);
-            mysql.insertOrUpdateChunkLoader(chunkLoader);
+            database.insertOrUpdateChunkLoader(chunkLoader);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -146,7 +138,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         super.setAlwaysOnChunksLimit(playerId, amount);
         try {
             PlayerData playerData = this.getPlayerData(playerId);
-            mysql.insertOrUpdatePlayerData(playerId, playerData.getAlwaysOnChunksAmount(), playerData.getOnlineOnlyChunksAmount());
+            database.insertOrUpdatePlayerData(playerId, playerData.getAlwaysOnChunksAmount(), playerData.getOnlineOnlyChunksAmount());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -158,7 +150,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         try {
 
             PlayerData playerData = this.getPlayerData(playerId);
-            mysql.insertOrUpdatePlayerData(playerId, playerData.getAlwaysOnChunksAmount(), playerData.getOnlineOnlyChunksAmount());
+            database.insertOrUpdatePlayerData(playerId, playerData.getAlwaysOnChunksAmount(), playerData.getOnlineOnlyChunksAmount());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -169,7 +161,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         super.addAlwaysOnChunksLimit(playerId, amount);
         try {
             PlayerData playerData = this.getPlayerData(playerId);
-            mysql.insertOrUpdatePlayerData(playerId, playerData.getAlwaysOnChunksAmount(), playerData.getOnlineOnlyChunksAmount());
+            database.insertOrUpdatePlayerData(playerId, playerData.getAlwaysOnChunksAmount(), playerData.getOnlineOnlyChunksAmount());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -180,7 +172,7 @@ public class MySqlDataStore extends AHashMapDataStore {
         super.addOnlineOnlyChunksLimit(playerId, amount);
         try {
             PlayerData playerData = this.getPlayerData(playerId);
-            mysql.insertOrUpdatePlayerData(playerId, playerData.getAlwaysOnChunksAmount(), playerData.getOnlineOnlyChunksAmount());
+            database.insertOrUpdatePlayerData(playerId, playerData.getAlwaysOnChunksAmount(), playerData.getOnlineOnlyChunksAmount());
         } catch (SQLException e) {
             e.printStackTrace();
         }

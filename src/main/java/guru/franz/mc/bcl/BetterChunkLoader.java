@@ -5,6 +5,8 @@ import guru.franz.mc.bcl.command.Delete;
 import guru.franz.mc.bcl.command.Reload;
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.config.ConfigLoader;
+import guru.franz.mc.bcl.datastore.H2DataStore;
+import guru.franz.mc.bcl.datastore.MySQLDataStore;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
@@ -17,7 +19,6 @@ import guru.franz.mc.bcl.command.Purge;
 import guru.franz.mc.bcl.command.elements.ChunksChangeOperatorElement;
 import guru.franz.mc.bcl.command.elements.LoaderTypeElement;
 import guru.franz.mc.bcl.datastore.DataStoreManager;
-import guru.franz.mc.bcl.datastore.MySqlDataStore;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -31,8 +32,6 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -102,12 +101,6 @@ public class BetterChunkLoader {
         return 0;
     }
 
-    public void onLoad() {
-        this.activeChunkLoaders = new HashMap<>();
-        // Register MySQL DataStore
-        DataStoreManager.registerDataStore("MySQL", MySqlDataStore.class);
-    }
-
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
         // check if forge is running
@@ -134,29 +127,23 @@ public class BetterChunkLoader {
     }
 
     public void setupPlugin() throws Exception {
-        // Config File
-        if (!Files.exists(configDir)) {
-            try {
-                Files.createDirectories(configDir);
-            } catch (IOException e) {
-                e.printStackTrace();
-                //TODO better message.
-            }
-        }
-
         // load config
         logger.debug("Loading configuration");
-        ConfigLoader.getInstance().setup();
-        onLoad();
+        new ConfigLoader(configDir).setup();
 
-        // instantiate data store, if needed
+        this.activeChunkLoaders = new HashMap<>();
+        // Register MySQL DataStore
+        DataStoreManager.registerDataStore("MySQL", MySQLDataStore.class);
+        DataStoreManager.registerDataStore("H2", H2DataStore.class);
+
+        // instantiate DataStore, if needed
         if (DataStoreManager.getDataStore() == null) {
             String dataStore = Config.getInstance().getDataStore();
             DataStoreManager.setDataStoreInstance(dataStore);
         }
 
         // load datastore
-        logger.debug("Loading " + DataStoreManager.getDataStore().getName() + " Data Store...");
+        logger.info("Loading " + DataStoreManager.getDataStore().getName() + " DataStore...");
         DataStoreManager.getDataStore().load();
 
         logger.info("Loaded " + DataStoreManager.getDataStore().getChunkLoaders().size() + " chunk loaders data.");
@@ -279,11 +266,6 @@ public class BetterChunkLoader {
     public Logger getLogger() {
         return logger;
     }
-
-    public Path getConfigDir() {
-        return configDir;
-    }
-
 
     public void loadChunks(CChunkLoader chunkloader){
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {

@@ -26,7 +26,7 @@ public class MySQL implements DatabaseInterface {
      */
     public void setupTable() throws SQLException, MySQLConnectionException {
         //TODO we should look at adding created and changed at timestamps
-        try (Connection conn = getDataStore().getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             // create table, if not exists
             conn.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS bcl_chunkloaders ("
                     + "loc varchar(50) NOT NULL, "
@@ -57,7 +57,7 @@ public class MySQL implements DatabaseInterface {
      */
     public List<CChunkLoader> getChunkloadersByServerAndWorld(String serverName, String world) throws SQLException, MySQLConnectionException {
         List<CChunkLoader> chunkLoaders = new ArrayList<>();
-        try (Connection conn = getDataStore().getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             String query = "SELECT * FROM bcl_chunkloaders WHERE serverName = ? and loc LIKE ?";
 
             PreparedStatement statement = conn.prepareStatement(query);
@@ -94,7 +94,7 @@ public class MySQL implements DatabaseInterface {
      */
     public Map<UUID, PlayerData> getPlayers() throws SQLException, MySQLConnectionException {
         Map<UUID, PlayerData> players = new HashMap<>();
-        try (Connection conn = getDataStore().getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             String query = "SELECT * from bcl_playersdata";
             PreparedStatement statement = conn.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
@@ -119,7 +119,7 @@ public class MySQL implements DatabaseInterface {
      * @throws MySQLConnectionException If we can't connect to the database.
      */
     public void insertOrUpdatePlayerData(UUID playerId, int worldLoaders, int personalLoaders) throws SQLException, MySQLConnectionException {
-        try (Connection conn = getDataStore().getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             String query = "INSERT INTO bcl_playersdata (pid, alwayson, onlineonly) VALUES" +
                     "(?, ?, ?) ON DUPLICATE KEY UPDATE " +
                     "alwayson = ?, onlineonly= ?";
@@ -143,7 +143,7 @@ public class MySQL implements DatabaseInterface {
      * @throws UserNotFound             If we can't load a Player by the UUID
      */
     public PlayerData getPlayerDataByUUID(UUID uuid) throws SQLException, MySQLConnectionException, UserNotFound {
-        try (Connection conn = getDataStore().getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             String query = "SELECT * FROM bcl_playersdata WHERE pid = ? LIMIT 1";
 
             PreparedStatement statement = conn.prepareStatement(query);
@@ -166,7 +166,7 @@ public class MySQL implements DatabaseInterface {
      * @throws MySQLConnectionException If we can't connect to the database.
      */
     public void insertOrUpdateChunkLoader(CChunkLoader chunkLoader) throws SQLException, MySQLConnectionException {
-        try (Connection conn = getDataStore().getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             String query = "INSERT INTO bcl_chunkloaders (loc, r, owner, date, aon, serverName) VALUES " +
                     "(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE " +
                     "owner = ?, date= ?, aon = ?, serverName = ?";
@@ -193,7 +193,7 @@ public class MySQL implements DatabaseInterface {
      * @throws MySQLConnectionException If we can't connect to the database.
      */
     public void deleteChunkLoader(CChunkLoader chunkLoader) throws SQLException, MySQLConnectionException {
-        try (Connection conn = getDataStore().getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             String query = "DELETE FROM bcl_chunkloaders WHERE loc = ? LIMIT 1";
             //TODO should use servername as well.
             PreparedStatement statement = conn.prepareStatement(query);
@@ -211,7 +211,7 @@ public class MySQL implements DatabaseInterface {
      * @throws MySQLConnectionException If we can't connect to the database.
      */
     public int deleteChunkLoadersByOwner(UUID ownerId) throws SQLException, MySQLConnectionException {
-        try (Connection conn = getDataStore().getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             String query = "DELETE FROM bcl_chunkloaders WHERE owner = ? LIMIT 1";
             //TODO should be with servername as well
             PreparedStatement statement = conn.prepareStatement(query);
@@ -221,13 +221,13 @@ public class MySQL implements DatabaseInterface {
     }
 
     /**
-     * Get a dataStore to execute Queries against
+     * Get a dataSource to execute Queries against
      *
      * @return the DataStore
      * @throws SQLException             if there is any errors with the MySQL
      * @throws MySQLConnectionException If we can't connect to the database.
      */
-    private DataSource getDataStore() throws SQLException, MySQLConnectionException {
+    protected DataSource getDataSource() throws SQLException, MySQLConnectionException {
 
         return Sponge.getServiceManager().provide(SqlService.class).orElseThrow(SQLException::new)
                 .getDataSource(Config.getInstance().getMySQL().getConnectionString());

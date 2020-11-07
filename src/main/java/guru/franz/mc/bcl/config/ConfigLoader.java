@@ -18,16 +18,35 @@ import java.nio.file.Paths;
 
 public class ConfigLoader {
 
-    private static final ConfigLoader instance = new ConfigLoader();
-    private final Path configFile = Paths.get(BetterChunkLoader.instance().getConfigDir() + "/config.conf");
-    private final ConfigurationLoader<CommentedConfigurationNode> configLoader = HoconConfigurationLoader.builder().setPath(configFile).build();
+    private static ConfigLoader instance;
+
+    private final Path configDir;
+    private final Path configFile;
+    private final ConfigurationLoader<CommentedConfigurationNode> configLoader;
     private CommentedConfigurationNode configNode;
+
+    public ConfigLoader(Path configDir) {
+        this.configDir = configDir;
+        configFile = Paths.get(configDir + "/config.conf");
+        configLoader = HoconConfigurationLoader.builder().setPath(configFile).build();
+        instance = this;
+    }
 
     public static ConfigLoader getInstance(){
         return instance;
     }
 
     public void setup() throws ConfigLoadException {
+        // Config File
+        if (!Files.exists(configDir)) {
+            try {
+                Files.createDirectories(configDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+                //TODO better message.
+            }
+        }
+
         if (!Files.exists(this.configFile)) {
             try {
                 Files.createFile(this.configFile);
@@ -93,7 +112,7 @@ public class ConfigLoader {
     private void populate() {
         get().getNode("ServerName").setValue("aServer").setComment("Unique name of server");
         get().getNode("MaxHoursOffline").setValue(72).setComment("Time in hours before player's chunkloaders become inactive.");
-        get().getNode("DataStore").setValue("MySQL").setComment("The only DataStore available is MySQL atm!");
+        get().getNode("DataStore").setValue("H2").setComment("You can use Either MySQL or H2 (");
         get().getNode("DefaultChunksAmount", "World").setValue(0);
         get().getNode("DefaultChunksAmount", "Personal").setValue(0);
         get().getNode("MaxChunksAmount", "World").setValue(250);
@@ -104,6 +123,10 @@ public class ConfigLoader {
         get().getNode("MySQL", "Username").setValue("user");
         get().getNode("MySQL", "Password").setValue("pass");
         get().getNode("MySQL", "Database").setValue("db");
+    }
+
+    public Path getDirectory(){
+        return configDir;
     }
 
     private CommentedConfigurationNode get() {

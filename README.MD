@@ -8,7 +8,6 @@ You can find the latest version under [releases][ReleaseLink].
 
 ## Requirements 
  - [BCLForge mod][BCLForgeMod]
- - A MySQL Database 
  
 ## Support
 You can receive support for using this plugin on my [Discord Chat][discordLink].
@@ -47,6 +46,9 @@ As part of version 3.8.0, you can now set up metadata on the user for a few defa
 **The user currently has to log out and log in for this to take effect, this will also not work if the user has a set/added value (I am working on a
  solution for this)**
  
+## DataSources
+As part of version 3.9.0 I have introduced H2 (which is now the default).
+I would still recommend you to use MySQL where possible.
 
 ## Permissions
 The up to date version of permission can be found at [permissions][permissions] file.

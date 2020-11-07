@@ -12,15 +12,15 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Interface for BetterChunkLoader's data store<br>
- * How to create custom data store:<br>
+ * Interface for BetterChunkLoader's DataStore<br>
+ * How to create custom DataStore:<br>
  * - Make a class that implements this interface<br>
  * - Call DataStoreManager.registerDataStore(name, class) during your plugin's onLoad()
  */
 public interface IDataStore {
 
     /**
-     * Returns the data store name
+     * Returns the DataStore name
      */
     String getName();
 

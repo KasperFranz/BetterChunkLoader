@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Data store manager<br>
- * See IDataStore interface if you want to implement your custom data store
+ * DataStore manager<br>
+ * See IDataStore interface if you want to implement your custom DataStore
  */
 final public class DataStoreManager {
 
@@ -13,9 +13,9 @@ final public class DataStoreManager {
     private static IDataStore dataStore;
 
     /**
-     * Register a new Data Store. This should be run at onLoad()<br>
+     * Register a new DataStore. This should be run at onLoad()<br>
      *
-     * @param dataStoreId    ID that identifies this data store <br>
+     * @param dataStoreId    ID that identifies this DataStore <br>
      * @param dataStoreClass a class that implements IDataStore
      */
     public static void registerDataStore(String dataStoreId, Class<? extends IDataStore> dataStoreClass) {
@@ -23,19 +23,19 @@ final public class DataStoreManager {
     }
 
     /**
-     * Sets and instantiate the data store
+     * Sets and instantiate the DataStore
      */
     public static void setDataStoreInstance(String dataStoreId) {
         try {
             dataStore = dataStores.get(dataStoreId).newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
-            throw new RuntimeException("Couldn't instantiate data store " + dataStoreId);
+            throw new RuntimeException("Couldn't instantiate DataStore " + dataStoreId);
         }
     }
 
     /**
-     * Gets current data store. Returns null if there isn't an instantiated data store
+     * Gets current DataStore. Returns null if there isn't an instantiated DataStore
      */
     public static IDataStore getDataStore() {
         return dataStore;
