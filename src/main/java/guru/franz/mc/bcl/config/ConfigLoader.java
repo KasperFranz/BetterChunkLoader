@@ -112,7 +112,7 @@ public class ConfigLoader {
     private void populate() {
         get().getNode("ServerName").setValue("aServer").setComment("Unique name of server");
         get().getNode("MaxHoursOffline").setValue(72).setComment("Time in hours before player's chunkloaders become inactive.");
-        get().getNode("DataStore").setValue("H2").setComment("You can use Either MySQL or H2 (");
+        get().getNode("DataStore").setValue("H2").setComment("You can use Either MySQL or H2!");
         get().getNode("DefaultChunksAmount", "World").setValue(0);
         get().getNode("DefaultChunksAmount", "Personal").setValue(0);
         get().getNode("MaxChunksAmount", "World").setValue(250);
