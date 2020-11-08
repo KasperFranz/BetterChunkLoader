@@ -1,4 +1,4 @@
-package guru.franz.mc.bcl.config.nodes;
+package guru.franz.mc.bcl.config.node;
 
 import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 import guru.franz.mc.bcl.BetterChunkLoader;

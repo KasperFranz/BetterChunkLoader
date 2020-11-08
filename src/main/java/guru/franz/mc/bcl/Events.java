@@ -1,7 +1,7 @@
 package guru.franz.mc.bcl;
 
 import guru.franz.mc.bcl.config.Config;
-import guru.franz.mc.bcl.config.nodes.ItemsNode;
+import guru.franz.mc.bcl.config.node.ItemsNode;
 import guru.franz.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.inventory.ChunkLoaderInventory;
 import guru.franz.mc.bcl.model.CChunkLoader;

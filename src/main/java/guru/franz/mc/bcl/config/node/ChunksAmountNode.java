@@ -1,4 +1,4 @@
-package guru.franz.mc.bcl.config.nodes;
+package guru.franz.mc.bcl.config.node;
 
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;

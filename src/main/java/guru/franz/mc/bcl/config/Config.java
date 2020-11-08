@@ -1,10 +1,10 @@
 package guru.franz.mc.bcl.config;
 
 import guru.franz.mc.bcl.BetterChunkLoader;
-import guru.franz.mc.bcl.config.nodes.ChunksAmountNode;
-import guru.franz.mc.bcl.config.nodes.ItemsNode;
-import guru.franz.mc.bcl.config.nodes.MaxChunksAmountNode;
-import guru.franz.mc.bcl.config.nodes.MySQLNode;
+import guru.franz.mc.bcl.config.node.ChunksAmountNode;
+import guru.franz.mc.bcl.config.node.ItemsNode;
+import guru.franz.mc.bcl.config.node.MaxChunksAmountNode;
+import guru.franz.mc.bcl.config.node.MySQLNode;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
