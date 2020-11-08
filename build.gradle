@@ -7,7 +7,7 @@ plugins {
 group = 'net.kaikk.mc'
 version = '3.8.2-S7.1.0-pre'
 description = 'Better Chunkloading.'
-project.ext.authors = 'KaiNoMood, Rob5Underscores, KasperFranz'
+project.ext.authors = 'KasperFranz'
 
 dependencies {
     compile 'org.spongepowered:spongeapi:7.1.0-SNAPSHOT'
