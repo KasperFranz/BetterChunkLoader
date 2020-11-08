@@ -1,7 +1,7 @@
 package guru.franz.mc.bcl.config.node;
 
-import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 import guru.franz.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
@@ -42,7 +42,8 @@ public class MySQLNode {
             safePassword = URLEncoder.encode(password, "UTF-8");
         } catch (Exception e) {
             safePassword = password;
-            BetterChunkLoader.instance().getLogger().error("We had a problem while encoding the database password, falling back to unsafe, this may end badly");
+            BetterChunkLoader.instance().getLogger()
+                    .error("We had a problem while encoding the database password, falling back to unsafe, this may end badly");
         }
 
         return String.format("jdbc:mysql://%s:%s@%s/%s", username, safePassword, hostname, database);

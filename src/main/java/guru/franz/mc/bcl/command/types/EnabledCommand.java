@@ -1,8 +1,8 @@
 package guru.franz.mc.bcl.command.types;
 
+import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
-import guru.franz.mc.bcl.BetterChunkLoader;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;

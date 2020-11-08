@@ -2,11 +2,11 @@ package guru.franz.mc.bcl.command;
 
 import guru.franz.mc.bcl.command.types.EnabledCommand;
 import guru.franz.mc.bcl.config.Config;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.exception.NegativeValueException;
+import guru.franz.mc.bcl.model.PlayerData;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import guru.franz.mc.bcl.datastore.DataStoreManager;
-import guru.franz.mc.bcl.model.PlayerData;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -29,7 +29,7 @@ public class Chunks extends EnabledCommand {
         int changeValue = commandContext.<Integer>getOne("value").get();
         PlayerData playerData = DataStoreManager.getDataStore().getPlayerData(user.getUniqueId());
 
-        if(changeValue < 0){
+        if (changeValue < 0) {
             Messenger.sendNegativeValue(sender);
             return CommandResult.empty();
         }

@@ -37,8 +37,9 @@ public class CommandHelper {
         if (safeLocation == null) {
             player.sendMessage(
                     Text.builder().append(Text.of(Messenger.ERROR_COLOR, "Location is not safe. "),
-                    Text.builder().append(Text.of(TextColors.GREEN, "Are you sure you want to teleport here anyway?")).onClick(TextActions.executeCallback(createForceTeleportConsumer(player, location)))
-                            .style(TextStyles.UNDERLINE).build()).build());
+                            Text.builder().append(Text.of(TextColors.GREEN, "Are you sure you want to teleport here anyway?"))
+                                    .onClick(TextActions.executeCallback(createForceTeleportConsumer(player, location)))
+                                    .style(TextStyles.UNDERLINE).build()).build());
         } else {
             player.setLocation(safeLocation);
         }
@@ -72,13 +73,13 @@ public class CommandHelper {
     }
 
 
-    public static void deleteChunk(Player player, CChunkLoader chunkLoader){
-        if (!Permission.canDeleteChunkLoader(player,chunkLoader)) {
+    public static void deleteChunk(Player player, CChunkLoader chunkLoader) {
+        if (!Permission.canDeleteChunkLoader(player, chunkLoader)) {
             player.sendMessage(Text.of(Messenger.ERROR_COLOR, Messages.LIST_PERMISSION_ERROR));
             return;
         }
 
-        ChunkLoaderHelper.removeChunkLoader(chunkLoader,player);
+        ChunkLoaderHelper.removeChunkLoader(chunkLoader, player);
     }
 
 }

@@ -30,7 +30,7 @@ public class Events {
 
     @Listener
     public void onPlayerInteractBlockSecondary(InteractBlockEvent.Secondary.MainHand event, @First Player player,
-                                               @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
+            @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
         ItemsNode itemsNode = Config.getInstance().getItems();
         if (clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) || clickedBlock.getState().getType().equals(BlockTypes.IRON_BLOCK)) {
             CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(clickedBlock.getLocation().get());

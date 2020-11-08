@@ -14,7 +14,7 @@ public class Utilities {
         return Sponge.getServiceManager().provideUnchecked(UserStorageService.class).get(uuid).orElseThrow(UserNotFound::new);
     }
 
-    public static int getOptionOrDefault(User player, String key, int defaultValue){
+    public static int getOptionOrDefault(User player, String key, int defaultValue) {
         Optional<String> option = player.getOption(key);
         return option.map(Integer::parseInt).orElse(defaultValue);
 

@@ -27,10 +27,10 @@ import java.util.UUID;
 public class CChunkLoader extends ChunkLoader {
 
     private final UUID owner;
-    private Location<World> loc;
-    private Date creationDate;
     private final boolean isAlwaysOn;
     private final String serverName;
+    private Location<World> loc;
+    private Date creationDate;
 
     public CChunkLoader(int chunkX, int chunkZ, String worldName, byte range, UUID owner, Location<World> loc, Date creationDate, boolean isAlwaysOn,
             String serverName) {
@@ -48,7 +48,8 @@ public class CChunkLoader extends ChunkLoader {
 
     }
 
-    public CChunkLoader(String location, byte range, UUID owner, Date creationDate, boolean isAlwaysOn, String serverName) throws NoWorldException, WrongServerException {
+    public CChunkLoader(String location, byte range, UUID owner, Date creationDate, boolean isAlwaysOn, String serverName)
+            throws NoWorldException, WrongServerException {
         super(0, 0, "", range);
         this.serverName = serverName;
         this.setLocationString(location);
@@ -120,11 +121,12 @@ public class CChunkLoader extends ChunkLoader {
 
     @Override
     public String toString() {
-        return (this.isAlwaysOn ? "y" : "n") + " - " + ChunkLoaderHelper.getRadiusFromRange(range) + " - " + this.loc.toString() + " - " + this.serverName;
+        return (this.isAlwaysOn ? "y" : "n") + " - " + ChunkLoaderHelper.getRadiusFromRange(range) + " - " + this.loc.toString() + " - "
+                + this.serverName;
     }
 
     public Text toText(boolean showUser, CommandSource source) {
-        return Messenger.getChunkText(source,this,showUser);
+        return Messenger.getChunkText(source, this, showUser);
     }
 
     public UUID getOwner() {
@@ -140,22 +142,22 @@ public class CChunkLoader extends ChunkLoader {
     }
 
     public void setLocationString(String location) throws NoWorldException, WrongServerException {
-            if (this.serverName.equalsIgnoreCase(Config.getInstance().getServerName())) {
-                String[] s = location.split(":");
-                String[] coordinates = s[1].split(",");
-                int x = Integer.parseInt(coordinates[0]);
-                int y = Integer.parseInt(coordinates[1]);
-                int z = Integer.parseInt(coordinates[2]);
-                super.worldName = s[0];
+        if (this.serverName.equalsIgnoreCase(Config.getInstance().getServerName())) {
+            String[] s = location.split(":");
+            String[] coordinates = s[1].split(",");
+            int x = Integer.parseInt(coordinates[0]);
+            int y = Integer.parseInt(coordinates[1]);
+            int z = Integer.parseInt(coordinates[2]);
+            super.worldName = s[0];
 
-                World world = Sponge.getServer().getWorld(s[0]).orElseThrow(NoWorldException::new);
+            World world = Sponge.getServer().getWorld(s[0]).orElseThrow(NoWorldException::new);
 
-                this.loc = new Location<>(world, x, y, z);
-                super.chunkX = this.loc.getChunkPosition().getX();
-                super.chunkZ = this.loc.getChunkPosition().getZ();
-            } else {
-                throw new WrongServerException();
-            }
+            this.loc = new Location<>(world, x, y, z);
+            super.chunkX = this.loc.getChunkPosition().getX();
+            super.chunkZ = this.loc.getChunkPosition().getZ();
+        } else {
+            throw new WrongServerException();
+        }
     }
 
     public String getPrettyLocationString() {
@@ -189,12 +191,12 @@ public class CChunkLoader extends ChunkLoader {
         return super.range;
     }
 
-    public String getRadius(){
-        return ChunkLoaderHelper.getRadiusFromRange(this.range);
-    }
-
     public void setRange(byte range) {
         super.range = range;
+    }
+
+    public String getRadius() {
+        return ChunkLoaderHelper.getRadiusFromRange(this.range);
     }
 
 }

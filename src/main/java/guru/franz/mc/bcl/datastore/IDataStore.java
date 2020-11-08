@@ -1,10 +1,10 @@
 package guru.franz.mc.bcl.datastore;
 
+import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 import guru.franz.mc.bcl.exception.Exception;
 import guru.franz.mc.bcl.exception.NegativeValueException;
-import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
-import guru.franz.mc.bcl.model.PlayerData;
 import guru.franz.mc.bcl.model.CChunkLoader;
+import guru.franz.mc.bcl.model.PlayerData;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 

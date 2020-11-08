@@ -1,8 +1,8 @@
 package guru.franz.mc.bcl.utils;
 
 import guru.franz.mc.bcl.BetterChunkLoader;
-import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -36,8 +36,8 @@ public class ChunkLoaderHelper {
      * @param range the range
      * @return the amount of chunks based on the range
      */
-    public static int calculateChunksFromRange(int range){
-        return calculateSide(range)*calculateSide(range);
+    public static int calculateChunksFromRange(int range) {
+        return calculateSide(range) * calculateSide(range);
     }
 
     /**
@@ -45,12 +45,12 @@ public class ChunkLoaderHelper {
      * @param chunkLoader the chunkloader we have deleted
      * @param player The player removing the chunkloader
      */
-    public static void removeChunkLoader(CChunkLoader chunkLoader, Player player){
+    public static void removeChunkLoader(CChunkLoader chunkLoader, Player player) {
         // remove the chunk loader
         DataStoreManager.getDataStore().removeChunkLoader(chunkLoader);
         String executor = "unknown";
 
-        if(player != null){
+        if (player != null) {
             executor = player.getName();
         }
 
@@ -81,7 +81,7 @@ public class ChunkLoaderHelper {
 
 
             //send message to the owner
-            if(chunkLoader.getPlayer() != null) {
+            if (chunkLoader.getPlayer() != null) {
                 chunkLoader.getPlayer().sendMessage(Text.of(TextColors.RED,
                         String.format(
                                 Messages.DELETE_CHUNKLOADER_USER_INFORM,
@@ -93,7 +93,7 @@ public class ChunkLoaderHelper {
 
         BetterChunkLoader.instance().getLogger().info(logMessage);
 
-        if(player != null) {
+        if (player != null) {
             player.sendMessage(Text.of(TextColors.RED, userMessage));
         }
     }

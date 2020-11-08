@@ -6,12 +6,13 @@ import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.sql.SqlService;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 public class H2 extends MySQL {
 
@@ -36,5 +37,6 @@ public class H2 extends MySQL {
         String jdbcConnection = String.format("jdbc:h2:%s/h2;mode=MySQL", datastoreDir);
         return Sponge.getServiceManager().provide(SqlService.class).orElseThrow(SQLException::new)
                 .getDataSource(jdbcConnection);
+
     }
 }

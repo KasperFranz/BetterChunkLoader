@@ -47,7 +47,9 @@ import java.util.UUID;
         version = BetterChunkLoaderPluginInfo.VERSION
 )
 public class BetterChunkLoader {
+
     private static BetterChunkLoader instance;
+    public boolean enabled = false;
     @Inject
     private Logger logger;
     @Inject
@@ -60,7 +62,6 @@ public class BetterChunkLoader {
     @DefaultConfig(sharedRoot = false)
     private ConfigurationLoader<CommentedConfigurationNode> configLoader;
     private Map<String, List<CChunkLoader>> activeChunkLoaders;
-    public boolean enabled = false;
 
     @Inject
     public BetterChunkLoader() {

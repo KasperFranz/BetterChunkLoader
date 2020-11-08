@@ -1,6 +1,7 @@
 package guru.franz.mc.bcl.utils;
 
 public final class Messages {
+
     public static final String CREATE_CHUNKLOADER_LOG = "%s created a %s at %s with radius %s";
     public static final String CREATE_CHUNKLOADER_USER = "Chunk loader created to cover %s chunks.";
     public static final String EDIT_CHUNKLOADER_LOG_OTHER = "%s edited %s's chunk loader at %s's radius from %s to %s,";
@@ -27,6 +28,8 @@ public final class Messages {
     public static final String CMD_DELETE_OWN_SUCCESS_LOG = "%s deleted all their chunk loaders.";
     public static final String CMD_DELETE_OWN_PERMISSION = "You do not have permission to delete your own chunk loaders.";
     public static final String CMD_DELETE_OWN_CONFIRM = "Are you sure you want to delete all of your chunk loaders";
-    public static final String PLUGIN_DISABLED_DATASTORE = "The plugin is disabled as we could not connect to the datastore - please verify the password and check database information. once correct you can run /bcl reload.";
+    public static final String PLUGIN_DISABLED_DATASTORE =
+            "The plugin is disabled as we could not connect to the datastore - please verify the password and check database information. once "
+                    + "correct you can run /bcl reload.";
     public static final String ARGUMENT_INVALID = "%s is not a valid argument, valid arguments: %s";
 }
