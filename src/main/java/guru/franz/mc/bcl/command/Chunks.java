@@ -53,8 +53,8 @@ public class Chunks extends EnabledCommand {
 
     private CommandResult commandPartAdd(CommandSource sender, PlayerData playerData, User user, int changeValue, String loaderTypeElement) {
         int newValue = changeValue;
-        int maxWorldChunks = Config.getInstance().getMaxChunksAmountWorld();
-        int maxOnlineOnlyChunks = Config.getInstance().getMaxChunksAmountPersonal();
+        int maxWorldChunks = Config.getInstance().getMaxChunksAmount().getWorld();
+        int maxOnlineOnlyChunks = Config.getInstance().getMaxChunksAmount().getPersonal();
 
         if (loaderTypeElement.equalsIgnoreCase("world")) {
             newValue += playerData.getAlwaysOnChunksAmount();

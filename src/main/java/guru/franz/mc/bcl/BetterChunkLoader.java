@@ -1,30 +1,32 @@
 package guru.franz.mc.bcl;
 
 import com.google.inject.Inject;
+import guru.franz.mc.bcl.command.BCL;
+import guru.franz.mc.bcl.command.Balance;
+import guru.franz.mc.bcl.command.Chunks;
 import guru.franz.mc.bcl.command.Delete;
+import guru.franz.mc.bcl.command.Info;
+import guru.franz.mc.bcl.command.ListCommand;
+import guru.franz.mc.bcl.command.Purge;
 import guru.franz.mc.bcl.command.Reload;
+import guru.franz.mc.bcl.command.elements.ChunksChangeOperatorElement;
+import guru.franz.mc.bcl.command.elements.LoaderTypeElement;
 import guru.franz.mc.bcl.config.Config;
-import guru.franz.mc.bcl.config.ConfigLoader;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.datastore.H2DataStore;
 import guru.franz.mc.bcl.datastore.MySQLDataStore;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import guru.franz.mc.bcl.command.BCL;
-import guru.franz.mc.bcl.command.Balance;
-import guru.franz.mc.bcl.command.Chunks;
-import guru.franz.mc.bcl.command.Info;
-import guru.franz.mc.bcl.command.ListCommand;
-import guru.franz.mc.bcl.command.Purge;
-import guru.franz.mc.bcl.command.elements.ChunksChangeOperatorElement;
-import guru.franz.mc.bcl.command.elements.LoaderTypeElement;
-import guru.franz.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -33,7 +35,11 @@ import org.spongepowered.api.text.Text;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Plugin(id = BetterChunkLoaderPluginInfo.ID,
         name = BetterChunkLoaderPluginInfo.NAME,
@@ -47,17 +53,23 @@ public class BetterChunkLoader {
     @Inject
     @ConfigDir(sharedRoot = false)
     private Path configDir;
+    @Inject
+    @DefaultConfig(sharedRoot = false)
+    private Path configPath;
+    @Inject
+    @DefaultConfig(sharedRoot = false)
+    private ConfigurationLoader<CommentedConfigurationNode> configLoader;
     private Map<String, List<CChunkLoader>> activeChunkLoaders;
     public boolean enabled = false;
 
     @Inject
-    public BetterChunkLoader(){
-        if (instance != null){
+    public BetterChunkLoader() {
+        if (instance != null) {
             throw new IllegalStateException("Plugin cannot be instantiated twice");
         }
 
         instance = this;
-     }
+    }
 
     public static BetterChunkLoader instance() {
         return instance;
@@ -117,9 +129,9 @@ public class BetterChunkLoader {
             throw new RuntimeException("BCLForgeLib is needed to run this plugin!");
         }
 
-        try{
+        try {
             setupPlugin();
-        } catch (Exception e){
+        } catch (Exception e) {
             Messenger.logException(e);
         }
 
@@ -127,38 +139,41 @@ public class BetterChunkLoader {
     }
 
     public void setupPlugin() throws Exception {
-        // load config
+        // Load config
         logger.debug("Loading configuration");
-        new ConfigLoader(configDir).setup();
+        // Have to move config file since Configurate did not properly implemented private root conventions
+        Config.moveOldConfig(configDir, configPath);
+        Config config = Config.loadFrom(configDir, configLoader.load());
+        config.saveToFile(configLoader);
 
         this.activeChunkLoaders = new HashMap<>();
-        // Register MySQL DataStore
+        // Register DataStores
         DataStoreManager.registerDataStore("MySQL", MySQLDataStore.class);
         DataStoreManager.registerDataStore("H2", H2DataStore.class);
 
         // instantiate DataStore, if needed
         if (DataStoreManager.getDataStore() == null) {
-            String dataStore = Config.getInstance().getDataStore();
+            String dataStore = config.getDataStore();
             DataStoreManager.setDataStoreInstance(dataStore);
         }
 
         // load datastore
-        logger.info("Loading " + DataStoreManager.getDataStore().getName() + " DataStore...");
+        logger.info("Loading {} DataStore...", DataStoreManager.getDataStore().getName());
         DataStoreManager.getDataStore().load();
 
-        logger.info("Loaded " + DataStoreManager.getDataStore().getChunkLoaders().size() + " chunk loaders data.");
-        logger.info("Loaded " + DataStoreManager.getDataStore().getPlayersData().size() + " players data.");
+        logger.info("Loaded {} chunk loaders data.", DataStoreManager.getDataStore().getChunkLoaders().size());
+        logger.info("Loaded {} players data.", DataStoreManager.getDataStore().getPlayersData().size());
 
         // load always on chunk loaders
         int count = 0;
         for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
-            if (cl.getServerName().equalsIgnoreCase(Config.getInstance().getServerName()) && cl.isLoadable()) {
+            if (cl.getServerName().equalsIgnoreCase(config.getServerName()) && cl.isLoadable()) {
                 this.loadChunks(cl);
                 count++;
             }
         }
 
-        logger.info("Loaded " + count + " always-on chunk loaders.");
+        logger.info("Loaded {} always-on chunk loaders.", count);
 
         logger.debug("Loading Listeners...");
         initializeListeners();
@@ -197,7 +212,6 @@ public class BetterChunkLoader {
                 .description(Text.of("Get general information about the usage on the server."))
                 .executor(new Info())
                 .build();
-
 
 
         CommandSpec cmdList = CommandSpec.builder()
@@ -267,7 +281,7 @@ public class BetterChunkLoader {
         return logger;
     }
 
-    public void loadChunks(CChunkLoader chunkloader){
+    public void loadChunks(CChunkLoader chunkloader) {
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().addChunkLoader(chunkloader);
             List<CChunkLoader> clList = activeChunkLoaders.computeIfAbsent(chunkloader.getWorldName(), k -> new ArrayList<>());
@@ -276,11 +290,11 @@ public class BetterChunkLoader {
     }
 
 
-    public void unloadChunks(CChunkLoader chunkloader){
+    public void unloadChunks(CChunkLoader chunkloader) {
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().removeChunkLoader(chunkloader);
             List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
-            if(clList == null){
+            if (clList == null) {
                 return;
             }
             clList.remove(chunkloader);
