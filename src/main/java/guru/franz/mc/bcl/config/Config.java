@@ -1,71 +1,160 @@
 package guru.franz.mc.bcl.config;
 
-import guru.franz.mc.bcl.config.stub.MySQL;
-import org.spongepowered.api.item.ItemType;
+import guru.franz.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.config.node.ChunksAmountNode;
+import guru.franz.mc.bcl.config.node.ItemsNode;
+import guru.franz.mc.bcl.config.node.MaxChunksAmountNode;
+import guru.franz.mc.bcl.config.node.MySQLNode;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+@ConfigSerializable
 public class Config {
 
     private static Config instance;
-    private final ItemType itemType;
-    private final String serverName, dataStore;
-    private final int maxHoursOffline, defaultChunksAmountWorld, defaultChunksAmountPersonal, maxChunksAmountWorld, maxChunksAmountPersonal;
-    private final MySQL mySQL;
+    private static final ObjectMapper<Config> MAPPER;
 
-    public Config(String serverName, int maxHoursOffline, String dataStore, int defaultChunksAmountWorld,
-            int defaultChunksAmountPersonal, int maxChunksAmountWorld, int maxChunksAmountPersonal, ItemType itemType, MySQL mySQL) {
-        this.itemType = itemType;
-        this.serverName = serverName;
-        this.maxHoursOffline = maxHoursOffline;
-        this.dataStore = dataStore;
-        this.defaultChunksAmountWorld = defaultChunksAmountWorld;
-        this.defaultChunksAmountPersonal = defaultChunksAmountPersonal;
-        this.maxChunksAmountWorld = maxChunksAmountWorld;
-        this.maxChunksAmountPersonal = maxChunksAmountPersonal;
-        this.mySQL = mySQL;
-        instance = this;
+    private Path configDir;
+    private ConfigurationNode node;
+    @Setting(value = "DataStore", comment = "Available data storage types include: MySQL, H2.")
+    private String dataStore = "H2";
+    @Setting("Items")
+    private ItemsNode itemsNode = new ItemsNode();
+    @Setting("DefaultChunksAmount")
+    private ChunksAmountNode defaultChunksNode = new ChunksAmountNode();
+    @Setting("MaxChunksAmount")
+    private MaxChunksAmountNode maxChunksNode = new MaxChunksAmountNode();
+    @Setting(value = "MaxHoursOffline", comment = "Time in hours before a player's chunkloaders become inactive.")
+    private int maxHoursOffline = 72;
+    @Setting("MySQL")
+    private final MySQLNode mySQL = new MySQLNode();
+    @Setting(value = "ServerName", comment = "Unique name of the server.")
+    private String serverName = "aServer";
+
+    static {
+        try {
+            MAPPER = ObjectMapper.forClass(Config.class);
+        } catch (ObjectMappingException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
+
+    public Config(Path configDir, ConfigurationNode node) {
+        this.configDir = configDir;
+        this.node = node;
     }
 
     public static Config getInstance() {
         return instance;
     }
 
-    public ItemType getItemType() {
-        return itemType;
+    /**
+     * @return The {@link ConfigurationNode} that was used to create this {@link Config}.
+     */
+    public ConfigurationNode getNode() {
+        return node;
     }
 
-    public String getItemName() {
-        return itemType.getTranslation().get();
+    public Path getDirectory() {
+        return configDir;
     }
 
-    public String getServerName() {
-        return serverName;
+    public void setDirectory(Path configDir) {
+        this.configDir = configDir;
     }
 
-    public int getMaxHoursOffline() {
-        return maxHoursOffline;
+    /**
+     * Loads a {@link Config} instance from the provided {@link ConfigurationNode}.
+     * The newly created instance is then used when returning {@link #getInstance()}.
+     *
+     * @param configDir The {@link Path} where the config resides, used to return {@link #getDirectory()}.
+     * @param node The {@link ConfigurationNode} to load from.
+     * @return The newly created instance.
+     * @throws ObjectMappingException If an error occurs when populating the config.
+     */
+    public static Config loadFrom(Path configDir, ConfigurationNode node) throws ObjectMappingException {
+        // Apply any version transformations before generating the config object
+        Transformations.versionedTransformation().apply(node);
+        instance = new Config(configDir, node);
+        // Populate fields
+        MAPPER.bind(instance).populate(node);
+        return instance;
+    }
+
+    public static void moveOldConfig(Path configDir, Path newConfigPath) {
+        Path oldConfigPath = configDir.resolve("config.conf");
+        if (Files.exists(oldConfigPath) && !Files.exists(newConfigPath)) {
+            try {
+                Files.move(oldConfigPath, newConfigPath);
+            } catch (IOException e) {
+                BetterChunkLoader.instance().getLogger().error("Could not move old config file.", e);
+            }
+        }
+    }
+
+    public void saveToFile(ConfigurationLoader<CommentedConfigurationNode> configLoader) throws ObjectMappingException, IOException {
+        this.saveToNode(node);
+        configLoader.save(node);
+    }
+
+    public void saveToNode(ConfigurationNode node) throws ObjectMappingException {
+        MAPPER.bind(this).serialize(node);
+    }
+
+    public ItemsNode getItems() {
+        return itemsNode;
     }
 
     public String getDataStore() {
         return dataStore;
     }
 
-    public int getDefaultChunksAmountWorld() {
-        return defaultChunksAmountWorld;
+    public void setDataStore(String dataStore) {
+        this.dataStore = dataStore;
     }
 
-    public int getDefaultChunksAmountPersonal() {
-        return defaultChunksAmountPersonal;
+    public ChunksAmountNode getDefaultChunksAmount() {
+        return defaultChunksNode;
     }
 
-    public int getMaxChunksAmountWorld() {
-        return maxChunksAmountWorld;
+    public void setDefaultChunksAmount(ChunksAmountNode defaultChunksNode) {
+        this.defaultChunksNode = defaultChunksNode;
     }
 
-    public int getMaxChunksAmountPersonal() {
-        return maxChunksAmountPersonal;
+    public MaxChunksAmountNode getMaxChunksAmount() {
+        return maxChunksNode;
     }
 
-    public MySQL getMySQL() {
+    public void setMaxChunksAmount(MaxChunksAmountNode maxChunksNode) {
+        this.maxChunksNode = maxChunksNode;
+    }
+
+    public int getMaxHoursOffline() {
+        return maxHoursOffline;
+    }
+
+    public void setMaxHoursOffline(int maxHoursOffline) {
+        this.maxHoursOffline = maxHoursOffline;
+    }
+
+    public MySQLNode getMySQL() {
         return mySQL;
+    }
+
+    public String getServerName() {
+        return serverName;
+    }
+
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
     }
 }

@@ -1,6 +1,7 @@
 package guru.franz.mc.bcl.datastore.database;
 
-import guru.franz.mc.bcl.config.ConfigLoader;
+import guru.franz.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.service.sql.SqlService;
@@ -23,20 +24,19 @@ public class H2 extends MySQL {
      * @throws MySQLConnectionException If we can't connect to the database.
      */
     protected DataSource getDataSource() throws SQLException, MySQLConnectionException {
-
-        Path datastoreDir = Paths.get(ConfigLoader.getInstance().getDirectory() + "/datastore");
+        Path datastoreDir = Paths.get(Config.getInstance().getDirectory() + "/datastore");
         if (!Files.exists(datastoreDir)) {
             try {
                 Files.createDirectories(datastoreDir);
             } catch (IOException e) {
-                e.printStackTrace();
-                //TODO better message.
+                BetterChunkLoader.instance().getLogger()
+                        .error("Could not create datastore directory.", e);
             }
         }
 
-        String ConnectionString = "jdbc:h2:" + datastoreDir + "/h2;mode=MySQL";
+        String jdbcConnection = String.format("jdbc:h2:%s/h2;mode=MySQL", datastoreDir);
         return Sponge.getServiceManager().provide(SqlService.class).orElseThrow(SQLException::new)
-                .getDataSource(ConnectionString);
+                .getDataSource(jdbcConnection);
 
     }
 }

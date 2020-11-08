@@ -1,20 +1,23 @@
-package guru.franz.mc.bcl.config.stub;
+package guru.franz.mc.bcl.config.node;
 
 import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 import java.net.URLEncoder;
 
-public class MySQL {
+@ConfigSerializable
+public class MySQLNode {
 
-    private final String hostname, username, password, database;
-
-    public MySQL(String hostname, String username, String password, String database) {
-        this.hostname = hostname;
-        this.username = username;
-        this.password = password;
-        this.database = database;
-    }
+    @Setting("Hostname")
+    private String hostname = "host";
+    @Setting("Username")
+    private String username = "user";
+    @Setting("Password")
+    private String password = "pass";
+    @Setting("Database")
+    private String database = "db";
 
     /**
      * Get a JDBC connection string.
@@ -22,8 +25,6 @@ public class MySQL {
      * @throws MySQLConnectionException if there is any data issues
      */
     public String getConnectionString() throws MySQLConnectionException {
-
-
         if (username == null || username.isEmpty()) {
             throw new MySQLConnectionException("No user provided");
         }
@@ -45,14 +46,6 @@ public class MySQL {
                     .error("We had a problem while encoding the database password, falling back to unsafe, this may end badly");
         }
 
-        return "jdbc:mysql://"
-                + username
-                + ":"
-                + safePassword
-                + "@"
-                + hostname
-                + "/"
-                + database;
+        return String.format("jdbc:mysql://%s:%s@%s/%s", username, safePassword, hostname, database);
     }
-
 }

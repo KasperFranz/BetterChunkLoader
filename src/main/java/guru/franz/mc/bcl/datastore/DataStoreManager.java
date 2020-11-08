@@ -7,7 +7,7 @@ import java.util.Map;
  * DataStore manager<br>
  * See IDataStore interface if you want to implement your custom DataStore
  */
-final public class DataStoreManager {
+public final class DataStoreManager {
 
     private static final Map<String, Class<? extends IDataStore>> dataStores = new HashMap<>();
     private static IDataStore dataStore;

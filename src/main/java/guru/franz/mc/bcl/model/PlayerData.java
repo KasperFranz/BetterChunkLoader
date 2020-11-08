@@ -15,8 +15,8 @@ public class PlayerData {
     public PlayerData(UUID playerId) throws UserNotFound {
         this.playerId = playerId;
         User player = Utilities.getUserFromUUID(playerId);
-        this.alwaysOnChunksAmount = Utilities.getOptionOrDefault(player, "bcl.world", Config.getInstance().getDefaultChunksAmountWorld());
-        this.onlineOnlyChunksAmount = Utilities.getOptionOrDefault(player, "bcl.personal", Config.getInstance().getDefaultChunksAmountPersonal());
+        this.alwaysOnChunksAmount = Utilities.getOptionOrDefault(player, "bcl.world", Config.getInstance().getDefaultChunksAmount().getWorld());
+        this.onlineOnlyChunksAmount = Utilities.getOptionOrDefault(player, "bcl.personal", Config.getInstance().getDefaultChunksAmount().getPersonal());
     }
 
     public PlayerData(UUID playerId, int alwaysOnChunksAmount, int onlineOnlyChunksAmount) {

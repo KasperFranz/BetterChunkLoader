@@ -1,6 +1,7 @@
 package guru.franz.mc.bcl;
 
 import guru.franz.mc.bcl.config.Config;
+import guru.franz.mc.bcl.config.node.ItemsNode;
 import guru.franz.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.inventory.ChunkLoaderInventory;
 import guru.franz.mc.bcl.model.CChunkLoader;
@@ -30,15 +31,18 @@ public class Events {
     @Listener
     public void onPlayerInteractBlockSecondary(InteractBlockEvent.Secondary.MainHand event, @First Player player,
             @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
+        ItemsNode itemsNode = Config.getInstance().getItems();
         if (clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) || clickedBlock.getState().getType().equals(BlockTypes.IRON_BLOCK)) {
             CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(clickedBlock.getLocation().get());
-            boolean ChunkLoaderOnThisServer = chunkLoader != null;
+            boolean hasChunkLoader = chunkLoader != null;
+            boolean hasSelector = player.getItemInHand(HandTypes.MAIN_HAND)
+                    .map(item -> item.getType().equals(itemsNode.getSelector()))
+                    .orElse(false);
 
-            if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent() && player.getItemInHand(HandTypes.MAIN_HAND).get().getType()
-                    .equals(Config.getInstance().getItemType())) {
+            if (hasSelector) {
                 // if the chunkloader is not on this server or the player can edit chunkloader then we should show
                 // the UI
-                if (!ChunkLoaderOnThisServer || (player.getUniqueId().equals(chunkLoader.getOwner()) || player
+                if (!hasChunkLoader || (player.getUniqueId().equals(chunkLoader.getOwner()) || player
                         .hasPermission(Permission.ABILITY_EDIT_OTHERS))) {
                     // if the chunkloader is not present lets make one!
                     if (chunkLoader == null) {
@@ -54,12 +58,12 @@ public class Events {
                     player.sendMessage(Text.of(TextColors.RED, "You can't edit others' chunk loaders."));
                 }
             } else {
-                if (ChunkLoaderOnThisServer) {
+                if (hasChunkLoader) {
                     player.sendMessage(chunkLoader.info());
                 } else {
+                    String selectorName = Config.getInstance().getItems().getSelectorName();
                     player.sendMessage(Text.of(TextColors.GOLD,
-                            "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a ", Config.getInstance().getItemName(),
-                            "."));
+                            "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a ", selectorName, "."));
                 }
             }
         }

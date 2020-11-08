@@ -12,7 +12,6 @@ import guru.franz.mc.bcl.command.Reload;
 import guru.franz.mc.bcl.command.elements.ChunksChangeOperatorElement;
 import guru.franz.mc.bcl.command.elements.LoaderTypeElement;
 import guru.franz.mc.bcl.config.Config;
-import guru.franz.mc.bcl.config.ConfigLoader;
 import guru.franz.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.datastore.H2DataStore;
 import guru.franz.mc.bcl.datastore.MySQLDataStore;
@@ -20,11 +19,14 @@ import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -53,6 +55,12 @@ public class BetterChunkLoader {
     @Inject
     @ConfigDir(sharedRoot = false)
     private Path configDir;
+    @Inject
+    @DefaultConfig(sharedRoot = false)
+    private Path configPath;
+    @Inject
+    @DefaultConfig(sharedRoot = false)
+    private ConfigurationLoader<CommentedConfigurationNode> configLoader;
     private Map<String, List<CChunkLoader>> activeChunkLoaders;
 
     @Inject
@@ -132,38 +140,41 @@ public class BetterChunkLoader {
     }
 
     public void setupPlugin() throws Exception {
-        // load config
+        // Load config
         logger.debug("Loading configuration");
-        new ConfigLoader(configDir).setup();
+        // Have to move config file since Configurate 3.x did not properly implement private root conventions
+        Config.moveOldConfig(configDir, configPath);
+        Config config = Config.loadFrom(configDir, configLoader.load());
+        config.saveToFile(configLoader);
 
         this.activeChunkLoaders = new HashMap<>();
-        // Register MySQL DataStore
+        // Register DataStores
         DataStoreManager.registerDataStore("MySQL", MySQLDataStore.class);
         DataStoreManager.registerDataStore("H2", H2DataStore.class);
 
         // instantiate DataStore, if needed
         if (DataStoreManager.getDataStore() == null) {
-            String dataStore = Config.getInstance().getDataStore();
+            String dataStore = config.getDataStore();
             DataStoreManager.setDataStoreInstance(dataStore);
         }
 
         // load datastore
-        logger.info("Loading " + DataStoreManager.getDataStore().getName() + " DataStore...");
+        logger.info("Loading {} DataStore...", DataStoreManager.getDataStore().getName());
         DataStoreManager.getDataStore().load();
 
-        logger.info("Loaded " + DataStoreManager.getDataStore().getChunkLoaders().size() + " chunk loaders data.");
-        logger.info("Loaded " + DataStoreManager.getDataStore().getPlayersData().size() + " players data.");
+        logger.info("Loaded {} chunk loaders data.", DataStoreManager.getDataStore().getChunkLoaders().size());
+        logger.info("Loaded {} players data.", DataStoreManager.getDataStore().getPlayersData().size());
 
         // load always on chunk loaders
         int count = 0;
         for (CChunkLoader cl : DataStoreManager.getDataStore().getChunkLoaders()) {
-            if (cl.getServerName().equalsIgnoreCase(Config.getInstance().getServerName()) && cl.isLoadable()) {
+            if (cl.getServerName().equalsIgnoreCase(config.getServerName()) && cl.isLoadable()) {
                 this.loadChunks(cl);
                 count++;
             }
         }
 
-        logger.info("Loaded " + count + " always-on chunk loaders.");
+        logger.info("Loaded {} always-on chunk loaders.", count);
 
         logger.debug("Loading Listeners...");
         initializeListeners();
