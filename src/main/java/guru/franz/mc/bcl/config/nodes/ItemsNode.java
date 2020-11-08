@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 @ConfigSerializable
 public final class ItemsNode {
 
-    @Setting
+    @Setting("Selector")
     private ItemType selector = ItemTypes.BLAZE_ROD;
     // TODO: Add support for multiple blocks as chunkloaders?
     // @Setting(value = "AllowedBlocks", comment = "Blocks allowed to be used with the selector to make chunkloaders.")

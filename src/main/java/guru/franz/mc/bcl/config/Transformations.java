@@ -21,8 +21,8 @@ public class Transformations {
      */
     public static ConfigurationTransformation firstConfig() {
         return getBuilder()
-                .addAction(path("item"), (path, value) -> path("items"))
-                .addAction(path("items", "type"), (path, value) -> path("items", "selector"))
+                .addAction(path("item"), (path, value) -> path("Items"))
+                .addAction(path("Items", "type"), (path, value) -> path("Items", "Selector"))
                 .addAction(path("DataStore"), (path, value) -> {
                     if (value instanceof CommentedConfigurationNode) {
                         CommentedConfigurationNode commentedNode = (CommentedConfigurationNode) value;

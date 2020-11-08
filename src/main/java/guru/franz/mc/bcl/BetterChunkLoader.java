@@ -141,7 +141,7 @@ public class BetterChunkLoader {
     public void setupPlugin() throws Exception {
         // Load config
         logger.debug("Loading configuration");
-        // Have to move config file since Configurate did not properly implemented private root conventions
+        // Have to move config file since Configurate 3.x did not properly implement private root conventions
         Config.moveOldConfig(configDir, configPath);
         Config config = Config.loadFrom(configDir, configLoader.load());
         config.saveToFile(configLoader);

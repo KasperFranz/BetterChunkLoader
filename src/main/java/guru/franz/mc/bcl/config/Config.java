@@ -27,7 +27,7 @@ public class Config {
     private ConfigurationNode node;
     @Setting(value = "DataStore", comment = "Available data storage types include: MySQL, H2.")
     private String dataStore = "H2";
-    @Setting("items")
+    @Setting("Items")
     private ItemsNode itemsNode = new ItemsNode();
     @Setting("DefaultChunksAmount")
     private ChunksAmountNode defaultChunksNode = new ChunksAmountNode();
