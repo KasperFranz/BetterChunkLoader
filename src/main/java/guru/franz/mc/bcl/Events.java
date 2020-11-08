@@ -29,7 +29,7 @@ public class Events {
 
     @Listener
     public void onPlayerInteractBlockSecondary(InteractBlockEvent.Secondary.MainHand event, @First Player player,
-                                               @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
+            @Getter("getTargetBlock") BlockSnapshot clickedBlock) {
         if (clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) || clickedBlock.getState().getType().equals(BlockTypes.IRON_BLOCK)) {
             CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(clickedBlock.getLocation().get());
             boolean ChunkLoaderOnThisServer = chunkLoader != null;
@@ -58,7 +58,8 @@ public class Events {
                     player.sendMessage(chunkLoader.info());
                 } else {
                     player.sendMessage(Text.of(TextColors.GOLD,
-                            "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a ", Config.getInstance().getItemName(), "."));
+                            "Iron and Diamond blocks can be converted into chunk loaders. Right click it with a ", Config.getInstance().getItemName(),
+                            "."));
                 }
             }
         }

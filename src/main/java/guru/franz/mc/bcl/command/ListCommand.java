@@ -1,10 +1,10 @@
 package guru.franz.mc.bcl.command;
 
 import com.google.common.collect.Lists;
-import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.BetterChunkLoader;
-import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.model.CChunkLoader;
+import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -24,7 +24,7 @@ public class ListCommand implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext commandContext) {
 
-        if(!BetterChunkLoader.instance().enabled){
+        if (!BetterChunkLoader.instance().enabled) {
             commandSource.sendMessage(Text.builder(Messages.PLUGIN_DISABLED_DATASTORE).color(Messenger.ERROR_COLOR).build());
             return CommandResult.empty();
         }
@@ -56,19 +56,19 @@ public class ListCommand implements CommandExecutor {
 
         java.util.List<Text> texts = Lists.newArrayList();
         boolean finalShowUser = showUser;
-        clList.forEach(chunkLoader -> texts.add(chunkLoader.toText(finalShowUser,commandSource)));
+        clList.forEach(chunkLoader -> texts.add(chunkLoader.toText(finalShowUser, commandSource)));
 
         if (texts.isEmpty()) {
             texts.add(Text.of(
                     TextColors.GOLD,
-                    String.format(Messages.LIST_NO_CHUNKLOADERS,name)
+                    String.format(Messages.LIST_NO_CHUNKLOADERS, name)
             ));
         }
 
         PaginationList.builder()
                 .title(Text.of(
                         TextColors.GOLD,
-                        String.format(Messages.LIST_CHUNKLOADERS_TITLE,name)
+                        String.format(Messages.LIST_CHUNKLOADERS_TITLE, name)
                 ))
                 .contents(texts)
                 .padding(Text.of("-"))

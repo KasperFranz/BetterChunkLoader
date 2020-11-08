@@ -12,7 +12,7 @@ public class Config {
     private final MySQL mySQL;
 
     public Config(String serverName, int maxHoursOffline, String dataStore, int defaultChunksAmountWorld,
-            int defaultChunksAmountPersonal,int maxChunksAmountWorld, int maxChunksAmountPersonal, ItemType itemType, MySQL mySQL) {
+            int defaultChunksAmountPersonal, int maxChunksAmountWorld, int maxChunksAmountPersonal, ItemType itemType, MySQL mySQL) {
         this.itemType = itemType;
         this.serverName = serverName;
         this.maxHoursOffline = maxHoursOffline;
@@ -65,7 +65,7 @@ public class Config {
         return maxChunksAmountPersonal;
     }
 
-    public MySQL getMySQL(){
+    public MySQL getMySQL() {
         return mySQL;
     }
 }

@@ -1,11 +1,12 @@
 package guru.franz.mc.bcl.config.stub;
 
-import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 import guru.franz.mc.bcl.BetterChunkLoader;
+import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
 
 import java.net.URLEncoder;
 
 public class MySQL {
+
     private final String hostname, username, password, database;
 
     public MySQL(String hostname, String username, String password, String database) {
@@ -40,7 +41,8 @@ public class MySQL {
             safePassword = URLEncoder.encode(password, "UTF-8");
         } catch (Exception e) {
             safePassword = password;
-            BetterChunkLoader.instance().getLogger().error("We had a problem while encoding the database password, falling back to unsafe, this may end badly");
+            BetterChunkLoader.instance().getLogger()
+                    .error("We had a problem while encoding the database password, falling back to unsafe, this may end badly");
         }
 
         return "jdbc:mysql://"

@@ -1,9 +1,9 @@
 package guru.franz.mc.bcl.config;
 
 import com.google.common.reflect.TypeToken;
+import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.config.stub.MySQL;
 import guru.franz.mc.bcl.exception.ConfigLoadException;
-import guru.franz.mc.bcl.BetterChunkLoader;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -32,7 +32,7 @@ public class ConfigLoader {
         instance = this;
     }
 
-    public static ConfigLoader getInstance(){
+    public static ConfigLoader getInstance() {
         return instance;
     }
 
@@ -86,10 +86,10 @@ public class ConfigLoader {
             BetterChunkLoader.instance().getLogger().info("Loading information for " + serverName);
 
             MySQL mySQL = new MySQL(
-            get().getNode("MySQL", "Hostname").getString("host"),
-            get().getNode("MySQL", "Username").getString("user"),
-            get().getNode("MySQL", "Password").getString("pass"),
-            get().getNode("MySQL", "Database").getString("db")
+                    get().getNode("MySQL", "Hostname").getString("host"),
+                    get().getNode("MySQL", "Username").getString("user"),
+                    get().getNode("MySQL", "Password").getString("pass"),
+                    get().getNode("MySQL", "Database").getString("db")
             );
 
             new Config(serverName, maxHoursOffline, dataStore, defaultChunksAmountWorld, defaultChunksAmountPersonal,
@@ -125,7 +125,7 @@ public class ConfigLoader {
         get().getNode("MySQL", "Database").setValue("db");
     }
 
-    public Path getDirectory(){
+    public Path getDirectory() {
         return configDir;
     }
 

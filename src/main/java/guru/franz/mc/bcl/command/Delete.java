@@ -1,12 +1,12 @@
 package guru.franz.mc.bcl.command;
 
+import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.command.types.EnabledCommand;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messages;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import guru.franz.mc.bcl.BetterChunkLoader;
-import guru.franz.mc.bcl.model.CChunkLoader;
-import guru.franz.mc.bcl.datastore.DataStoreManager;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -19,6 +19,43 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Delete extends EnabledCommand {
+
+    /**
+     * Create a Delete Chunk Loader consumer for an Player
+     * @param player The player that wants to delete their Chunk Loaders
+     * @return The consumer to delete the players Chunk Loaders
+     */
+    public static Consumer<CommandSource> createDeleteConsumer(Player player) {
+        return action -> {
+            if (player == null) {
+                return;
+            }
+
+            if (!player.hasPermission(Permission.COMMAND_DELETE_OWN)) {
+                player.sendMessage(Messenger.createErrorMessage(Messages.CMD_DELETE_OWN_PERMISSION));
+                return;
+            }
+
+            List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(player.getUniqueId());
+            if (clList.isEmpty()) {
+                player.sendMessage(Messenger.createErrorMessage(Messages.CMD_DELETE_OWN_NO_CHUNKLOADERS));
+                return;
+            }
+
+            Integer removed = DataStoreManager.getDataStore().removeChunkLoaders(player.getUniqueId());
+            player.sendMessage(Text.builder(
+                    String.format(
+                            Messages.CMD_DELETE_OWN_SUCCESS,
+                            removed
+                    )).color(TextColors.GREEN).build());
+
+            BetterChunkLoader.instance().getLogger().info(
+                    String.format(
+                            Messages.CMD_DELETE_OWN_SUCCESS_LOG,
+                            player.getName()
+                    ));
+        };
+    }
 
     protected CommandResult executeCommand(CommandSource sender, CommandContext commandContext) {
         User user = (User) commandContext.getOne("user").orElse(null);
@@ -33,7 +70,6 @@ public class Delete extends EnabledCommand {
 
         return deleteOwn((Player) sender);
     }
-
 
     /**
      * Delete all Chunk Loaders of a specific user
@@ -78,7 +114,6 @@ public class Delete extends EnabledCommand {
 
     }
 
-
     /**
      * Delete all chunkloaders of a Player
      *
@@ -90,43 +125,6 @@ public class Delete extends EnabledCommand {
         return CommandResult.empty();
 
 
-    }
-
-    /**
-     * Create a Delete Chunk Loader consumer for an Player
-     * @param player The player that wants to delete their Chunk Loaders
-     * @return  The consumer to delete the players Chunk Loaders
-     */
-    public static Consumer<CommandSource> createDeleteConsumer(Player player) {
-        return action -> {
-            if (player == null) {
-                return;
-            }
-
-            if (!player.hasPermission(Permission.COMMAND_DELETE_OWN)) {
-                player.sendMessage(Messenger.createErrorMessage(Messages.CMD_DELETE_OWN_PERMISSION));
-                return;
-            }
-
-            List<CChunkLoader> clList = DataStoreManager.getDataStore().getChunkLoaders(player.getUniqueId());
-            if (clList.isEmpty()) {
-                player.sendMessage(Messenger.createErrorMessage(Messages.CMD_DELETE_OWN_NO_CHUNKLOADERS));
-                return;
-            }
-
-            Integer removed = DataStoreManager.getDataStore().removeChunkLoaders(player.getUniqueId());
-            player.sendMessage(Text.builder(
-                    String.format(
-                            Messages.CMD_DELETE_OWN_SUCCESS,
-                            removed
-                    )).color(TextColors.GREEN).build());
-
-            BetterChunkLoader.instance().getLogger().info(
-                    String.format(
-                            Messages.CMD_DELETE_OWN_SUCCESS_LOG,
-                            player.getName()
-                    ));
-        };
     }
 
 }

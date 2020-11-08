@@ -11,7 +11,11 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.*;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.InventoryArchetype;
+import org.spongepowered.api.item.inventory.InventoryArchetypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
@@ -44,7 +48,8 @@ public class ChunkLoaderInventory {
 
         int pos = 2;
         for (byte i = 0; i < 5; ) {
-            addInventoryOption(inventory, pos, ItemTypes.MAP, "Size " + ChunkLoaderHelper.getRadiusFromRange(i) + (chunkLoader.getRange() == i ? " [selected]" : ""));
+            addInventoryOption(inventory, pos, ItemTypes.MAP,
+                    "Size " + ChunkLoaderHelper.getRadiusFromRange(i) + (chunkLoader.getRange() == i ? " [selected]" : ""));
             pos++;
             i++;
         }
@@ -66,7 +71,6 @@ public class ChunkLoaderInventory {
         }
 
     }
-
 
 
     public static Consumer<ClickInventoryEvent> createClickEventConsumer(CChunkLoader chunkLoader) {
@@ -148,7 +152,7 @@ public class ChunkLoaderInventory {
                     } else {
                         pos = chunkLoader.radiusFromSide(pos);
                         // if higher range, check if the player has enough free chunks
-                        if (!player.hasPermission(Permission.ABILITY_UNLIMITED) &&  pos > chunkLoader.getRange()) {
+                        if (!player.hasPermission(Permission.ABILITY_UNLIMITED) && pos > chunkLoader.getRange()) {
                             int needed = ((1 + (pos * 2)) * (1 + (pos * 2))) - chunkLoader.getSize();
                             int available;
                             if (chunkLoader.isAlwaysOn()) {
@@ -179,7 +183,7 @@ public class ChunkLoaderInventory {
                                 ChunkLoaderHelper.getRadiusFromRange(pos)
                         );
 
-                        if(!player.getUniqueId().equals(chunkLoader.getOwner())){
+                        if (!player.getUniqueId().equals(chunkLoader.getOwner())) {
                             logMessage = String.format(
                                     Messages.EDIT_CHUNKLOADER_LOG_OTHER,
                                     player.getName(),

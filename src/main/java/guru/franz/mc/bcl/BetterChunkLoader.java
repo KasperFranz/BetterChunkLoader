@@ -1,24 +1,24 @@
 package guru.franz.mc.bcl;
 
 import com.google.inject.Inject;
+import guru.franz.mc.bcl.command.BCL;
+import guru.franz.mc.bcl.command.Balance;
+import guru.franz.mc.bcl.command.Chunks;
 import guru.franz.mc.bcl.command.Delete;
+import guru.franz.mc.bcl.command.Info;
+import guru.franz.mc.bcl.command.ListCommand;
+import guru.franz.mc.bcl.command.Purge;
 import guru.franz.mc.bcl.command.Reload;
+import guru.franz.mc.bcl.command.elements.ChunksChangeOperatorElement;
+import guru.franz.mc.bcl.command.elements.LoaderTypeElement;
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.config.ConfigLoader;
+import guru.franz.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.datastore.H2DataStore;
 import guru.franz.mc.bcl.datastore.MySQLDataStore;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import guru.franz.mc.bcl.command.BCL;
-import guru.franz.mc.bcl.command.Balance;
-import guru.franz.mc.bcl.command.Chunks;
-import guru.franz.mc.bcl.command.Info;
-import guru.franz.mc.bcl.command.ListCommand;
-import guru.franz.mc.bcl.command.Purge;
-import guru.franz.mc.bcl.command.elements.ChunksChangeOperatorElement;
-import guru.franz.mc.bcl.command.elements.LoaderTypeElement;
-import guru.franz.mc.bcl.datastore.DataStoreManager;
 import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -33,7 +33,11 @@ import org.spongepowered.api.text.Text;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Plugin(id = BetterChunkLoaderPluginInfo.ID,
         name = BetterChunkLoaderPluginInfo.NAME,
@@ -41,23 +45,24 @@ import java.util.*;
         version = BetterChunkLoaderPluginInfo.VERSION
 )
 public class BetterChunkLoader {
+
     private static BetterChunkLoader instance;
+    public boolean enabled = false;
     @Inject
     private Logger logger;
     @Inject
     @ConfigDir(sharedRoot = false)
     private Path configDir;
     private Map<String, List<CChunkLoader>> activeChunkLoaders;
-    public boolean enabled = false;
 
     @Inject
-    public BetterChunkLoader(){
-        if (instance != null){
+    public BetterChunkLoader() {
+        if (instance != null) {
             throw new IllegalStateException("Plugin cannot be instantiated twice");
         }
 
         instance = this;
-     }
+    }
 
     public static BetterChunkLoader instance() {
         return instance;
@@ -117,9 +122,9 @@ public class BetterChunkLoader {
             throw new RuntimeException("BCLForgeLib is needed to run this plugin!");
         }
 
-        try{
+        try {
             setupPlugin();
-        } catch (Exception e){
+        } catch (Exception e) {
             Messenger.logException(e);
         }
 
@@ -199,7 +204,6 @@ public class BetterChunkLoader {
                 .build();
 
 
-
         CommandSpec cmdList = CommandSpec.builder()
                 .arguments(
                         // TODO: figure out a good way to do this.
@@ -267,7 +271,7 @@ public class BetterChunkLoader {
         return logger;
     }
 
-    public void loadChunks(CChunkLoader chunkloader){
+    public void loadChunks(CChunkLoader chunkloader) {
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().addChunkLoader(chunkloader);
             List<CChunkLoader> clList = activeChunkLoaders.computeIfAbsent(chunkloader.getWorldName(), k -> new ArrayList<>());
@@ -276,11 +280,11 @@ public class BetterChunkLoader {
     }
 
 
-    public void unloadChunks(CChunkLoader chunkloader){
+    public void unloadChunks(CChunkLoader chunkloader) {
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
             BCLForgeLib.instance().removeChunkLoader(chunkloader);
             List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
-            if(clList == null){
+            if (clList == null) {
                 return;
             }
             clList.remove(chunkloader);

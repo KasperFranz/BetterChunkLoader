@@ -4,8 +4,7 @@ import java.sql.SQLException;
 
 public class MySQLConnectionException extends SQLException {
 
-    public MySQLConnectionException(String message)
-    {
+    public MySQLConnectionException(String message) {
         super(message);
     }
 }

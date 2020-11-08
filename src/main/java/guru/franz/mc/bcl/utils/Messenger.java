@@ -1,9 +1,9 @@
 package guru.franz.mc.bcl.utils;
 
 
+import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.BetterChunkLoaderPluginInfo;
 import guru.franz.mc.bcl.exception.ConfigLoadException;
-import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.command.CommandSource;
@@ -42,7 +42,8 @@ public class Messenger {
 
     public static void sendNoPermission(CommandSource sender) {
         sender.sendMessage(
-                BetterChunkLoaderPluginInfo.prefix.concat(Text.builder("You do not have permission to execute this command!").color(TextColors.DARK_RED).build()));
+                BetterChunkLoaderPluginInfo.prefix
+                        .concat(Text.builder("You do not have permission to execute this command!").color(TextColors.DARK_RED).build()));
     }
 
     public static void sendUsage(CommandSource sender, String command) {
@@ -71,7 +72,7 @@ public class Messenger {
     }
 
     public static Text senderNotPlayerError() {
-        return  BetterChunkLoaderPluginInfo.prefix.concat(Text.builder("This command can only be executed by a player!").build());
+        return BetterChunkLoaderPluginInfo.prefix.concat(Text.builder("This command can only be executed by a player!").build());
     }
 
     /**
@@ -113,7 +114,7 @@ public class Messenger {
         return Text.builder("Removed " + newValue + " " + type + " from " + user).color(baseColor).build();
     }
 
-    public static Text getChunkText(CommandSource source, CChunkLoader chunkLoader, boolean showUser){
+    public static Text getChunkText(CommandSource source, CChunkLoader chunkLoader, boolean showUser) {
         TextColor color = chunkLoader.isAlwaysOn() ? TextColors.AQUA : TextColors.GREEN;
         String text = chunkLoader.isAlwaysOn() ? "World" : "Personal";
 
@@ -131,9 +132,9 @@ public class Messenger {
                 .append(Text.builder(chunkLoader.getPrettyLocationString() + " ").color(baseColor).build());
 
         //TELEPORT ACTION
-        if(source.hasPermission(Permission.ABILITY_TELEPORT) && source instanceof Player){
-            Location<World> location = chunkLoader.getLoc().add(0,1,0);
-            Text tp = Text.builder(Messages.LIST_ACTION_TELEPORT +" ").color(TextColors.DARK_BLUE)
+        if (source.hasPermission(Permission.ABILITY_TELEPORT) && source instanceof Player) {
+            Location<World> location = chunkLoader.getLoc().add(0, 1, 0);
+            Text tp = Text.builder(Messages.LIST_ACTION_TELEPORT + " ").color(TextColors.DARK_BLUE)
                     .onClick(TextActions.executeCallback(CommandHelper.createTeleportConsumer(source, location)))
                     .onHover(TextActions.showText(Text.of(Messages.LIST_ACTION_TELEPORT_HOVER)))
                     .build();
@@ -141,7 +142,7 @@ public class Messenger {
         }
 
         //DELETE ACTION
-        if(source instanceof Player && Permission.canDeleteChunkLoader((Player) source, chunkLoader)){
+        if (source instanceof Player && Permission.canDeleteChunkLoader((Player) source, chunkLoader)) {
             Text tp = Text.builder(Messages.LIST_ACTION_DELETE + " ").color(TextColors.RED)
                     .onClick(TextActions.executeCallback(CommandHelper.createDeleteChunkConsumer((Player) source, chunkLoader)))
                     .onHover(TextActions.showText(Text.of(Messages.LIST_ACTION_DELETE_HOVER)))
@@ -154,23 +155,23 @@ public class Messenger {
                 .toText();
     }
 
-    public static void logException(Throwable e){
+    public static void logException(Throwable e) {
         Logger logger = BetterChunkLoader.instance().getLogger();
         StackTraceElement error = e.getStackTrace()[0];
 
         String type = "";
-        if(e instanceof ConfigLoadException){
+        if (e instanceof ConfigLoadException) {
             type = "Configuration issue";
         }
 
         logger.error("===================================================================");
 
-        if(!type.isEmpty()){
+        if (!type.isEmpty()) {
             logger.error(type);
         }
 
         logger.error(e.getMessage());
-        logger.error( "Happened at " + error.getClassName() + ":" + error.getLineNumber() + "");
+        logger.error("Happened at " + error.getClassName() + ":" + error.getLineNumber() + "");
         logger.error("===================================================================");
     }
 
@@ -183,7 +184,7 @@ public class Messenger {
         return Text.builder(message).color(Messenger.ERROR_COLOR).build();
     }
 
-    public static Text getConfirmBox(String message, Consumer<CommandSource> action){
+    public static Text getConfirmBox(String message, Consumer<CommandSource> action) {
 
 
         Text.Builder builder = Text.builder().append(Text.of(Messenger.baseColor, message))

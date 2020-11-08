@@ -9,17 +9,17 @@ import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class SimpleValueElement extends CommandElement {
+import javax.annotation.Nullable;
 
-    protected abstract List<String> getValues();
+public abstract class SimpleValueElement extends CommandElement {
 
     public SimpleValueElement(Text key) {
         super(key);
     }
 
+    protected abstract List<String> getValues();
 
     @Nullable
     @Override
