@@ -47,7 +47,7 @@ As part of version 3.8.0, you can now set up metadata on the user for a few defa
  solution for this)**
  
 ## DataSources
-As part of version 3.9.0 I have introduced H2 (which is now the default).
+As part of version 3.8.2 I have introduced H2 (which is now the default).
 I would still recommend you to use MySQL where possible.
 
 ## Permissions
