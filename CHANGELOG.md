@@ -4,6 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 
 ## [Unreleased][unreleased]
 ### Added
+
+### Changed
+
+### Fixed
+
+
+## 202012-23 3.8.2
+### Added
  - Show an error message before allowing players to run bcl commands when plugin is not ready/enabled (because of wrong config or datastore) 
  - Added H2 as an option for datastore #25
  
