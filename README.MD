@@ -5,8 +5,8 @@
 BetterChunkLoaders is a spongeForge plugin that adds two different types of chunk loaders.
 
 ### Types Of Chunk Loaders.
-Online Only – This will load chunks when the player is online (Iron block) 
-Always Online – This will load chunks even when the player is offline up to the number of hours specified in the config (Diamond block).
+- **Online Only** – This will load chunks when the player is online (Iron block) 
+- **Always Online** – This will load chunks even when the player is offline up to the number of hours specified in the config (Diamond block).
 
 ### Create a chunk loader (user).
 1. Add an iron or diamond block in the block you want to have as your chunk loaders' centre.
