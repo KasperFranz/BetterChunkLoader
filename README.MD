@@ -2,28 +2,34 @@
 [![Codacy Badge][CodacyImg]][codacyLink]
 [![Discord][discordImg]][discordLink]
 
-This Sponge plugin requires the [BCLForge mod][BCLForgeMod]. we use this secondary mod to do chunkloading reliable.
+BetterChunkLoaders is a spongeForge plugin that adds two different types of chunk loaders.
+
+### Types Of Chunk Loaders.
+- **Online Only** – This will load chunks when the player is online (Iron block) 
+- **Always Online** – This will load chunks even when the player is offline up to the number of hours specified in the config (Diamond block).
+
+### Create a chunk loader (user).
+1. Add an iron or diamond block in the block you want to have as your chunk loaders' centre.
+2. Click the block with a blaze road (the item can change this in the config) and an interface where you can select how many chunks around it you want to load.
 
 You can find the latest version under [releases][ReleaseLink].
 
 ## Requirements 
- - [BCLForge mod][BCLForgeMod]
+ - [BCLForge mod][BCLForgeMod] (Used so we can chunkload reliable) 
+ - SpongeForge
  
 ## Support
 You can receive support for using this plugin on my [Discord Chat][discordLink].
 
 
-## Known issues
-the database is NOT compatible with the 1.7 version of this mod since this is making the table readable instead of being bytes - Sorry
 
-
-If you find any issues when using this plugin, please create an issue.
+If you find any issues when using this plugin, please create a problem.
 
 
 ## Commands
 The base command is betterchunkloader (with the alias of bcl), this gives the general usage and what commands are available.
 
-| Sub command        | parameters           | Permission  | Description |
+| Sub-command        | parameters           | Permission  | Description |
 | ------------- |:-------------: | -----| ----- |
 | `balance` |   | `betterchunkloader.balance.own` | Get your balance of chunkloaders.
 | `balance` | [User]  | `betterchunkloader.balance.others` | Get your balance of  another player
@@ -47,11 +53,11 @@ As part of version 3.8.0, you can now set up metadata on the user for a few defa
  solution for this)**
  
 ## DataSources
-As part of version 3.8.2 I have introduced H2 (which is now the default).
+As part of version 3.8.2, I have introduced H2 (which is now the default).
 I would still recommend you to use MySQL where possible.
 
 ## Permissions
-The up to date version of permission can be found at [permissions][permissions] file.
+You can find the up to date version of permission in the [permissions][permissions] file.
 
 
 ## FAQ 
