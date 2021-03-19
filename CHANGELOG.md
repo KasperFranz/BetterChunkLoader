@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 - Updated the log message when the player deleted their own chunkloader
 
 ### Fixed
+ - Fixed a problem if more than 1 block were deleted at once #55
 
 
 ## 2020-12-23 3.8.2

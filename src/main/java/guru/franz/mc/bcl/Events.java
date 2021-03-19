@@ -71,21 +71,28 @@ public class Events {
 
     @Listener
     public void onBlockBreak(ChangeBlockEvent.Break event) {
-        BlockSnapshot block = event.getTransactions().get(0).getOriginal();
-        if (
-                block == null //TODO: in what cases could this block be empty?
-                        || (!block.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) && !block.getState().getType().equals(BlockTypes.IRON_BLOCK))
-                        || !block.getLocation().isPresent()
-        ) {
-            return;
-        }
+        event.getTransactions().forEach(blockSnapshotTransaction -> {
+            BlockSnapshot block = blockSnapshotTransaction.getOriginal();
 
-        CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(block.getLocation().get());
-        if (chunkLoader == null) {
-            return;
-        }
+            //If the block is not diamond or Iron or if the location of the block is not present we should just return early.
+            if (
+                    (!block.getState().getType().equals(BlockTypes.DIAMOND_BLOCK) && !block.getState().getType().equals(BlockTypes.IRON_BLOCK))
+                            || !block.getLocation().isPresent()
+            ) {
+                return;
+            }
 
-        ChunkLoaderHelper.removeChunkLoader(chunkLoader, event.getCause().last(Player.class).orElse(null));
+            CChunkLoader chunkLoader = DataStoreManager.getDataStore().getChunkLoaderAt(block.getLocation().get());
+
+            //If there is no chunkloader at this location we just return early.
+            if (chunkLoader == null) {
+                return;
+            }
+
+            ChunkLoaderHelper.removeChunkLoader(chunkLoader, event.getCause().last(Player.class).orElse(null));
+        });
+
+
     }
 
     @Listener
