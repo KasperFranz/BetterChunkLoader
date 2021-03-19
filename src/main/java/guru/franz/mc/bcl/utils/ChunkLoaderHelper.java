@@ -57,7 +57,7 @@ public class ChunkLoaderHelper {
         String logMessage = String.format(
                 Messages.DELETE_CHUNKLOADER_LOG_SELF,
                 executor,
-                chunkLoader.getOwnerName()
+                chunkLoader.getLocationString()
         );
 
 

@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Added
 
 ### Changed
+- Updated the log message when the player deleted their own chunkloader
 
 ### Fixed
 
