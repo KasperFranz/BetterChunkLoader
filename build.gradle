@@ -4,14 +4,13 @@ plugins {
     id 'ninja.miserable.blossom' version '1.0.1'
 }
 
-group = 'net.kaikk.mc'
-version = '3.9.0-S7.1.0-dev'
+version = '3.8.3-S7.3.0-dev'
 description = 'Better Chunkloading.'
 project.ext.authors = 'KasperFranz'
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:7.1.0-SNAPSHOT'
-    compile 'com.github.KasperFranz:BCLForgeLib:master'
+    implementation('org.spongepowered:spongeapi:7.3.0')
+    implementation('com.github.KasperFranz:BCLForgeLib:master')
 }
 
 blossom {
@@ -33,7 +32,7 @@ repositories {
     jcenter()
     maven {
         name 'Sponge maven repo'
-        url 'http://repo.spongepowered.org/maven'
+        url 'https://repo.spongepowered.org/repository/maven-public/'
     }
     maven { url 'https://jitpack.io' }
     maven { url 'https://repo.codemc.org/repository/maven-public/'}
