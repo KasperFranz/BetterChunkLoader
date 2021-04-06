@@ -10,6 +10,7 @@ public final class BetterChunkLoaderPluginInfo {
     public static final String VERSION = "@version@";
 
     public static final String DESCRIPTION = "@description@";
+    public static final String AUTHORS = "@authors";
 
     public static final Text prefix = Text.builder("[BetterChunkLoader] ").color(TextColors.GOLD).build();
 

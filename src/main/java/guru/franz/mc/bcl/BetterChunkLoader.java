@@ -44,7 +44,8 @@ import java.util.UUID;
 @Plugin(id = BetterChunkLoaderPluginInfo.ID,
         name = BetterChunkLoaderPluginInfo.NAME,
         description = BetterChunkLoaderPluginInfo.DESCRIPTION,
-        version = BetterChunkLoaderPluginInfo.VERSION
+        version = BetterChunkLoaderPluginInfo.VERSION,
+        authors = BetterChunkLoaderPluginInfo.AUTHORS
 )
 public class BetterChunkLoader {
 
