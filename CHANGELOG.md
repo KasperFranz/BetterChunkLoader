@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 - Updated the log message when the player deleted their own chunkloader
 
 ### Fixed
- - Fixed a problem if more than 1 block were deleted at once #55
+ - Fixed a problem where a chunkloader would stay if aif more than 1 block were deleted at once #55
 
 
 ## 2020-12-23 3.8.2
@@ -20,7 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/ ), and followin
 ### Changed
  - We throw more readable errors when there is a config exception.
  - Cleanup of internals in the plugin (namespaces)
- - Removed internal references of admin loader (it has nt been implemented in a long time - so safe to be removed.
+ - Removed internal references of admin loader (it was removed a long time ago)
  
 ### Fixed
  - Issue with creating chunk loaders

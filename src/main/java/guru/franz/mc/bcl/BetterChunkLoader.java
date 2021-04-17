@@ -1,6 +1,8 @@
 package guru.franz.mc.bcl;
 
 import com.google.inject.Inject;
+import guru.franz.mc.bcl.chunkload.BCLForgeMod;
+import guru.franz.mc.bcl.chunkload.ChunkLoaderInterface;
 import guru.franz.mc.bcl.command.BCL;
 import guru.franz.mc.bcl.command.Balance;
 import guru.franz.mc.bcl.command.Chunks;
@@ -18,7 +20,6 @@ import guru.franz.mc.bcl.datastore.MySQLDataStore;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import net.kaikk.mc.bcl.forgelib.BCLForgeLib;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
@@ -63,6 +64,7 @@ public class BetterChunkLoader {
     @DefaultConfig(sharedRoot = false)
     private ConfigurationLoader<CommentedConfigurationNode> configLoader;
     private Map<String, List<CChunkLoader>> activeChunkLoaders;
+    private ChunkLoaderInterface chunkloader;
 
     @Inject
     public BetterChunkLoader() {
@@ -182,6 +184,8 @@ public class BetterChunkLoader {
 
         logger.debug("Load complete.");
         enabled = true;
+
+        this.chunkloader = new BCLForgeMod();
     }
 
     @Listener
@@ -285,7 +289,7 @@ public class BetterChunkLoader {
 
     public void loadChunks(CChunkLoader chunkloader) {
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
-            BCLForgeLib.instance().addChunkLoader(chunkloader);
+            this.chunkloader.addChunkloader(chunkloader);
             List<CChunkLoader> clList = activeChunkLoaders.computeIfAbsent(chunkloader.getWorldName(), k -> new ArrayList<>());
             clList.add(chunkloader);
         }
@@ -294,7 +298,7 @@ public class BetterChunkLoader {
 
     public void unloadChunks(CChunkLoader chunkloader) {
         if (chunkloader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
-            BCLForgeLib.instance().removeChunkLoader(chunkloader);
+            this.chunkloader.removeChunkloader(chunkloader);
             List<CChunkLoader> clList = activeChunkLoaders.get(chunkloader.getWorldName());
             if (clList == null) {
                 return;

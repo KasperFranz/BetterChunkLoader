@@ -2,7 +2,7 @@
 [![Codacy Badge][CodacyImg]][codacyLink]
 [![Discord][discordImg]][discordLink]
 
-BetterChunkLoaders is a spongeForge plugin that adds two different types of chunk loaders.
+BetterChunkLoaders is a spongeForge plugin that adds two different types of chunk loaders for your users.
 
 ### Types Of Chunk Loaders.
 - **Online Only** – This will load chunks when the player is online (Iron block) 
