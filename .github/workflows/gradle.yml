@@ -28,4 +28,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Build plugin
-        path: build/libs/BetterChunkLoader-*.jar
+        path: |
+          build/libs/BetterChunkLoader-*.jar
+          !*-all.jar
