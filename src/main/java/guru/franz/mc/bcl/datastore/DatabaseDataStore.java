@@ -4,6 +4,7 @@ import guru.franz.mc.bcl.BetterChunkLoader;
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.datastore.database.DatabaseInterface;
 import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
+import guru.franz.mc.bcl.exception.Exception;
 import guru.franz.mc.bcl.exception.NegativeValueException;
 import guru.franz.mc.bcl.exception.UserNotFound;
 import guru.franz.mc.bcl.model.CChunkLoader;
@@ -28,7 +29,7 @@ public abstract class DatabaseDataStore extends AHashMapDataStore {
             database.setupTable();
         } catch (SQLException e) {
             BetterChunkLoader.instance().getLogger().info("Unable to connect to the database. Please verify the connection information.");
-            throw new RuntimeException(e);
+            throw new MySQLConnectionException(e.getMessage());
         }
 
         try {
@@ -39,7 +40,7 @@ public abstract class DatabaseDataStore extends AHashMapDataStore {
 
         } catch (SQLException e) {
             BetterChunkLoader.instance().getLogger().info("unable to read chunk loaders data from the database.");
-            throw new RuntimeException(e);
+            throw new MySQLConnectionException(e.getMessage());
         }
 
         try {
@@ -56,14 +57,14 @@ public abstract class DatabaseDataStore extends AHashMapDataStore {
      *
      * @param world The world we want to load
      */
-    public void loadWorld(String world) {
+    public void loadWorld(String world) throws Exception {
         try {
             List<CChunkLoader> clList = database.getChunkloadersByServerAndWorld(Config.getInstance().getServerName(), world);
             chunkLoaders.remove(world);
             chunkLoaders.put(world, clList);
         } catch (SQLException e) {
             BetterChunkLoader.instance().getLogger().info("unable to  load the chunk loaders data from MySQL server. for " + world);
-            throw new RuntimeException(e);
+            throw new Exception(e);
         }
     }
 
@@ -72,10 +73,12 @@ public abstract class DatabaseDataStore extends AHashMapDataStore {
         //TODO we should be able to do this better!
         for (Map.Entry<String, List<CChunkLoader>> entry : this.chunkLoaders.entrySet()) {
             for (CChunkLoader cChunkLoader : entry.getValue()) {
-                if (cChunkLoader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName())) {
-                    if (cChunkLoader.getLoc().equals(blockLocation)) {
-                        return cChunkLoader;
-                    }
+                if (
+                        cChunkLoader.getServerName().equalsIgnoreCase(Config.getInstance().getServerName()) &&
+                        cChunkLoader.getLoc().equals(blockLocation)
+                ) {
+                    return cChunkLoader;
+
                 }
             }
         }

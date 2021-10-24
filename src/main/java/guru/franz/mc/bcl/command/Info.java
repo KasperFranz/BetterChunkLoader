@@ -30,7 +30,12 @@ public class Info extends EnabledCommand {
             return CommandResult.success();
         }
 
-        int alwaysOnLoaders = 0, onlineOnlyLoaders = 0, alwaysOnChunks = 0, onlineOnlyChunks = 0, players;
+        int alwaysOnLoaders = 0;
+        int onlineOnlyLoaders = 0;
+        int alwaysOnChunks = 0;
+        int onlineOnlyChunks = 0;
+        int players;
+
         HashMap<UUID, Integer> loadedChunksForPlayer = new HashMap<>();
 
         for (CChunkLoader chunkLoader : chunkLoaders) {
@@ -51,15 +56,7 @@ public class Info extends EnabledCommand {
         }
 
         players = loadedChunksForPlayer.size();
-/*
-        for (Map.Entry<UUID, Integer> entry : loadedChunksForPlayer.entrySet()) {
-            if (maxChunksCount < entry.getValue()) {
-                maxChunksCount = entry.getValue();
-                maxChunksPlayer = entry.getKey();
-            }
-        }
 
-*/
         Messenger.sendInfoMessage(commandSource, onlineOnlyLoaders, alwaysOnLoaders, onlineOnlyChunks, alwaysOnChunks, players);
         return CommandResult.success();
     }

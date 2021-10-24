@@ -17,11 +17,14 @@ import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.datastore.DataStoreManager;
 import guru.franz.mc.bcl.datastore.H2DataStore;
 import guru.franz.mc.bcl.datastore.MySQLDataStore;
+import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
+import guru.franz.mc.bcl.exception.Exception;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
@@ -35,6 +38,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,38 +122,42 @@ public class BetterChunkLoader {
     }
 
     @Listener
-    public void onServerStart(GameStartedServerEvent event) {
+    public void onServerStart(GameStartedServerEvent event) throws Exception {
         // check if forge is running
         try {
             Class.forName("net.minecraftforge.common.ForgeVersion");
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("BCLForgeLib are needed to run this plugin!");
+            throw new Exception("BCLForgeLib are needed to run this plugin!");
         }
 
         // check if BCLForgeLib is present
         try {
             Class.forName("net.kaikk.mc.bcl.forgelib.BCLForgeLib");
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("BCLForgeLib is needed to run this plugin!");
+            throw new Exception("BCLForgeLib is needed to run this plugin!");
         }
 
         try {
             setupPlugin();
-        } catch (Exception e) {
+        } catch (Exception | MySQLConnectionException e) {
             Messenger.logException(e);
         }
 
         initializeCommands();
     }
 
-    public void setupPlugin() throws Exception {
+    public void setupPlugin() throws Exception, MySQLConnectionException {
         // Load config
         logger.debug("Loading configuration");
         // Have to move config file since Configurate 3.x did not properly implement private root conventions
         Config.moveOldConfig(configDir, configPath);
-        Config config = Config.loadFrom(configDir, configLoader.load());
-        config.saveToFile(configLoader);
-
+        Config config;
+        try {
+            config = Config.loadFrom(configDir, configLoader.load());
+            config.saveToFile(configLoader);
+        } catch (ObjectMappingException | IOException e) {
+            throw new Exception(e);
+        }
         this.activeChunkLoaders = new HashMap<>();
         // Register DataStores
         DataStoreManager.registerDataStore("MySQL", MySQLDataStore.class);
