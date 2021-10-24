@@ -3,7 +3,9 @@
 [![Codacy Badge][codacy_img]][codacy_link]
 [![Discord][discord_img]][discordLink]
 
-BetterChunkLoaders is a spongeForge plugin that adds two different types of chunk loaders for your users.
+BetterChunkLoaders is a Sponge Forge plugin that adds two different types of chunk loaders for your users.
+
+## How To
 
 ### Types Of Chunk Loaders.
 
