@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: Bug Report
 about: Create a report to help us improve
 
 ---
@@ -28,6 +28,7 @@ It is vital to supply all version numbers.
 
 **To Reproduce**
 Steps to reproduce the behaviour:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'

@@ -20,8 +20,8 @@ from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 ### Added
 
-- Show an error message before allowing players to run bcl commands when plugin is not ready/enabled (because of wrong
-  config or datastore)
+- Show an error message on BCL commands if the plugin is not ready.
+(because of wrong config or datastore)
 - Added H2 as an option for datastore #25
 
 ### Changed
@@ -118,10 +118,12 @@ from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 ### Fixed
 
-- fixed an issue where the insert was done to the wrong part (world add as personal and personal as world, if using the
-  add while nothing was in the DB)
-  -fixed a permission issue (you was able to see everyone's balance without the right permission and updated the readme
-  with the subcommands
+- Fixed an issue where the insert was done to the wrong part
+  (world add as personal and personal as world)
+  only if using the add while nothing was in the DB
+- Fixed a permission issue on the balance command.
+  (You were able to see everyone's balance without the right permission)
+- Updated the readme with the subcommands
 
 ## 2017-04-21 3.3.0
 
