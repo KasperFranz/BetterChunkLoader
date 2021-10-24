@@ -10,7 +10,8 @@ import java.util.UUID;
 public class PlayerData {
 
     private final UUID playerId;
-    private int alwaysOnChunksAmount, onlineOnlyChunksAmount;
+    private int alwaysOnChunksAmount;
+    private int onlineOnlyChunksAmount;
 
     public PlayerData(UUID playerId) throws UserNotFound {
         this.playerId = playerId;

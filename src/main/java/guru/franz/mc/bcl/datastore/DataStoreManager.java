@@ -1,5 +1,7 @@
 package guru.franz.mc.bcl.datastore;
 
+import guru.franz.mc.bcl.exception.Exception;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,12 +27,12 @@ public final class DataStoreManager {
     /**
      * Sets and instantiate the DataStore
      */
-    public static void setDataStoreInstance(String dataStoreId) {
+    public static void setDataStoreInstance(String dataStoreId) throws Exception {
         try {
             dataStore = dataStores.get(dataStoreId).newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
-            throw new RuntimeException("Couldn't instantiate DataStore " + dataStoreId);
+            throw new Exception("Couldn't instantiate DataStore " + dataStoreId);
         }
     }
 

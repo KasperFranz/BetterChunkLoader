@@ -1,8 +1,11 @@
 package guru.franz.mc.bcl;
 
+import com.flowpowered.math.vector.Vector3i;
 import guru.franz.mc.bcl.config.Config;
 import guru.franz.mc.bcl.config.node.ItemsNode;
 import guru.franz.mc.bcl.datastore.DataStoreManager;
+import guru.franz.mc.bcl.datastore.exceptions.MySQLConnectionException;
+import guru.franz.mc.bcl.exception.Exception;
 import guru.franz.mc.bcl.inventory.ChunkLoaderInventory;
 import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.ChunkLoaderHelper;
@@ -47,11 +50,18 @@ public class Events {
                     // if the chunkloader is not present lets make one!
                     if (chunkLoader == null) {
                         UUID uid = player.getUniqueId();
-                        int x = (int) Math.floor(clickedBlock.getLocation().get().getBlockX() / 16.00);
-                        int y = (int) Math.floor(clickedBlock.getLocation().get().getBlockZ() / 16.00);
+                        Vector3i chunkVector = clickedBlock.getLocation().get().getChunkPosition();
                         String worldName = clickedBlock.getLocation().get().getExtent().getName();
                         boolean alwaysOn = clickedBlock.getState().getType().equals(BlockTypes.DIAMOND_BLOCK);
-                        chunkLoader = new CChunkLoader(x, y, worldName, (byte) -1, uid, clickedBlock.getLocation().get(), null, alwaysOn);
+                        chunkLoader = new CChunkLoader(
+                                chunkVector.getX(),
+                                chunkVector.getY(),
+                                worldName, (byte) -1,
+                                uid,
+                                clickedBlock.getLocation().get(),
+                                null,
+                                alwaysOn
+                        );
                     }
                     ChunkLoaderInventory.ShowUI(player, chunkLoader);
                 } else {
@@ -135,7 +145,7 @@ public class Events {
                     BetterChunkLoader.instance().loadChunks(cl);
                 }
             }
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | Exception e) {
             Messenger.logException(e);
         }
     }
@@ -145,7 +155,7 @@ public class Events {
 
         try {
             BetterChunkLoader.instance().setupPlugin();
-        } catch (Exception e) {
+        } catch (Exception | MySQLConnectionException e) {
             Messenger.logException(e);
         }
     }

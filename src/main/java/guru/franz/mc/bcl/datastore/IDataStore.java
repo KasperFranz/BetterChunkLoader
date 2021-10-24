@@ -34,7 +34,7 @@ public interface IDataStore {
      * Loads data from the datastore.
      * This is called when a world is loaded
      */
-    void loadWorld(String world) throws RuntimeException;
+    void loadWorld(String world) throws RuntimeException, Exception;
 
     /**
      * Get chunk loaders
