@@ -3,21 +3,24 @@
 [![Codacy Badge][codacy_img]][codacy_link]
 [![Discord][discord_img]][discordLink]
 
-BetterChunkLoaders is a Sponge Forge plugin that adds two different types of chunk loaders for your users.
+BetterChunkLoaders is a Sponge Forge plugin that adds two different types of
+chunk loaders for your users.
 
 ## How To
 
 ### Types Of Chunk Loaders.
 
 - **Online Only** – This will load chunks when the player is online (Iron block)
-- **Always Online** – This will load chunks even when the player is offline up to the number of hours specified in the
-  config (Diamond block).
+- **Always Online** – This will load chunks even when the player is offline up
+  to the number of hours specified in the config (Diamond block).
 
 ### Create a chunk loader (user).
 
-1. Add an iron or diamond block in the block you want to have as your chunk loaders' centre.
-2. Click the block with a blaze road (the item can change this in the config) and an interface where you can select how
-   many chunks around it you want to load.
+1. Add an iron or diamond block in the block you want to have as your chunk
+   loaders' centre.
+2. Click the block with a blaze road (the item can change this in the config)
+   and an interface where you can select how many chunks around it you want to
+   load.
 
 You can find the latest version under [releases][release_link].
 
@@ -34,8 +37,8 @@ If you find any issues when using this plugin, please create a problem.
 
 ## Commands
 
-The base command is betterchunkloader (with the alias of bcl), this gives the general usage and what commands are
-available.
+The base command is betterchunkloader (with the alias of bcl), this gives the
+general usage and what commands are available.
 
 | Sub-command        | parameters           | Permission  | Description |
 | ------------- |:-------------: | -----| ----- |
@@ -51,31 +54,38 @@ available.
 
 ## metadata
 
-As part of version 3.8.0, you can now set up metadata on the user for a few defaults.
+As part of version 3.8.0, you can now set up metadata on the user for a few
+defaults.
 
 | meta name        | description |
 | ------------- | ----- |
 | bcl.world | The number of world chunk loaders a user can have. |
 | bcl.personal | The number of personal chunk loaders a user can have. |
 
-**The user currently has to log out and log in for this to take effect, this will also not work if the user has a
-set/added value (I am working on a solution for this)**
+**The user currently has to log out and log in for this to take effect, this
+will also not work if the user has a set/added value (I am working on a solution
+for this)**
 
 ## DataSources
 
-As part of version 3.8.2, I have introduced H2 (which is now the default). I would still recommend you to use MySQL
-where possible.
+As part of version 3.8.2, I have introduced H2 (which is now the default). I
+would still recommend you to use MySQL where possible.
 
 ## Permissions
 
-You can find the up to date version of permission in the [permissions][permissions] file.
+You can find the up-to-date version of permission in
+the [permissions][permissions] file.
 
 ## FAQ
 
 ### what is the difference between a personal loader and a world loader?
 
-A personal loader is only active when the player is online while a world loader is active even when the player is
-offline) (how long after their last login can be defined in the config.
+A personal loader is only active when the player is online.
+
+A world loader is active even when the player is offline.
+
+The length of the world loader is loading after the player was last seen is
+defined in the config.
 
 
 [discordLink]: https://discord.gg/MD6qGAd

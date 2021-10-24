@@ -23,6 +23,7 @@ format from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 - Show an error message on BCL commands if the plugin is not ready.
   (because of wrong config or datastore)
+
 - Added H2 as an option for datastore #25
 
 ### Changed
@@ -42,18 +43,21 @@ format from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 - Sending a message to the player if another player is deleting their
   chunkloader
+
 - Allowing the player to Delete their own/others Chunk Loaders through the list
   command (permission betterchunkloader.list.delete.others/
   betterchunkloader.list.delete.own) #6
-- Allowing players to delete all of their own chunkloaders (using /bcl delete)
-  # 36
+
+- Allowing players to delete all their own chunkloaders (using /bcl delete) #36
 
 ### Changed
 
 - Cleaned up the messages sent to the player and logged when we are
   deleting/changing/creating chunk loaders.
+
 - Using the DB Connection provided through Sponge #33 (moves DB connection to
   another thread)
+
 - Added security by using SQL Prepared statements.
 
 ### Fixed
@@ -67,9 +71,12 @@ format from [keep a CHANGELOG](http://keepachangelog.com/ )
 ### Added
 
 - Added bStats for visibility of how many are using the version.
+
 - Added the option to use metadata for the amount of chunk loaders a player can
   have.
+
 - Added more exceptions around the MySQL database connection start.
+
 - Added a reload command to reload the configuration!
 
 ### Changed
@@ -81,6 +88,7 @@ format from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 - Fixed a null pointer exception when using the purge command, and the world is
   empty (#27)
+
 - If the world is not loaded on startup we are now loading in the world when we
   get the sponge event! (Fixes #35)
 
@@ -105,7 +113,9 @@ format from [keep a CHANGELOG](http://keepachangelog.com/ )
 ### Added
 
 - added an option to teleport to a chunkloader (if you have the permission)
+
 - Added message when not able to load config. (#20)
+
 - Added option to use another item instead of a blaze rod to init the chunk
   loaders.
 
@@ -118,6 +128,7 @@ format from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 - Fixed the spam when shutting down the server, since it tried to unload chunks
   we didn't load.
+
 - An Illegal Exception if the data in the database isn't a valid UUID, then we
   now just say so instead of not loading the plugin.
 
@@ -133,8 +144,10 @@ format from [keep a CHANGELOG](http://keepachangelog.com/ )
 - Fixed an issue where the insert was done to the wrong part
   (world add as personal and personal as world)
   only if using the add while nothing was in the DB
+
 - Fixed a permission issue on the balance command.
   (You were able to see everyone's balance without the right permission)
+
 - Updated the readme with the subcommands
 
 ## 2017-04-21 3.3.0
