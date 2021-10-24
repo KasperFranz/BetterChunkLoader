@@ -19,7 +19,6 @@ Please follow this template; this makes sure the correct information is provided
 **What is the bug?**
 A clear and concise description of what the bug is.
 
-
 - **Sponge Version:**
 - **BetterChunkLoader Version:**
 - **BCLForgeLib Version:**
