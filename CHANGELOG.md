@@ -1,8 +1,8 @@
-# Change Log
+# Changelog
 
-All notable changes to this project will be documented in this file. This project adheres
-to [Semantic Versioning](http://semver.org/ ), and following the format
-from [keep a CHANGELOG](http://keepachangelog.com/ )
+All notable changes to this project will be documented in this file. This
+project adheres to [Semantic Versioning](http://semver.org/ ), and following the
+format from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 ## [Unreleased][unreleased]
 
@@ -14,14 +14,15 @@ from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 ### Fixed
 
-- Fixed a problem where a chunkloader would stay if aif more than 1 block were deleted at once #55
+- Fixed a problem where a chunkloader would not be deleted if more than 1 block
+  were deleted in the same event #55
 
 ## 2020-12-23 3.8.2
 
 ### Added
 
 - Show an error message on BCL commands if the plugin is not ready.
-(because of wrong config or datastore)
+  (because of wrong config or datastore)
 - Added H2 as an option for datastore #25
 
 ### Changed
@@ -33,21 +34,26 @@ from [keep a CHANGELOG](http://keepachangelog.com/ )
 ### Fixed
 
 - Issue with creating chunk loaders
-- URLencode database password (Thank you @clienthax)
+- URL Encode database password (Thank you, @clienthax)
 
 ## 2020-10-26 3.8.1
 
 ### Added
 
-- Sending a message to the player if another player is deleting their chunkloader
-- Allowing the player to Delete their own/others Chunk Loaders through the list command (permission
-  betterchunkloader.list.delete.others/ betterchunkloader.list.delete.own) #6
-- Allowing players to delete all of their own chunkloaders (using /bcl delete) #36
+- Sending a message to the player if another player is deleting their
+  chunkloader
+- Allowing the player to Delete their own/others Chunk Loaders through the list
+  command (permission betterchunkloader.list.delete.others/
+  betterchunkloader.list.delete.own) #6
+- Allowing players to delete all of their own chunkloaders (using /bcl delete)
+  # 36
 
 ### Changed
 
-- Cleaned up the messages sent to the player and logged when we are deleting/changing/creating chunk loaders.
-- Using the DB Connection provided through Sponge #33 (moves DB connection to another thread)
+- Cleaned up the messages sent to the player and logged when we are
+  deleting/changing/creating chunk loaders.
+- Using the DB Connection provided through Sponge #33 (moves DB connection to
+  another thread)
 - Added security by using SQL Prepared statements.
 
 ### Fixed
@@ -61,9 +67,10 @@ from [keep a CHANGELOG](http://keepachangelog.com/ )
 ### Added
 
 - Added bStats for visibility of how many are using the version.
-- Added the option to use metadata for the amount of chunk loaders a player can have.
+- Added the option to use metadata for the amount of chunk loaders a player can
+  have.
 - Added more exceptions around the MySQL database connection start.
-- Added an reload command to reload the configuration!
+- Added a reload command to reload the configuration!
 
 ### Changed
 
@@ -72,8 +79,10 @@ from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 ### Fixed
 
-- Fixed a null pointer exception when using the purge command, and the world is empty (#27)
-- If the world is not loaded on startup we are now loading in the world when we get the sponge event! (Fixes #35)
+- Fixed a null pointer exception when using the purge command, and the world is
+  empty (#27)
+- If the world is not loaded on startup we are now loading in the world when we
+  get the sponge event! (Fixes #35)
 
 ## 2018-10-07 3.7.0
 
@@ -89,7 +98,7 @@ from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 ### Fixed
 
-- Now the default blazerod is also doing what it is supposed to.
+- Now the default blaze rod is also doing what it is supposed to.
 
 ## 2017-10-27 3.5.0
 
@@ -97,7 +106,8 @@ from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 - added an option to teleport to a chunkloader (if you have the permission)
 - Added message when not able to load config. (#20)
-- Added option to use another item instead of a blaze rod to init the chunk loaders.
+- Added option to use another item instead of a blaze rod to init the chunk
+  loaders.
 
 ### Changed
 
@@ -106,15 +116,17 @@ from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 ### Fixed
 
-- Fixed the spam when shutting down the server, since it tried to unload chunks we didn't load.
-- A Illegal Exception if the data in the database isn't a valid UUID, then we now just say so instead of not loading the
-  plugin.
+- Fixed the spam when shutting down the server, since it tried to unload chunks
+  we didn't load.
+- An Illegal Exception if the data in the database isn't a valid UUID, then we
+  now just say so instead of not loading the plugin.
 
 ## 2017-06-12 3.4.0
 
 ### Changed
 
-- changed permission to read your own balance from `betterchunkloader.balance` to `betterchunkloader.balance.own`
+- changed permission to read your own balance from `betterchunkloader.balance`
+  to `betterchunkloader.balance.own`
 
 ### Fixed
 
@@ -129,8 +141,10 @@ from [keep a CHANGELOG](http://keepachangelog.com/ )
 
 ### Changed
 
-- Using the gameStoppingEvent instead of the GameStopped event to be sure that we can unforce properly.
+- Using the gameStoppingEvent instead of the GameStopped event to be sure that
+  we can save the DB properly.
 
 ### Fixed
 
-- setting a players personal/world is not going out from the base config option instead of 0.
+- setting a players personal/world is not going out from the base config option
+  instead of 0.
