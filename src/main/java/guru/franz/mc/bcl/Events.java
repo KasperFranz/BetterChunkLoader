@@ -11,7 +11,6 @@ import guru.franz.mc.bcl.model.CChunkLoader;
 import guru.franz.mc.bcl.utils.ChunkLoaderHelper;
 import guru.franz.mc.bcl.utils.Messenger;
 import guru.franz.mc.bcl.utils.Permission;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.type.HandTypes;
@@ -27,7 +26,6 @@ import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
