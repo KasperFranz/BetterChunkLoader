@@ -1,6 +1,6 @@
 plugins {
     id 'org.spongepowered.plugin' version '0.8.1'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'ninja.miserable.blossom' version '1.0.1'
 }
 
